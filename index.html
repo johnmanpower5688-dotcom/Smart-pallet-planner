@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>智慧棧板模擬器｜Smart Pallet Planner</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f3f4f6;color:#1f2937}.wrap{max-width:1440px;margin:0 auto;padding:18px}.titlebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.titlebar h1{margin:0;font-size:30px}.badge{padding:5px 10px;border-radius:999px;background:#e8f3eb;color:#21643a;font-size:12px;font-weight:800}.intro{color:#6b7280;line-height:1.7;margin:6px 0 16px}.layout{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}.card{background:#fff;border:1px solid #d1d5db;border-radius:18px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.04)}.section{margin-bottom:16px}.section h2{font-size:17px;margin:0 0 5px}.muted{font-size:12px;color:#6b7280;margin:0 0 9px}.grid2,.grid3{display:grid;gap:9px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}label{font-size:12px;color:#374151;font-weight:700;display:block}input,select{width:100%;margin-top:5px;padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px;background:#fff}.counter{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.counter button,.btn{border:1px solid #d1d5db;background:#fff;border-radius:10px;padding:10px 6px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}.counter .qty{display:flex;align-items:center;justify-content:center;border:1px solid #cbd5e1;border-radius:10px;font-size:19px;font-weight:900;background:#fff}.primary{background:#0f4c81!important;color:#fff!important;border-color:#0f4c81!important}.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.btnrow3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.notice{border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a}.layoutinfo{margin-top:8px;border:1px solid #dbe2ea;background:#f8fafc;border-radius:12px;padding:11px;font-size:13px;line-height:1.6}.layoutdiagram{font-family:monospace;white-space:pre;text-align:center;font-size:18px;line-height:1.15;color:#7c4f2d;margin-top:8px}.hidden{display:none!important}.warning{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}.ok{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}.metric{background:#fff;border:1px solid #d1d5db;border-radius:15px;padding:12px 8px;text-align:center}.metric .k{font-size:12px;color:#6b7280}.metric .v{font-size:22px;font-weight:900;margin-top:4px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.tab{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:800;cursor:pointer}.tab.active{background:#0f4c81;color:#fff;border-color:#0f4c81}#viewer{position:relative;height:520px;border-radius:18px;overflow:hidden;border:1px solid #d1d5db;background:#e5e7eb}#viewer canvas{display:block;width:100%;height:100%;touch-action:none}#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.78);z-index:5;color:#6b7280}.resultgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}.resultcard{background:#fff;border:1px solid #d1d5db;border-radius:16px;padding:14px;overflow:auto}.resultcard h3{margin:0 0 8px;font-size:17px}table{width:100%;border-collapse:collapse;min-width:680px}th,td{border-bottom:1px solid #e5e7eb;padding:9px 7px;font-size:12px;text-align:left;vertical-align:top}th{background:#f8fafc}pre{white-space:pre-wrap;word-break:break-word;background:#111827;color:#f9fafb;border-radius:12px;padding:12px;font-size:12px;line-height:1.5;min-height:210px;margin:8px 0}.full{width:100%}.hint{text-align:center;color:#6b7280;font-size:12px;margin:8px 0 0}@media(max-width:1120px){.layout{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(3,1fr)}}@media(max-width:720px){.metrics{grid-template-columns:repeat(2,1fr)}.resultgrid{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.counter{gap:4px}.counter button{padding:9px 2px;font-size:12px}#viewer{height:420px}}
+
+.pallettabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
+.pallettab{min-width:96px;border-radius:999px;padding:9px 18px;background:#fff;border:1px solid #cbd5e1;box-shadow:0 2px 8px rgba(15,23,42,.05)}
+.pallettab.active{background:#0f4c81;color:#fff;border-color:#0f4c81;box-shadow:0 4px 12px rgba(15,76,129,.22)}
+.currentpanel{margin-top:12px;background:#fff;border:1px solid #d1d5db;border-radius:16px;padding:14px}
+.currentpanel h3{margin:0 0 8px;font-size:17px}
+.currentgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.currentitem{background:#f8fafc;border-radius:11px;padding:10px}
+.currentitem .k{font-size:11px;color:#64748b}.currentitem .v{font-size:15px;font-weight:800;margin-top:3px}
+@media(max-width:720px){.currentgrid{grid-template-columns:repeat(2,1fr)}}
+
+
+.actionrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.btnsecondary{background:#eef2f7!important;color:#334155!important;border:1px solid #cbd5e1!important}
+.transportnote{margin-top:8px;padding:10px 12px;border-radius:12px;background:#fff7ed;color:#9a3412;font-size:12px;line-height:1.6}
+.errbox{margin-top:10px;padding:11px 12px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-size:13px;font-weight:700;line-height:1.6}
+.errbox.hidden{display:none!important}
+
+
+.theme-toggle{
+  position:absolute;top:18px;right:22px;
+  border:1px solid #cbd5e1;background:#fff;color:#334155;
+  border-radius:999px;padding:8px 14px;font-weight:800;
+  cursor:pointer;box-shadow:0 3px 10px rgba(15,23,42,.08);
+  z-index:5
+}
+.theme-toggle:hover{transform:translateY(-1px)}
+body.dark{background:#111827!important;color:#e5e7eb!important}
+body.dark .app,
+body.dark .panel,
+body.dark .metric,
+body.dark .currentpanel,
+body.dark .currentitem,
+body.dark .resultcard,
+body.dark details,
+body.dark .card{
+  background:#273449!important;color:#e5e7eb!important;border-color:#374151!important
+}
+body.dark h1,body.dark h2,body.dark h3,
+body.dark .metric .v,body.dark .currentitem .v{color:#f8fafc!important}
+body.dark label,body.dark .hint,body.dark .k,
+body.dark .metric .k,body.dark .currentitem .k{color:#9ca3af!important}
+body.dark input,body.dark select,body.dark textarea{
+  background:#1a2435!important;color:#f9fafb!important;border-color:#556275!important
+}
+body.dark .btnsecondary,body.dark .pallettab{
+  background:#314158!important;color:#e5e7eb!important;border-color:#556275!important
+}
+body.dark .pallettab.active{
+  background:#2563a6!important;color:#fff!important;border-color:#60a5fa!important
+}
+body.dark #viewer{
+  background:linear-gradient(180deg,#182234 0%,#111827 100%)!important;
+  border-color:#374151!important
+}
+body.dark table th{background:#273449!important;color:#f3f4f6!important}
+body.dark table td{border-color:#374151!important}
+body.dark pre{background:#111827!important;color:#d1d5db!important}
+body.dark .transportnote{
+  background:#3b2f1f!important;color:#fcd34d!important;border-color:#92400e!important
+}
+body.dark .errbox{
+  background:#451a1a!important;color:#fecaca!important;border-color:#7f1d1d!important
+}
+body.dark .theme-toggle{
+  background:#273449;color:#f9fafb;border-color:#4b5563
+}
+@media(max-width:720px){
+  .theme-toggle{position:static;margin:0 0 12px auto;display:block}
+}
+
+
+body.dark .layoutinfo{
+  background:#243244!important;
+  color:#e5e7eb!important;
+  border-color:#556275!important;
+}
+body.dark .layoutinfo b{color:#f8fafc!important}
+body.dark .layoutdiagram{
+  color:#e1b56a!important;
+  text-shadow:0 0 8px rgba(225,181,106,.16)
+}
+
+
+/* v3 usability refinements */
+.resultgrid{grid-template-columns:1fr!important}
+.resultcard{overflow:visible!important}
+.resultcard table{min-width:0!important;width:100%!important;table-layout:fixed}
+.resultcard th,.resultcard td{font-size:12px;padding:9px 6px;white-space:normal;word-break:keep-all}
+.resultcard th:nth-child(1),.resultcard td:nth-child(1){width:12%}
+.resultcard th:nth-child(2),.resultcard td:nth-child(2){width:15%}
+.resultcard th:nth-child(3),.resultcard td:nth-child(3){width:10%}
+.resultcard th:nth-child(4),.resultcard td:nth-child(4){width:27%}
+.resultcard th:nth-child(5),.resultcard td:nth-child(5){width:18%}
+.resultcard th:nth-child(6),.resultcard td:nth-child(6){width:18%}
+.viewer-tools{justify-content:center!important;margin:6px 0 10px!important}
+.viewer-tools .btn{
+  min-width:auto!important;padding:7px 12px!important;border-radius:9px!important;
+  font-size:12px!important;font-weight:700!important;background:#f8fafc!important;
+  color:#64748b!important;border:1px solid #d8dee7!important;box-shadow:none!important
+}
+.viewer-tools .btn:hover{background:#eef2f7!important;color:#334155!important}
+body.dark .viewer-tools .btn{
+  background:#2b3748!important;color:#cbd5e1!important;border-color:#465469!important
+}
+body.dark .viewer-tools .btn:hover{background:#35445a!important;color:#fff!important}
+@media(max-width:820px){
+  .resultcard th,.resultcard td{font-size:11px;padding:8px 4px}
+}
+
+
+@media(min-width:821px){
+  .layout{grid-template-columns:330px minmax(0,1fr)!important}
+  aside.card{
+    position:sticky;top:16px;max-height:calc(100vh - 32px);
+    overflow-y:auto;scrollbar-gutter:stable
+  }
+  aside.card::-webkit-scrollbar{width:8px}
+  aside.card::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
+  body.dark aside.card::-webkit-scrollbar-thumb{background:#556275}
+}
+@media(max-width:820px){
+  .layout{grid-template-columns:1fr!important}
+  #viewer{height:clamp(360px,56vh,500px)!important}
+}
+.export-tools{
+  display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:12px 0 2px
+}
+.export-tools .btn{
+  min-width:150px;border-radius:11px;padding:9px 14px
+}
+body.dark .export-tools .btn.btnsecondary{
+  background:#314158!important;color:#e5e7eb!important;border-color:#556275!important
+}
+@media print{
+  @page{size:A4 landscape;margin:10mm}
+  body{background:#fff!important;color:#111!important}
+  .theme-toggle,aside.card,.viewer-tools,.export-tools,#copyShipping,.hint{display:none!important}
+  .wrap{max-width:none!important;margin:0!important;padding:0!important}
+  .layout{display:block!important}
+  main.card{box-shadow:none!important;border:0!important;padding:0!important}
+  #viewer{height:360px!important;break-inside:avoid}
+  .metrics,.currentpanel,.resultcard{break-inside:avoid}
+  .resultgrid{display:block!important}
+  .resultcard{margin-top:12px!important}
+  pre{white-space:pre-wrap!important}
+}
+
+
+.image-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.78);z-index:9999;padding:24px;align-items:center;justify-content:center}
+.image-modal.open{display:flex}
+.image-modal-card{width:min(1000px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:18px;padding:16px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+.image-modal-card img{display:block;width:100%;height:auto;border-radius:12px;background:#f5f7f9}
+.image-modal-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.image-modal-head h3{margin:0}
+.image-modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;justify-content:center}
+body.dark .image-modal-card{background:#273449;color:#e5e7eb}
+.print-help{display:none;margin:10px 0;padding:12px;border-radius:12px;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a;text-align:center;font-weight:700}
+.print-help.show{display:block}
+body.dark .print-help{background:#1e3a5f;border-color:#315784;color:#dbeafe}
+
+
+.report-wrap{margin-top:16px}
+.report-page{
+  display:none;background:#fff;border:1px solid #d1d5db;border-radius:18px;
+  padding:22px;box-shadow:0 8px 28px rgba(15,23,42,.06)
+}
+.report-page.show{display:block}
+.report-toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.report-title{font-size:24px;font-weight:900;color:#0f4c81}
+.report-sub{font-size:12px;color:#6b7280}
+.report-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:16px;margin-top:10px}
+.report-image{background:#f8fafc;border:1px solid #e5e7eb;border-radius:16px;padding:12px}
+.report-image img{width:100%;display:block;border-radius:12px;background:#eef2f7}
+.report-caption{font-size:12px;color:#6b7280;margin-top:8px}
+.report-box{border:1px solid #e5e7eb;border-radius:16px;padding:14px;background:#fff}
+.report-box h4{margin:0 0 10px;font-size:15px;color:#334155}
+.report-kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;font-size:13px;line-height:1.6}
+.report-kv .k{color:#6b7280;font-weight:700}
+.report-kv .v{color:#111827;font-weight:800}
+.report-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.report-metric{border:1px solid #dbe2ea;background:#f8fafc;border-radius:14px;padding:10px 8px;text-align:center}
+.report-metric .k{font-size:12px;color:#6b7280}
+.report-metric .v{font-size:20px;color:#0f4c81;font-weight:900;margin-top:4px}
+.report-table table{min-width:0!important}
+.report-note{margin-top:14px;border:1px solid #e5e7eb;border-radius:14px;padding:12px;background:#f8fafc}
+.report-note pre{min-height:auto;margin:0;background:#fff;color:#111827;border:1px solid #e5e7eb}
+.report-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.report-actions .btn{min-width:160px}
+body.dark .report-page{background:#1f2937;border-color:#374151}
+body.dark .report-title{color:#f8fafc}
+body.dark .report-sub{color:#9ca3af}
+body.dark .report-image,body.dark .report-box,body.dark .report-note{background:#273449;border-color:#374151}
+body.dark .report-kv .k{color:#9ca3af}
+body.dark .report-kv .v{color:#f8fafc}
+body.dark .report-metric{background:#314158;border-color:#4b5563}
+body.dark .report-metric .k{color:#cbd5e1}
+body.dark .report-metric .v{color:#fff}
+body.dark .report-note pre{background:#111827;color:#e5e7eb;border-color:#374151}
+@media(max-width:900px){
+  .report-grid{grid-template-columns:1fr}
+  .report-metrics{grid-template-columns:repeat(2,1fr)}
+  .report-kv{grid-template-columns:100px 1fr}
+}
+@media print{
+  body.print-report .wrap>*:not(#reportWrap){display:none!important}
+  body.print-report #reportWrap{display:block!important;padding:0!important;margin:0!important}
+  body.print-report #reportPage{display:block!important;border:0!important;box-shadow:none!important;padding:0!important}
+  body.print-report .report-actions{display:none!important}
+}
+
+
+.report-language{display:flex;align-items:center;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:10px}
+.report-language label{font-size:12px;font-weight:800;color:#475569}
+.report-language select{width:auto;min-width:150px;margin:0;padding:8px 10px}
+.image-save-note{display:block;text-align:center;margin-top:10px;font-weight:800;color:#ffffff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
+body.dark .report-language label{color:#cbd5e1}
+@media print{.pdf-modal{display:none!important}}
+
+</style>
+</head>
+<body>
+<button id="themeToggle" class="theme-toggle">🌙 深色模式</button>
+<div class="wrap">
+<div class="titlebar"><h1>智慧棧板模擬器</h1><span class="badge">Smart Pallet Planner</span></div>
+<p class="intro">可切換產品與棧板模板、自動比較方向、限制高度與重量、自動分板，並以 3D 查看每一板。</p>
+<div class="layout" id="mainLayout">
+<aside class="card" id="settingsPanel">
+  <div class="section"><h2>產品設定</h2><p class="muted">選擇模板或自行修改</p>
+    <label>產品模板<select id="productTemplate"><option value="w888">W-888 一般風扇</option><option value="custom">自訂產品</option></select></label>
+    <label style="margin-top:8px">產品名稱<input id="productName" value="W-888 Ceiling Fan"></label>
+    <div class="grid3" style="margin-top:8px"><label>正面寬<input id="boxW" type="number" value="62" min="1"></label><label>高度<input id="boxH" type="number" value="62" min="1"></label><label>厚度<input id="boxD" type="number" value="18" min="1"></label></div>
+    <div class="grid2" style="margin-top:8px"><label>單台重量 kg<input id="unitWeight" type="number" value="5.56" min="0" step="0.01"></label><label>產品總數量<input id="qtyInput" type="number" value="50" min="0"></label></div>
+  </div>
+
+  <div class="section"><h2>棧板設定</h2>
+    <label>棧板模板<select id="palletTemplate"><option value="130x110">130 × 110 cm</option><option value="120x100">120 × 100 cm</option><option value="120x80">120 × 80 cm</option><option value="110x110">110 × 110 cm</option><option value="custom">自訂尺寸</option></select></label>
+    <div class="grid3" style="margin-top:8px"><label>長度<input id="palletL" type="number" value="130" min="1"></label><label>寬度<input id="palletW" type="number" value="110" min="1"></label><label>高度<input id="palletH" type="number" value="15" min="0"></label></div>
+    <label style="margin-top:8px">棧板重量 kg<input id="palletWeight" type="number" value="0" min="0" step="0.1"></label>
+  </div>
+
+  <div class="section"><h2>排法與限制</h2>
+    <label>排法模式<select id="layoutMode"><option value="template">W-888 固定排法（2 欄 × 5 排）</option><option value="auto">系統自動最佳排法</option><option value="manual">手動指定排法</option></select></label>
+    <div id="manualLayout" class="grid2 hidden" style="margin-top:8px"><label>每排欄數<input id="manualCols" type="number" value="2" min="1"></label><label>排數<input id="manualRows" type="number" value="5" min="1"></label></div>
+    <div id="layoutInfo" class="layoutinfo"></div>
+    <label style="margin-top:8px">分板模式<select id="distribution"><option value="minimum">最少棧板數</option><option value="balanced">平均分配</option></select></label>
+    <label style="margin-top:8px">運輸方式<select id="transportMode"><option value="sea">海運</option><option value="air">空運</option><option value="custom">自訂</option></select></label>
+<label id="seaTypeWrap" style="margin-top:8px">貨櫃類型<select id="seaType"><option value="standard">一般櫃</option><option value="highcube">高櫃</option><option value="custom">自訂高度</option></select></label>
+<label style="margin-top:8px">整板最高限制 cm<input id="maxHeight" type="number" value="220" min="1"></label>
+<div id="transportHint" class="notice" style="margin-top:8px"></div>
+<details style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">進階設定</summary><label style="margin-top:8px">每板重量上限 kg<input id="maxWeight" type="number" value="500" min="1"></label></details>
+<div class="transportnote">海運與空運高度為常用參考值，實際限制請依貨運公司、航空公司、貨櫃門高及裝卸條件確認。</div>
+<div id="errorBox" class="errbox hidden"></div>
+  </div>
+
+  <div class="section"><h2>數量調整</h2>
+    <div class="counter"><button id="minus10">−10</button><button id="minus1">−1</button><div id="qtyCounter" class="qty">50</div><button id="plus1" class="primary">＋1</button><button id="plus10" class="primary">＋10</button></div>
+    <button id="reset" class="btn full" style="margin-top:8px">恢復預設</button>
+  </div>
+
+  <div id="fitMessage" class="notice"></div>
+  <div id="warningMessage" class="notice warning" style="margin-top:8px;display:none"></div>
+
+</aside>
+
+<main>
+  <div class="metrics">
+    <div class="metric"><div class="k">產品總數量</div><div id="mQty" class="v">50</div></div>
+    <div class="metric"><div class="k">棧板數</div><div id="mPallets" class="v">2</div></div>
+    <div class="metric"><div class="k">總毛重</div><div id="mWeight" class="v">278 kg</div></div>
+    <div class="metric"><div class="k">總運輸 CBM</div><div id="mCBM" class="v">0.00</div></div>
+  </div>
+
+  <section class="currentpanel">
+    <h3 id="currentTitle">目前查看：第 1 板</h3>
+    <div class="currentgrid">
+      <div class="currentitem"><div class="k">紙箱數量</div><div id="currentQty" class="v">—</div></div>
+      <div class="currentitem"><div class="k">層數</div><div id="currentLayers" class="v">—</div></div>
+      <div class="currentitem"><div class="k">完成尺寸</div><div id="currentSize" class="v">—</div></div>
+      <div class="currentitem"><div class="k">毛重</div><div id="currentWeight" class="v">—</div></div>
+      <div class="currentitem"><div class="k">運輸 CBM</div><div id="currentCBM" class="v">—</div></div>
+    </div>
+  </section>
+
+  <div id="palletTabs" class="pallettabs"></div>
+  <p class="hint" style="margin-bottom:8px">點選第 1 板、第 2 板，可切換查看 3D 模擬。</p>
+  <div class="viewer-tools">
+    <button id="frontView" class="btn">正面</button>
+    <button id="topView" class="btn">俯視</button>
+    <button id="angleView" class="btn">立體角度</button>
+    <button id="resetView" class="btn btnsecondary">重設視角</button>
+  </div>
+  <div id="viewer"><div id="loading">正在載入 3D 模型…</div></div>
+  <div class="report-language">
+    <label for="reportLanguage">模擬報告語言</label>
+    <select id="reportLanguage">
+      <option value="zh">中文</option>
+      <option value="en">English</option>
+    </select>
+  </div>
+  <div class="export-tools">
+    <button type="button" id="downloadImage" class="btn btnsecondary">產生 3D 圖片</button>
+    <button type="button" id="buildReport" class="btn btnsecondary">產生模擬報告</button>
+  </div>
+  <div id="actionStatus" class="hint" style="text-align:center;min-height:20px;margin-top:6px"></div>
+
+  <div class="resultgrid">
+    <section class="resultcard">
+      <h3>全部棧板資訊</h3>
+      <table>
+        <thead><tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>完成尺寸 cm</th><th>毛重 kg</th><th>運輸 CBM</th></tr></thead>
+        <tbody id="resultBody"></tbody>
+      </table>
+    </section>
+    <section class="resultcard"><h3>貨運公司資料</h3><pre id="shippingText"></pre><button type="button" id="copyShipping" class="btn full">複製英文資料</button></section>
+  </div>
+
+  <section id="reportWrap" class="report-wrap">
+    <div id="reportPage" class="report-page">
+      <div class="report-actions">
+        <button type="button" id="generatePdf" class="btn">產生 PDF 檔案</button>
+      </div>
+      <div class="report-toolbar">
+        <div>
+          <div id="reportTitle" class="report-title">棧板模擬報告</div>
+          <div id="reportSub" class="report-sub">Generated report</div>
+        </div>
+        <div id="reportBadge" class="badge">報告預覽</div>
+      </div>
+
+      <div class="report-metrics">
+        <div class="report-metric"><div id="rQtyLabel" class="k">產品總數量</div><div id="rQty" class="v">-</div></div>
+        <div class="report-metric"><div id="rPalletsLabel" class="k">棧板數</div><div id="rPallets" class="v">-</div></div>
+        <div class="report-metric"><div id="rWeightLabel" class="k">總毛重</div><div id="rWeight" class="v">-</div></div>
+        <div class="report-metric"><div id="rCBMLabel" class="k">總運輸 CBM</div><div id="rCBM" class="v">-</div></div>
+      </div>
+
+      <div class="report-grid">
+        <div class="report-image">
+          <img id="reportImage" alt="3D pallet preview">
+          <div id="reportCaption" class="report-caption">3D preview</div>
+        </div>
+
+        <div class="report-box">
+          <h4 id="reportSummaryTitle">出貨摘要</h4>
+          <div id="reportSummary" class="report-kv"></div>
+        </div>
+      </div>
+
+      <div class="report-box report-table" style="margin-top:14px">
+        <h4 id="reportBreakdownTitle">棧板明細</h4>
+        <table>
+          <thead id="reportTableHead"><tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>完成尺寸 (cm)</th><th>毛重 (kg)</th><th>CBM</th></tr></thead>
+          <tbody id="reportTableBody"></tbody>
+        </table>
+      </div>
+
+      <div class="report-note">
+        <h4 id="reportShippingTitle" style="margin:0 0 10px;font-size:15px;color:#334155">貨運資料</h4>
+        <pre id="reportShipping"></pre>
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.164.1/+esm';
+import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/controls/OrbitControls.js/+esm';
+
+const $=id=>document.getElementById(id);
+const ids=['productName','boxW','boxH','boxD','unitWeight','qtyInput','palletL','palletW','palletH','palletWeight','layoutMode','distribution','maxHeight','maxWeight','manualCols','manualRows'];
+const inputs=Object.fromEntries(ids.map(id=>[id,$(id)]));
+let selectedPallet=0, result=null, palletGroup=null, productGroup=null;
+
+const viewer=$('viewer'), scene=new THREE.Scene();scene.background=new THREE.Color(0xf3f4f6);
+const camera=new THREE.PerspectiveCamera(38,1,.1,4000);camera.position.set(220,185,235);
+const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;viewer.appendChild(renderer.domElement);
+const controls=new OrbitControls(camera,renderer.domElement);controls.enableDamping=true;controls.dampingFactor=.07;controls.target.set(0,45,0);controls.minDistance=90;controls.maxDistance=900;controls.maxPolarAngle=Math.PI*.495;
+scene.add(new THREE.HemisphereLight(0xffffff,0x667085,2.1));const light=new THREE.DirectionalLight(0xffffff,2.8);light.position.set(180,260,180);light.castShadow=true;scene.add(light);
+const floor=new THREE.Mesh(new THREE.PlaneGeometry(1000,1000),new THREE.MeshStandardMaterial({color:0xe5e7eb,roughness:.9}));floor.rotation.x=-Math.PI/2;floor.position.y=-8;floor.receiveShadow=true;scene.add(floor);const grid=new THREE.GridHelper(800,32,0x9ca3af,0xd1d5db);grid.position.y=-7.8;scene.add(grid);
+
+function num(id,min=0){return Math.max(min,Number($(id).value)||0)}
+function cfg(){return{productName:$('productName').value||'Product',boxW:num('boxW',1),boxH:num('boxH',1),boxD:num('boxD',1),unitWeight:num('unitWeight'),qty:Math.floor(num('qtyInput')),palletL:num('palletL',1),palletW:num('palletW',1),palletH:num('palletH'),palletWeight:num('palletWeight'),layoutMode:$('layoutMode').value,distribution:$('distribution').value,maxHeight:num('maxHeight',1),maxWeight:num('maxWeight',1),productMaxLayers:3,manualCols:Math.max(1,Math.floor(num('manualCols',1))),manualRows:Math.max(1,Math.floor(num('manualRows',1)))}}
+function chooseLayout(c){if(c.layoutMode==='template')return{cols:2,rows:5,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'W-888 固定排法'};if(c.layoutMode==='manual')return{cols:c.manualCols,rows:c.manualRows,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'手動指定排法'};const a={cols:Math.floor(c.palletL/c.boxW),rows:Math.floor(c.palletW/c.boxD),dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'原方向'};const b={cols:Math.floor(c.palletL/c.boxD),rows:Math.floor(c.palletW/c.boxW),dimX:c.boxD,dimZ:c.boxW,rotated:true,label:'旋轉 90°'};a.count=a.cols*a.rows;b.count=b.cols*b.rows;return b.count>a.count?b:a}
+function plan(c){const layout=chooseLayout(c);const perLayer=Math.max(0,layout.cols*layout.rows);if(!perLayer)return{error:'目前尺寸無法放入任何一箱。'};const usedL=layout.cols*layout.dimX,usedW=layout.rows*layout.dimZ;if(usedL>c.palletL||usedW>c.palletW)return{error:`目前排法需要 ${usedL} × ${usedW} cm，已超出 ${c.palletL} × ${c.palletW} cm 棧板。`};const heightLayers=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));const weightUnits=Math.max(0,Math.floor((c.maxWeight-c.palletWeight)/Math.max(c.unitWeight,.000001)));const allowedLayers=Math.min(c.productMaxLayers,heightLayers);const cap=Math.min(perLayer*allowedLayers,weightUnits);if(cap<=0)return{error:'高度或重量限制使每板無法放入產品。'};const count=Math.max(1,Math.ceil(c.qty/cap));let alloc=[];if(c.qty===0)alloc=[];else if(c.distribution==='balanced'){const base=Math.floor(c.qty/count),extra=c.qty%count;alloc=Array.from({length:count},(_,i)=>base+(i<extra?1:0))}else{let r=c.qty;while(r>0){const t=Math.min(cap,r);alloc.push(t);r-=t}}const pallets=alloc.map((q,i)=>{const layers=Math.ceil(q/perLayer),height=c.palletH+layers*c.boxH,cargoWeight=q*c.unitWeight,gross=cargoWeight+c.palletWeight,stackCBM=(usedL*usedW*height)/1e6,transportCBM=(c.palletL*c.palletW*height)/1e6;return{index:i,q,layers,height,cargoWeight,gross,stackCBM,transportCBM}});const productCBM=c.qty*c.boxW*c.boxH*c.boxD/1e6,totalGross=pallets.reduce((s,p)=>s+p.gross,0),totalTransport=pallets.reduce((s,p)=>s+p.transportCBM,0),usage=Math.min(999,(usedL*usedW/(c.palletL*c.palletW))*100);return{c,layout,perLayer,usedL,usedW,cap,pallets,productCBM,totalGross,totalTransport,usage}}
+function dispose(g){if(!g)return;g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose())}});scene.remove(g)}
+function createPallet(c){palletGroup=new THREE.Group();const wood=new THREE.MeshStandardMaterial({color:0xa97449,roughness:.78}),slats=7,gap=2.2,sw=(c.palletL-gap*(slats-1))/slats;for(let i=0;i<slats;i++){const s=new THREE.Mesh(new THREE.BoxGeometry(sw,4.5,c.palletW),wood);s.position.set(-c.palletL/2+sw/2+i*(sw+gap),5.5,0);s.castShadow=s.receiveShadow=true;palletGroup.add(s)}[-c.palletW*.34,0,c.palletW*.34].forEach(z=>{const s=new THREE.Mesh(new THREE.BoxGeometry(c.palletL,7,9),wood);s.position.set(0,0,z);s.castShadow=s.receiveShadow=true;palletGroup.add(s)});scene.add(palletGroup)}
+function addDetails(box,c,rotated){
+const edges=new THREE.LineSegments(new THREE.EdgesGeometry(box.geometry),new THREE.LineBasicMaterial({color:0x6e4b31,transparent:true,opacity:.45}));box.add(edges);
+const faceW=rotated?c.boxD:c.boxW,depth=rotated?c.boxW:c.boxD;
+const tape=new THREE.Mesh(
+  new THREE.BoxGeometry(faceW*.99,.3,Math.max(2.8,depth*.075)),
+  new THREE.MeshStandardMaterial({color:0xd8c49a,roughness:.72,metalness:0,transparent:true,opacity:.94})
+);
+tape.position.set(0,c.boxH/2+.18,0);
+tape.receiveShadow=true;
+box.add(tape);
+const r=Math.max(.75,Math.min(depth*.065,1.15)),holeY=c.boxH*.18,off=depth*.23,eps=.04;
+[-1,1].forEach(sx=>[-1,1].forEach(sz=>{
+  const h=new THREE.Mesh(new THREE.CircleGeometry(r,24),new THREE.MeshBasicMaterial({color:0x111111,side:THREE.DoubleSide,depthWrite:false}));
+  h.rotation.y=sx===1?-Math.PI/2:Math.PI/2;
+  h.position.set(sx*(faceW/2+eps),holeY,sz*off);
+  box.add(h)
+}))
+}
+function createProducts(p){productGroup=new THREE.Group();const {c,layout,perLayer,usedL,usedW}=result,mat=new THREE.MeshStandardMaterial({color:0xb68a5a,roughness:.9});const startX=-usedL/2+layout.dimX/2,startZ=-usedW/2+layout.dimZ/2,topY=7.75;for(let i=0;i<p.q;i++){const layer=Math.floor(i/perLayer),idx=i%perLayer,row=Math.floor(idx/layout.cols),col=idx%layout.cols;const box=new THREE.Mesh(new THREE.BoxGeometry(layout.dimX,c.boxH,layout.dimZ),mat.clone());box.position.set(startX+col*layout.dimX,topY+c.boxH/2+layer*c.boxH,startZ+row*layout.dimZ);box.castShadow=box.receiveShadow=true;addDetails(box,c,layout.rotated);productGroup.add(box)}scene.add(productGroup)}
+function render3D(){if(!result||result.error)return;dispose(palletGroup);dispose(productGroup);createPallet(result.c);const p=result.pallets[selectedPallet];if(p)createProducts(p);const h=p?p.height:result.c.palletH;controls.target.set(0,Math.min(h*.42,145),0)}
+function updateUI(){const c=cfg();
+$('errorBox').classList.add('hidden');
+$('errorBox').textContent='';
+
+const byHeight=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));
+const finalLayers=Math.min(c.productMaxLayers,byHeight);
+const completedHeight=c.palletH+finalLayers*c.boxH;
+const remainingHeight=Math.max(0,c.maxHeight-completedHeight);
+const transportName=$('transportMode').value==='sea'?'海運':$('transportMode').value==='air'?'空運':'自訂';
+$('transportHint').innerHTML=`<b>${transportName}</b>｜整板最高 ${c.maxHeight} cm<br>運輸高度最多 ${byHeight} 層；產品安全上限 3 層；<b>實際採用 ${finalLayers} 層</b><br>完成高度 ${completedHeight} cm，剩餘 ${remainingHeight} cm。`;$('manualLayout').classList.toggle('hidden',c.layoutMode!=='manual');$('qtyCounter').textContent=c.qty;$('mQty').textContent=c.qty;result=plan(c);const previewLayout=chooseLayout(c),previewUsedL=previewLayout.cols*previewLayout.dimX,previewUsedW=previewLayout.rows*previewLayout.dimZ,remainL=c.palletL-previewUsedL,remainW=c.palletW-previewUsedW,diagram=Array.from({length:Math.min(previewLayout.rows,8)},()=>Array.from({length:Math.min(previewLayout.cols,10)},()=> '□').join(' ')).join('\n');$('layoutInfo').innerHTML=`<b>目前排法：${previewLayout.label}</b><br>${previewLayout.cols} 欄 × ${previewLayout.rows} 排，每層 <b>${previewLayout.cols*previewLayout.rows}</b> 箱<br>占地：${previewUsedL} × ${previewUsedW} cm<br>棧板剩餘：長邊 ${remainL} cm、寬邊 ${remainW} cm<div class="layoutdiagram">${diagram}</div>`;const errors=[];
+if(c.qty===0)errors.push('請先輸入產品數量。');
+if(remainL<0||remainW<0)errors.push('目前排法超出棧板範圍，請更換排法或棧板尺寸。');
+if(Math.floor((c.maxHeight-c.palletH)/c.boxH)<1)errors.push('目前整板高度限制不足以放入一層紙箱。');
+if(c.maxWeight<=c.palletWeight+c.unitWeight)errors.push('每板重量上限過低，無法放入任何紙箱。');
+if(errors.length){
+  $('errorBox').textContent=errors.join(' ');
+  $('errorBox').classList.remove('hidden');
+}
+if(result.error){$('fitMessage').className='notice warning';$('fitMessage').textContent=result.error;$('warningMessage').style.display='none';$('palletTabs').innerHTML='';$('resultBody').innerHTML='';$('shippingText').textContent=result.error;dispose(palletGroup);dispose(productGroup);createPallet(c);return}selectedPallet=Math.min(selectedPallet,Math.max(0,result.pallets.length-1));const fits=true;$('fitMessage').className='notice ok';$('fitMessage').textContent=`採用${result.layout.label}：每層 ${result.perLayer} 台，占用 ${result.usedL} × ${result.usedW} cm，未超出棧板。`;$('warningMessage').style.display='none';$('mPallets').textContent=result.pallets.length;$('mWeight').textContent=result.totalGross.toFixed(1)+' kg';$('mCBM').textContent=result.totalTransport.toFixed(2);$('palletTabs').innerHTML=result.pallets.map((p,i)=>`<button class="pallettab ${i===selectedPallet?'active':''}" data-i="${i}">第 ${i+1} 板</button>`).join('');
+document.querySelectorAll('.pallettab').forEach(tab=>tab.onclick=()=>{selectedPallet=Number(tab.dataset.i);updateUI()});
+const current=result.pallets[selectedPallet];
+$('currentTitle').textContent=`目前查看：第 ${selectedPallet+1} 板`;
+$('currentQty').textContent=`${current.q} 箱`;
+$('currentLayers').textContent=`${current.layers} 層`;
+$('currentSize').textContent=`${result.usedL} × ${result.usedW} × ${current.height} cm`;
+$('currentWeight').textContent=`${current.gross.toFixed(2)} kg`;
+$('currentCBM').textContent=current.transportCBM.toFixed(2);$('resultBody').innerHTML=result.pallets.map(p=>`<tr><td>第 ${p.index+1} 板</td><td>${p.q}</td><td>${p.layers}</td><td>${result.usedL} × ${result.usedW} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('');$('shippingText').textContent=`Commodity: ${c.productName}\nQuantity: ${c.qty} Cartons / ${c.qty} Units\nPallets: ${result.pallets.length}\nPacking Pattern: ${result.layout.cols} × ${result.layout.rows} per layer (${result.perLayer} cartons)\n\n${result.pallets.map(p=>`Pallet ${p.index+1}: ${p.q} cartons / ${p.layers} layers / ${result.usedL} × ${result.usedW} × ${p.height} cm / Gross Weight ${p.gross.toFixed(2)} kg / ${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\nTotal Gross Weight: ${result.totalGross.toFixed(2)} kg\nTotal Product Volume: ${result.productCBM.toFixed(2)} CBM\nTotal Transport Volume: ${result.totalTransport.toFixed(2)} CBM`;render3D()}
+function setQty(v){$('qtyInput').value=Math.max(0,Math.floor(v));updateUI()}
+$('minus10').onclick=()=>setQty(num('qtyInput')-10);$('minus1').onclick=()=>setQty(num('qtyInput')-1);$('plus1').onclick=()=>setQty(num('qtyInput')+1);$('plus10').onclick=()=>setQty(num('qtyInput')+10);
+$('reset').onclick=()=>{$('productTemplate').value='w888';$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('qtyInput').value=50;$('palletTemplate').value='130x110';$('palletL').value=130;$('palletW').value=110;$('palletH').value=15;$('palletWeight').value=0;$('layoutMode').value='template';$('manualCols').value=2;$('manualRows').value=5;$('distribution').value='minimum';$('transportMode').value='sea';$('seaType').value='standard';$('seaTypeWrap').classList.remove('hidden');$('maxHeight').value=220;$('maxWeight').value=500;selectedPallet=0;updateUI()};
+$('productTemplate').onchange=()=>{if($('productTemplate').value==='w888'){$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('layoutMode').value='template'}updateUI()};
+$('palletTemplate').onchange=()=>{const m={"130x110":[130,110],"120x100":[120,100],"120x80":[120,80],"110x110":[110,110]};if(m[$('palletTemplate').value]){[$('palletL').value,$('palletW').value]=m[$('palletTemplate').value]}updateUI()};
+ids.forEach(id=>{if($(id))$(id).addEventListener('change',updateUI)});$('qtyInput').addEventListener('input',()=>{
+  $('qtyCounter').textContent=Math.floor(num('qtyInput'));
+  updateUI();
+});
+$('frontView').onclick=()=>{camera.position.set(0,75,340);controls.target.set(0,55,0);controls.update()};$('topView').onclick=()=>{camera.position.set(0,400,.1);controls.target.set(0,0,0);controls.update()};$('angleView').onclick=()=>{camera.position.set(220,185,235);controls.target.set(0,50,0);controls.update()};
+if($('resetView')) $('resetView').onclick=()=>{
+  camera.position.set(220,185,235);
+  controls.target.set(0,50,0);
+  controls.update();
+};
+
+
+function getSceneImageDataUrl(){
+  renderer.render(scene,camera);
+  const source=renderer.domElement;
+  const output=document.createElement('canvas');
+  output.width=source.width;
+  output.height=source.height;
+  const ctx=output.getContext('2d');
+  ctx.fillStyle=document.body.classList.contains('dark')?'#182234':'#f5f7f9';
+  ctx.fillRect(0,0,output.width,output.height);
+  ctx.drawImage(source,0,0);
+  return output.toDataURL('image/png');
+}
+function buildReport(){
+  if(!result||result.error){
+    showActionStatus('目前沒有可產生的報告資料。',true);
+    return false;
+  }
+  const lang=$('reportLanguage').value;
+  const zh=lang==='zh';
+  const c=result.c;
+  const current=result.pallets[selectedPallet];
+  const now=new Date();
+  const dateText=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const modeZh={sea:'海運',air:'空運',custom:'自訂'};
+  const modeEn={sea:'Sea Freight',air:'Air Freight',custom:'Custom'};
+  $('reportImage').src=getSceneImageDataUrl();
+  $('reportTitle').textContent=zh?'棧板模擬報告':'Pallet Loading Report';
+  $('reportBadge').textContent=zh?'報告預覽':'Report Preview';
+  $('reportSub').textContent=zh?`產生時間：${dateText}｜目前畫面：第 ${selectedPallet+1} 板`:`Generated: ${dateText} | Current View: Pallet ${selectedPallet+1}`;
+  $('rQtyLabel').textContent=zh?'產品總數量':'Product Quantity';
+  $('rPalletsLabel').textContent=zh?'棧板數':'Pallets';
+  $('rWeightLabel').textContent=zh?'總毛重':'Gross Weight';
+  $('rCBMLabel').textContent=zh?'總運輸 CBM':'Transport CBM';
+  $('reportSummaryTitle').textContent=zh?'出貨摘要':'Shipment Summary';
+  $('reportBreakdownTitle').textContent=zh?'棧板明細':'Pallet Breakdown';
+  $('reportShippingTitle').textContent=zh?'貨運資料':'Shipping Text';
+  $('generatePdf').textContent=zh?'產生 PDF 檔案':'Generate PDF File';
+  $('rQty').textContent=`${c.qty}`;
+  $('rPallets').textContent=`${result.pallets.length}`;
+  $('rWeight').textContent=`${result.totalGross.toFixed(2)} kg`;
+  $('rCBM').textContent=result.totalTransport.toFixed(2);
+  $('reportCaption').textContent=zh
+    ?`目前 3D 畫面：第 ${selectedPallet+1} 板｜${current.q} 箱｜${current.layers} 層｜${result.usedL} × ${result.usedW} × ${current.height} cm`
+    :`Current 3D view: Pallet ${selectedPallet+1} | ${current.q} cartons | ${current.layers} layers | ${result.usedL} × ${result.usedW} × ${current.height} cm`;
+  const summary=zh?[
+    ['產品名稱',c.productName],
+    ['紙箱尺寸',`${c.boxW} × ${c.boxH} × ${c.boxD} cm`],
+    ['單箱重量',`${c.unitWeight} kg／箱`],
+    ['棧板尺寸',`${c.palletL} × ${c.palletW} × ${c.palletH} cm`],
+    ['排列方式',`${result.layout.cols} 欄 × ${result.layout.rows} 排，每層 ${result.perLayer} 箱`],
+    ['分板方式',c.distribution==='minimum'?'優先裝滿，使用最少棧板':'平均分配'],
+    ['運輸方式',modeZh[c.transportMode]||'自訂'],
+    ['整板限高',`${c.maxHeight} cm`],
+    ['高度計算',`貨物 ${current.layers*c.boxH} cm＋棧板 ${c.palletH} cm＝${current.height} cm`],
+    ['每板重量上限',`${c.maxWeight} kg`]
+  ]:[
+    ['Commodity',c.productName],
+    ['Carton Size',`${c.boxW} × ${c.boxH} × ${c.boxD} cm`],
+    ['Unit Weight',`${c.unitWeight} kg / carton`],
+    ['Pallet Size',`${c.palletL} × ${c.palletW} × ${c.palletH} cm`],
+    ['Packing Pattern',`${result.layout.cols} × ${result.layout.rows} per layer (${result.perLayer} cartons)`],
+    ['Distribution',c.distribution==='minimum'?'Minimum pallets first':'Balanced'],
+    ['Transport Mode',modeEn[c.transportMode]||'Custom'],
+    ['Max Height',`${c.maxHeight} cm`],
+    ['Height Rule',`Cargo ${current.layers*c.boxH} cm + pallet ${c.palletH} cm = ${current.height} cm`],
+    ['Weight Limit / Pallet',`${c.maxWeight} kg`]
+  ];
+  $('reportSummary').innerHTML=summary.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('');
+  $('reportTableHead').innerHTML=zh
+    ?'<tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>完成尺寸 (cm)</th><th>毛重 (kg)</th><th>CBM</th></tr>'
+    :'<tr><th>Pallet</th><th>Cartons</th><th>Layers</th><th>Final Size (cm)</th><th>Gross Weight (kg)</th><th>CBM</th></tr>';
+  $('reportTableBody').innerHTML=result.pallets.map(p=>`<tr><td>${zh?'第 '+(p.index+1)+' 板':'Pallet '+(p.index+1)}</td><td>${p.q}</td><td>${p.layers}</td><td>${result.usedL} × ${result.usedW} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('');
+  $('reportShipping').textContent=zh
+    ?`產品名稱：${c.productName}\n產品數量：${c.qty} 箱／${c.qty} 台\n棧板數：${result.pallets.length}\n排列方式：每層 ${result.layout.cols} × ${result.layout.rows}（${result.perLayer} 箱）\n\n${result.pallets.map(p=>`第 ${p.index+1} 板：${p.q} 箱／${p.layers} 層／${result.usedL} × ${result.usedW} × ${p.height} cm／毛重 ${p.gross.toFixed(2)} kg／${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\n總毛重：${result.totalGross.toFixed(2)} kg\n總產品體積：${result.productCBM.toFixed(2)} CBM\n總運輸體積：${result.totalTransport.toFixed(2)} CBM`
+    :$('shippingText').textContent;
+  $('reportPage').classList.add('show');
+  $('reportWrap').scrollIntoView({behavior:'smooth',block:'start'});
+  showActionStatus(zh?'模擬報告已產生。':'Report generated.');
+  return true;
+}
+
+function showActionStatus(message,isError=false){
+  const el=$('actionStatus');
+  el.textContent=message;
+  el.style.color=isError?'#b91c1c':'';
+  clearTimeout(showActionStatus.timer);
+  showActionStatus.timer=setTimeout(()=>{el.textContent='';el.style.color=''},3500);
+}
+$('downloadImage').onclick=()=>{
+  try{
+    const dataUrl=getSceneImageDataUrl();
+    $('imagePreview').src=dataUrl;
+    $('imageModal').classList.add('open');
+    $('imageModal').setAttribute('aria-hidden','false');
+    showActionStatus('圖片已產生，請在圖片上按右鍵另存新檔。');
+  }catch(err){
+    console.error(err);
+    showActionStatus('圖片建立失敗，請改用瀏覽器截圖。',true);
+  }
+};
+$('closeImageModal').onclick=()=>{
+  $('imageModal').classList.remove('open');
+  $('imageModal').setAttribute('aria-hidden','true');
+};
+$('imageModal').onclick=e=>{
+  if(e.target===$('imageModal')) $('closeImageModal').click();
+};
+$('buildReport').onclick=()=>{ buildReport(); };
+$('reportLanguage').addEventListener('change',()=>{ if($('reportPage').classList.contains('show')) buildReport(); });
+$('generatePdf').onclick=async()=>{
+  if(!buildReport()) return;
+  if(!window.html2canvas||!window.jspdf){
+    showActionStatus('PDF 元件載入失敗，請確認網路連線後重新開啟。',true);
+    return;
+  }
+  const wasDark=document.body.classList.contains('dark');
+  if(wasDark) document.body.classList.remove('dark');
+  const button=$('generatePdf');
+  const oldText=button.textContent;
+  button.disabled=true;
+  button.textContent=$('reportLanguage').value==='zh'?'正在產生 PDF…':'Generating PDF...';
+  try{
+    await new Promise(resolve=>setTimeout(resolve,120));
+    const canvas=await window.html2canvas($('reportPage'),{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false});
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+    const pageW=210,pageH=297,margin=8;
+    const usableW=pageW-margin*2,usableH=pageH-margin*2;
+    const imgW=usableW;
+    const imgH=canvas.height*imgW/canvas.width;
+    const imgData=canvas.toDataURL('image/jpeg',0.94);
+    let heightLeft=imgH;
+    let y=margin;
+    pdf.addImage(imgData,'JPEG',margin,y,imgW,imgH,undefined,'FAST');
+    heightLeft-=usableH;
+    while(heightLeft>0){
+      pdf.addPage();
+      y=margin-(imgH-heightLeft);
+      pdf.addImage(imgData,'JPEG',margin,y,imgW,imgH,undefined,'FAST');
+      heightLeft-=usableH;
+    }
+    const fileName=$('reportLanguage').value==='zh'?'棧板模擬報告.pdf':'Pallet_Loading_Report.pdf';
+    pdf.save(fileName);
+    showActionStatus($('reportLanguage').value==='zh'?'PDF 已產生並開始下載。':'PDF generated and download started.');
+  }catch(err){
+    console.error(err);
+    showActionStatus('PDF 產生失敗，請重新整理後再試。',true);
+  }finally{
+    if(wasDark) document.body.classList.add('dark');
+    button.disabled=false;
+    button.textContent=oldText;
+  }
+};
+$('copyShipping').onclick=async()=>{
+  const value=$('shippingText').textContent;
+  let copied=false;
+  try{
+    if(navigator.clipboard&&window.isSecureContext){
+      await navigator.clipboard.writeText(value);
+      copied=true;
+    }
+  }catch(err){console.warn(err)}
+  if(!copied){
+    const area=document.createElement('textarea');
+    area.value=value;
+    area.setAttribute('readonly','');
+    area.style.position='fixed';
+    area.style.opacity='0';
+    document.body.appendChild(area);
+    area.select();
+    try{copied=document.execCommand('copy')}catch(err){console.warn(err)}
+    area.remove();
+  }
+  showActionStatus(copied?'英文資料已複製。':'無法自動複製，請直接選取文字複製。',!copied);
+};
+$('transportMode').addEventListener('change',()=>{
+  const mode=$('transportMode').value;
+  $('seaTypeWrap').classList.toggle('hidden',mode!=='sea');
+  if(mode==='sea')$('maxHeight').value=$('seaType').value==='highcube'?240:220;
+  if(mode==='air')$('maxHeight').value=160;
+  updateUI();
+});
+$('seaType').addEventListener('change',()=>{
+  const type=$('seaType').value;
+  if(type==='standard')$('maxHeight').value=220;
+  if(type==='highcube')$('maxHeight').value=240;
+  updateUI();
+});
+new ResizeObserver(()=>{const w=viewer.clientWidth,h=viewer.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}).observe(viewer);function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}$('loading').remove();updateUI();animate();
+
+
+const themeToggle=$('themeToggle');
+const savedTheme=localStorage.getItem('palletPlannerTheme');
+if(savedTheme==='dark'){
+  document.body.classList.add('dark');
+  themeToggle.textContent='☀️ 淺色模式';
+}
+themeToggle.onclick=()=>{
+  const dark=document.body.classList.toggle('dark');
+  themeToggle.textContent=dark?'☀️ 淺色模式':'🌙 深色模式';
+  localStorage.setItem('palletPlannerTheme',dark?'dark':'light');
+};
+
+</script>
+
+<div id="imageModal" class="image-modal" aria-hidden="true">
+  <div class="image-modal-card">
+    <div class="image-modal-head"><h3>3D 圖片預覽</h3><button type="button" id="closeImageModal" class="btn btnsecondary">關閉</button></div>
+    <img id="imagePreview" alt="3D 棧板圖片預覽">
+    <span class="image-save-note">請在圖片上按右鍵 → 圖片另存新檔</span>
+  </div>
+</div>
+
+</body>
+</html>
