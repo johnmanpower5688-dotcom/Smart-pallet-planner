@@ -289,6 +289,98 @@ input,select,textarea{font-family:inherit}
 body.dark .pdf-status-toast{background:#60a5fa;color:#0b1220}
 @media(max-width:900px){.report-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}.report-grid{grid-template-columns:1fr!important}}
 
+
+.shipping-overview{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:8px;
+  margin-bottom:12px
+}
+.shipping-overview-item{
+  background:#fff;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  padding:9px 10px
+}
+.shipping-overview-item .k{
+  font-size:10.5px;
+  color:#64748b;
+  font-weight:500
+}
+.shipping-overview-item .v{
+  margin-top:3px;
+  font-size:12px;
+  color:#1e293b;
+  font-weight:700;
+  line-height:1.4
+}
+.shipping-pallets{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+  margin:4px 0 12px
+}
+.shipping-pallet-card{
+  border:1px solid #dbe4ee;
+  background:#fff;
+  border-radius:11px;
+  padding:10px 11px
+}
+.shipping-pallet-card .title{
+  color:#0f4c81;
+  font-size:12px;
+  font-weight:800;
+  margin-bottom:6px
+}
+.shipping-pallet-card .line{
+  font-size:11px;
+  line-height:1.55;
+  color:#475569
+}
+.shipping-totals{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+  padding-top:11px;
+  border-top:1px solid #dbe4ee
+}
+.shipping-total{
+  text-align:center;
+  border-radius:10px;
+  padding:9px 8px;
+  background:#edf4f8;
+  border:1px solid #d5e2eb
+}
+.shipping-total .k{
+  font-size:10.5px;
+  color:#64748b
+}
+.shipping-total .v{
+  margin-top:3px;
+  font-size:14px;
+  color:#0f4c81;
+  font-weight:800
+}
+body.dark .shipping-overview-item,
+body.dark .shipping-pallet-card{
+  background:#314158;
+  border-color:#52647b
+}
+body.dark .shipping-overview-item .k,
+body.dark .shipping-pallet-card .line,
+body.dark .shipping-total .k{color:#cbd5e1}
+body.dark .shipping-overview-item .v{color:#fff}
+body.dark .shipping-pallet-card .title{color:#93c5fd}
+body.dark .shipping-total{
+  background:#24364b;
+  border-color:#52647b
+}
+body.dark .shipping-total .v{color:#fff}
+@media(max-width:900px){
+  .shipping-overview{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .shipping-pallets{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -430,8 +522,8 @@ body.dark .pdf-status-toast{background:#60a5fa;color:#0b1220}
       </div>
 
       <div class="report-note">
-        <h4 id="reportShippingTitle" style="margin:0 0 10px;font-size:15px;color:#334155">貨運資料</h4>
-        <pre id="reportShipping"></pre>
+        <h4 id="reportShippingTitle" style="margin:0 0 12px;font-size:15px;color:#334155">貨運資料</h4>
+        <div id="reportShipping"></div>
       </div>
     </div>
   </section>
@@ -613,9 +705,38 @@ function buildReport(){
     ?'<tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>貨物尺寸 (cm)</th><th>運輸外部尺寸 (cm)</th><th>毛重 (kg)</th><th>CBM</th></tr>'
     :'<tr><th>Pallet</th><th>Cartons</th><th>Layers</th><th>Cargo Size (cm)</th><th>Outer Size (cm)</th><th>Gross Weight (kg)</th><th>CBM</th></tr>';
   $('reportTableBody').innerHTML=result.pallets.map(p=>`<tr><td>${zh?'第 '+(p.index+1)+' 板':'Pallet '+(p.index+1)}</td><td>${p.q}</td><td>${p.layers}</td><td>${result.usedL} × ${result.usedW} × ${p.height}</td><td>${c.palletL} × ${c.palletW} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('');
-  $('reportShipping').textContent=zh
-    ?`產品名稱：${c.productName}\n產品數量：${c.qty} 箱／${c.qty} 台\n棧板數：${result.pallets.length}\n排列方式：每層 ${result.layout.cols} × ${result.layout.rows}（${result.perLayer} 箱）\n\n${result.pallets.map(p=>`第 ${p.index+1} 板：${p.q} 箱／${p.layers} 層／貨物尺寸 ${result.usedL} × ${result.usedW} × ${p.height} cm／運輸外部尺寸 ${c.palletL} × ${c.palletW} × ${p.height} cm／毛重 ${p.gross.toFixed(2)} kg／${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\n總毛重（不含棧板）：${result.totalGross.toFixed(2)} kg\n總產品體積：${result.productCBM.toFixed(2)} CBM\n總運輸體積：${result.totalTransport.toFixed(2)} CBM`
-    :`Commodity: ${c.productName}\nQuantity: ${c.qty} cartons / ${c.qty} units\nPallets: ${result.pallets.length}\nPacking Pattern: ${result.layout.cols} × ${result.layout.rows} (${result.perLayer} cartons per layer)\n\n${result.pallets.map(p=>`Pallet ${p.index+1}: ${p.q} cartons / ${p.layers} layers / Cargo Size ${result.usedL} × ${result.usedW} × ${p.height} cm / Outer Size ${c.palletL} × ${c.palletW} × ${p.height} cm / Gross Weight ${p.gross.toFixed(2)} kg / ${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\nTotal Gross Weight (Pallet Excluded): ${result.totalGross.toFixed(2)} kg\nTotal Product Volume: ${result.productCBM.toFixed(2)} CBM\nTotal Transport Volume: ${result.totalTransport.toFixed(2)} CBM`;
+  const overview=zh?[
+    ['產品名稱',c.productName],
+    ['產品數量',`${c.qty} 箱／${c.qty} 台`],
+    ['棧板數',`${result.pallets.length} 板`],
+    ['排列方式',`每層 ${result.layout.cols} × ${result.layout.rows}（${result.perLayer} 箱）`]
+  ]:[
+    ['Commodity',c.productName],
+    ['Quantity',`${c.qty} cartons / ${c.qty} units`],
+    ['Pallets',`${result.pallets.length}`],
+    ['Packing Pattern',`${result.layout.cols} × ${result.layout.rows} (${result.perLayer} cartons/layer)`]
+  ];
+  const overviewHtml=`<div class="shipping-overview">${overview.map(([k,v])=>`<div class="shipping-overview-item"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')}</div>`;
+  const palletHtml=`<div class="shipping-pallets">${result.pallets.map(p=>`<div class="shipping-pallet-card">
+    <div class="title">${zh?'第 '+(p.index+1)+' 板':'Pallet '+(p.index+1)}</div>
+    <div class="line">${zh?'紙箱數量':'Cartons'}：${p.q}</div>
+    <div class="line">${zh?'層數':'Layers'}：${p.layers}</div>
+    <div class="line">${zh?'貨物尺寸':'Cargo Size'}：${result.usedL} × ${result.usedW} × ${p.height} cm</div>
+    <div class="line">${zh?'運輸外部尺寸':'Outer Size'}：${c.palletL} × ${c.palletW} × ${p.height} cm</div>
+    <div class="line">${zh?'毛重':'Gross Weight'}：${p.gross.toFixed(2)} kg</div>
+    <div class="line">CBM：${p.transportCBM.toFixed(2)}</div>
+  </div>`).join('')}</div>`;
+  const totals=zh?[
+    ['總重（不含棧板）',`${result.totalGross.toFixed(2)} kg`],
+    ['總產品體積',`${result.productCBM.toFixed(2)} CBM`],
+    ['總運輸 CBM',`${result.totalTransport.toFixed(2)} CBM`]
+  ]:[
+    ['Total Weight (Pallet Excluded)',`${result.totalGross.toFixed(2)} kg`],
+    ['Total Product Volume',`${result.productCBM.toFixed(2)} CBM`],
+    ['Total Transport CBM',`${result.totalTransport.toFixed(2)} CBM`]
+  ];
+  const totalsHtml=`<div class="shipping-totals">${totals.map(([k,v])=>`<div class="shipping-total"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')}</div>`;
+  $('reportShipping').innerHTML=overviewHtml+palletHtml+totalsHtml;
   $('reportPage').classList.add('show');
   $('reportWrap').scrollIntoView({behavior:'smooth',block:'start'});
   showActionStatus(zh?'模擬報告已產生。':'Report generated.');
@@ -695,7 +816,14 @@ $('generatePdf').onclick=async()=>{
       pdf.addImage(imgData,'JPEG',margin,y,imgW,imgH,undefined,'FAST');
       heightLeft-=usableH;
     }
-    const fileName=$('reportLanguage').value==='zh'?'棧板模擬報告.pdf':'Pallet_Loading_Report.pdf';
+    const now=new Date();
+    const dateStamp=`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
+    const nameLower=result.c.productName.toLowerCase();
+    const categoryZh=nameLower.includes('fan')?'風扇':nameLower.includes('valve')?'閥門':'貨品';
+    const categoryEn=nameLower.includes('fan')?'fan':nameLower.includes('valve')?'valve':'cargo';
+    const fileName=$('reportLanguage').value==='zh'
+      ?`${dateStamp}-${result.c.qty}台${categoryZh}.pdf`
+      :`${dateStamp}-${result.c.qty}units-${categoryEn}.pdf`;
     pdf.save(fileName);
     showActionStatus($('reportLanguage').value==='zh'?'PDF 已產生並開始下載。':'PDF generated and download started.');
   }catch(err){
