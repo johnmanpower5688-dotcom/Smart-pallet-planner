@@ -257,6 +257,38 @@ label,.muted,.hint,.metric .k,.currentitem .k{font-weight:500}
 button,.btn,.pallettab{font-family:inherit}
 input,select,textarea{font-family:inherit}
 
+
+/* Refined freight-report layout */
+.report-page{position:relative;padding:20px!important;border-radius:16px!important}
+.report-title{font-size:22px!important;font-weight:700!important;letter-spacing:.01em!important}
+.report-sub{margin-top:3px;font-size:11px!important}
+.report-toolbar{margin-bottom:10px!important}
+.report-actions{position:absolute;top:16px;right:16px;z-index:2}
+.report-actions.is-capturing{display:none!important}
+.report-badge-clean{padding:5px 10px;border-radius:999px;background:#eef6f0;color:#2f6b43;font-size:11px;font-weight:700}
+.report-metrics{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:9px!important;margin:12px 0 14px!important}
+.report-metric{min-height:72px;display:flex;flex-direction:column;justify-content:center;border:1px solid #dbe4ee!important;background:#f8fafc!important;box-shadow:none!important}
+.report-metric.priority{background:#0f4c81!important;border-color:#0f4c81!important}
+.report-metric.priority .k,.report-metric.priority .v{color:#fff!important}
+.report-metric .k{font-size:11px!important;font-weight:500!important}
+.report-metric .v{font-size:18px!important;line-height:1.25!important;font-weight:700!important}
+.report-grid{grid-template-columns:1.12fr .88fr!important;gap:13px!important}
+.report-image,.report-box{border-radius:13px!important}
+.report-box h4{font-size:14px!important;font-weight:700!important}
+.report-kv{grid-template-columns:132px 1fr!important;gap:6px 10px!important;font-size:12px!important}
+.report-kv .k{font-weight:500!important}
+.report-kv .v{font-weight:700!important}
+.report-table{margin-top:12px!important}
+.report-table table{table-layout:fixed}
+.report-table th,.report-table td{padding:7px 6px!important;font-size:11.5px!important}
+.report-table th{color:#475569;font-weight:700}
+.report-note{margin-top:12px!important;padding:12px!important}
+.report-note pre{font-size:11.5px!important;line-height:1.55!important;padding:10px!important}
+.pdf-status-toast{position:fixed;right:18px;bottom:18px;z-index:10020;display:none;padding:10px 14px;border-radius:999px;background:#0f4c81;color:#fff;font-size:13px;font-weight:700;box-shadow:0 8px 24px rgba(15,76,129,.25)}
+.pdf-status-toast.show{display:block}
+body.dark .pdf-status-toast{background:#60a5fa;color:#0b1220}
+@media(max-width:900px){.report-metrics{grid-template-columns:repeat(2,minmax(0,1fr))!important}.report-grid{grid-template-columns:1fr!important}}
+
 </style>
 </head>
 <body>
@@ -365,16 +397,16 @@ input,select,textarea{font-family:inherit}
           <div id="reportTitle" class="report-title">棧板模擬報告</div>
           <div id="reportSub" class="report-sub">Generated report</div>
         </div>
-        <div id="reportBadge" class="badge">報告預覽</div>
+        <div id="reportBadge" class="report-badge-clean">報告預覽</div>
       </div>
 
       <div class="report-metrics">
         <div class="report-metric"><div id="rQtyLabel" class="k">產品總數量</div><div id="rQty" class="v">-</div></div>
         <div class="report-metric"><div id="rPalletsLabel" class="k">棧板數</div><div id="rPallets" class="v">-</div></div>
         <div class="report-metric"><div id="rCargoSizeLabel" class="k">貨物尺寸</div><div id="rCargoSize" class="v">-</div></div>
-        <div class="report-metric"><div id="rOuterSizeLabel" class="k">運輸外部尺寸</div><div id="rOuterSize" class="v">-</div></div>
-        <div class="report-metric"><div id="rWeightLabel" class="k">總毛重</div><div id="rWeight" class="v">-</div></div>
-        <div class="report-metric"><div id="rCBMLabel" class="k">總運輸 CBM</div><div id="rCBM" class="v">-</div></div>
+        <div class="report-metric priority"><div id="rOuterSizeLabel" class="k">運輸外部尺寸</div><div id="rOuterSize" class="v">-</div></div>
+        <div class="report-metric priority"><div id="rWeightLabel" class="k">總毛重</div><div id="rWeight" class="v">-</div></div>
+        <div class="report-metric priority"><div id="rCBMLabel" class="k">總運輸 CBM</div><div id="rCBM" class="v">-</div></div>
       </div>
 
       <div class="report-grid">
@@ -529,9 +561,9 @@ function buildReport(){
   $('rQtyLabel').textContent=zh?'產品總數量':'Product Quantity';
   $('rPalletsLabel').textContent=zh?'棧板數':'Pallets';
   $('rCargoSizeLabel').textContent=zh?'貨物尺寸':'Cargo Size';
-  $('rOuterSizeLabel').textContent=zh?'運輸外部尺寸':'Outer Transport Size';
-  $('rWeightLabel').textContent=zh?'總毛重':'Gross Weight';
-  $('rCBMLabel').textContent=zh?'總運輸 CBM':'Transport CBM';
+  $('rOuterSizeLabel').textContent=zh?'運輸外部尺寸（目前棧板）':'Outer Size (Current Pallet)';
+  $('rWeightLabel').textContent=zh?'總重（不含棧板）':'Total Weight (Pallet Excluded)';
+  $('rCBMLabel').textContent=zh?'總運輸 CBM':'Total Transport CBM';
   $('reportSummaryTitle').textContent=zh?'出貨摘要':'Shipment Summary';
   $('reportBreakdownTitle').textContent=zh?'棧板明細':'Pallet Breakdown';
   $('reportShippingTitle').textContent=zh?'貨運資料':'Shipping Text';
@@ -629,7 +661,11 @@ $('generatePdf').onclick=async()=>{
   const button=$('generatePdf');
   const oldText=button.textContent;
   button.disabled=true;
-  button.textContent=$('reportLanguage').value==='zh'?'正在產生 PDF…':'Generating PDF...';
+  const actions=button.closest('.report-actions');
+  const toast=$('pdfStatusToast');
+  if(actions) actions.classList.add('is-capturing');
+  toast.textContent=$('reportLanguage').value==='zh'?'正在產生 PDF…':'Generating PDF...';
+  toast.classList.add('show');
   try{
     if(document.fonts&&document.fonts.ready) await document.fonts.ready;
     await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
@@ -668,6 +704,8 @@ $('generatePdf').onclick=async()=>{
   }finally{
     if(wasDark) document.body.classList.add('dark');
     button.disabled=false;
+    if(actions) actions.classList.remove('is-capturing');
+    toast.classList.remove('show');
     button.textContent=oldText;
   }
 };
@@ -731,5 +769,6 @@ themeToggle.onclick=()=>{
   </div>
 </div>
 
+<div id="pdfStatusToast" class="pdf-status-toast">正在產生 PDF…</div>
 </body>
 </html>
