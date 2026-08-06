@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+<meta http-equiv="Pragma" content="no-cache" />
+<meta http-equiv="Expires" content="0" />
 <title>智慧棧板模擬器｜Smart Pallet Planner</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -819,6 +822,11 @@ $('generatePdf').onclick=async()=>{
     const y=(pageH-imgH)/2;
     const imgData=canvas.toDataURL('image/jpeg',0.97);
     pdf.addImage(imgData,'JPEG',x,y,imgW,imgH,undefined,'FAST');
+
+    // Hard guarantee: this report must contain exactly one PDF page.
+    while(pdf.getNumberOfPages()>1){
+      pdf.deletePage(pdf.getNumberOfPages());
+    }
 
     const now=new Date();
     const dateStamp=`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
