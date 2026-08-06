@@ -4,16 +4,21 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>智慧棧板模擬器｜Smart Pallet Planner</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:"Segoe UI","Noto Sans TC","Microsoft JhengHei",sans-serif;background:#f3f4f6;color:#1f2937}.wrap{max-width:1440px;margin:0 auto;padding:18px}.titlebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.titlebar h1{margin:0;font-size:30px}.badge{padding:5px 10px;border-radius:999px;background:#e8f3eb;color:#21643a;font-size:12px;font-weight:800}.intro{color:#6b7280;line-height:1.7;margin:6px 0 16px}.layout{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}.card{background:#fff;border:1px solid #d1d5db;border-radius:18px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.04)}.section{margin-bottom:16px}.section h2{font-size:17px;margin:0 0 5px}.muted{font-size:12px;color:#6b7280;margin:0 0 9px}.grid2,.grid3{display:grid;gap:9px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}label{font-size:12px;color:#374151;font-weight:700;display:block}input,select{width:100%;margin-top:5px;padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px;background:#fff}.counter{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.counter button,.btn{border:1px solid #d1d5db;background:#fff;border-radius:10px;padding:10px 6px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}.counter .qty{display:flex;align-items:center;justify-content:center;border:1px solid #cbd5e1;border-radius:10px;font-size:19px;font-weight:900;background:#fff}.primary{background:#0f4c81!important;color:#fff!important;border-color:#0f4c81!important}.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.btnrow3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.notice{border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a}.layoutinfo{margin-top:8px;border:1px solid #dbe2ea;background:#f8fafc;border-radius:12px;padding:11px;font-size:13px;line-height:1.6}.layoutdiagram{font-family:monospace;white-space:pre;text-align:center;font-size:18px;line-height:1.15;color:#7c4f2d;margin-top:8px}.hidden{display:none!important}.warning{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}.ok{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}.metric{background:#fff;border:1px solid #d1d5db;border-radius:15px;padding:12px 8px;text-align:center}.metric .k{font-size:12px;color:#6b7280}.metric .v{font-size:22px;font-weight:900;margin-top:4px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.tab{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:800;cursor:pointer}.tab.active{background:#0f4c81;color:#fff;border-color:#0f4c81}#viewer{position:relative;height:520px;border-radius:18px;overflow:hidden;border:1px solid #d1d5db;background:#e5e7eb}#viewer canvas{display:block;width:100%;height:100%;touch-action:none}#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.78);z-index:5;color:#6b7280}.resultgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}.resultcard{background:#fff;border:1px solid #d1d5db;border-radius:16px;padding:14px;overflow:auto}.resultcard h3{margin:0 0 8px;font-size:17px}table{width:100%;border-collapse:collapse;min-width:680px}th,td{border-bottom:1px solid #e5e7eb;padding:9px 7px;font-size:12px;text-align:left;vertical-align:top}th{background:#f8fafc}pre{white-space:pre-wrap;word-break:break-word;background:#111827;color:#f9fafb;border-radius:12px;padding:12px;font-size:12px;line-height:1.5;min-height:210px;margin:8px 0}.full{width:100%}.hint{text-align:center;color:#6b7280;font-size:12px;margin:8px 0 0}@media(max-width:1120px){.layout{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(3,1fr)}}@media(max-width:720px){.metrics{grid-template-columns:repeat(2,1fr)}.resultgrid{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.counter{gap:4px}.counter button{padding:9px 2px;font-size:12px}#viewer{height:420px}}
+*{box-sizing:border-box}body{margin:0;font-family:"Noto Sans TC","Microsoft JhengHei","Segoe UI",sans-serif;background:#f3f4f6;color:#1f2937}.wrap{max-width:1440px;margin:0 auto;padding:18px}.titlebar{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.titlebar h1{margin:0;font-size:30px}.badge{padding:5px 10px;border-radius:999px;background:#e8f3eb;color:#21643a;font-size:12px;font-weight:800}.intro{color:#6b7280;line-height:1.7;margin:6px 0 16px}.layout{display:grid;grid-template-columns:360px 1fr;gap:16px;align-items:start}.card{background:#fff;border:1px solid #d1d5db;border-radius:18px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.04)}.section{margin-bottom:16px}.section h2{font-size:17px;margin:0 0 5px}.muted{font-size:12px;color:#6b7280;margin:0 0 9px}.grid2,.grid3{display:grid;gap:9px}.grid2{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:repeat(3,1fr)}label{font-size:12px;color:#374151;font-weight:700;display:block}input,select{width:100%;margin-top:5px;padding:9px 10px;border:1px solid #cbd5e1;border-radius:10px;font-size:14px;background:#fff}.counter{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}.counter button,.btn{border:1px solid #d1d5db;background:#fff;border-radius:10px;padding:10px 6px;font-size:13px;font-weight:800;cursor:pointer;white-space:nowrap}.counter .qty{display:flex;align-items:center;justify-content:center;border:1px solid #cbd5e1;border-radius:10px;font-size:19px;font-weight:900;background:#fff}.primary{background:#0f4c81!important;color:#fff!important;border-color:#0f4c81!important}.btnrow{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}.btnrow3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}.notice{border-radius:12px;padding:10px 12px;font-size:13px;line-height:1.55;background:#eff6ff;border:1px solid #bfdbfe;color:#1e3a8a}.layoutinfo{margin-top:8px;border:1px solid #dbe2ea;background:#f8fafc;border-radius:12px;padding:11px;font-size:13px;line-height:1.6}.layoutdiagram{font-family:monospace;white-space:pre;text-align:center;font-size:18px;line-height:1.15;color:#7c4f2d;margin-top:8px}.hidden{display:none!important}.warning{background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}.ok{background:#ecfdf5;border:1px solid #bbf7d0;color:#166534}.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}.metric{background:#fff;border:1px solid #d1d5db;border-radius:15px;padding:12px 8px;text-align:center}.metric .k{font-size:12px;color:#6b7280}.metric .v{font-size:22px;font-weight:900;margin-top:4px}.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.tab{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:7px 12px;font-size:13px;font-weight:800;cursor:pointer}.tab.active{background:#0f4c81;color:#fff;border-color:#0f4c81}#viewer{position:relative;height:520px;border-radius:18px;overflow:hidden;border:1px solid #d1d5db;background:#e5e7eb}#viewer canvas{display:block;width:100%;height:100%;touch-action:none}#loading{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.78);z-index:5;color:#6b7280}.resultgrid{display:grid;grid-template-columns:1.3fr 1fr;gap:14px;margin-top:14px}.resultcard{background:#fff;border:1px solid #d1d5db;border-radius:16px;padding:14px;overflow:auto}.resultcard h3{margin:0 0 8px;font-size:17px}table{width:100%;border-collapse:collapse;min-width:680px}th,td{border-bottom:1px solid #e5e7eb;padding:9px 7px;font-size:12px;text-align:left;vertical-align:top}th{background:#f8fafc}pre{white-space:pre-wrap;word-break:break-word;background:#111827;color:#f9fafb;border-radius:12px;padding:12px;font-size:12px;line-height:1.5;min-height:210px;margin:8px 0}.full{width:100%}.hint{text-align:center;color:#6b7280;font-size:12px;margin:8px 0 0}@media(max-width:1120px){.layout{grid-template-columns:1fr}.metrics{grid-template-columns:repeat(3,1fr)}}@media(max-width:720px){.metrics{grid-template-columns:repeat(2,1fr)}.resultgrid{grid-template-columns:1fr}.grid3{grid-template-columns:1fr 1fr}.counter{gap:4px}.counter button{padding:9px 2px;font-size:12px}#viewer{height:420px}}
 
 .pallettabs{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0 4px}
 .pallettab{min-width:96px;border-radius:999px;padding:9px 18px;background:#fff;border:1px solid #cbd5e1;box-shadow:0 2px 8px rgba(15,23,42,.05)}
 .pallettab.active{background:#0f4c81;color:#fff;border-color:#0f4c81;box-shadow:0 4px 12px rgba(15,76,129,.22)}
-.currentpanel{margin-top:12px;background:#fff;border:1px solid #d1d5db;border-radius:16px;padding:14px}
+.currentpanel{margin-top:12px;background:#ffffff;border:1px solid #cbd5e1;border-radius:16px;padding:14px;box-shadow:0 2px 10px rgba(15,23,42,.04)}
 .currentpanel h3{margin:0 0 8px;font-size:17px}
 .currentgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
-.currentitem{background:#f8fafc;border-radius:11px;padding:10px}
+.currentitem{background:#f1f5f9;border:1px solid #d9e2ec;border-radius:11px;padding:10px;box-shadow:inset 0 1px 0 rgba(255,255,255,.65)}
 .currentitem .k{font-size:11px;color:#64748b}.currentitem .v{font-size:15px;font-weight:800;margin-top:3px}
 @media(max-width:720px){.currentgrid{grid-template-columns:repeat(2,1fr)}}
 
@@ -56,6 +61,16 @@ body.dark .btnsecondary,body.dark .pallettab{
 }
 body.dark .pallettab.active{
   background:#2563a6!important;color:#fff!important;border-color:#60a5fa!important
+}
+body.dark .currentpanel{
+  background:#2a3950!important;
+  border-color:#506177!important;
+  box-shadow:0 3px 14px rgba(0,0,0,.18)!important
+}
+body.dark .currentitem{
+  background:#334760!important;
+  border:1px solid #5a6d84!important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04)!important
 }
 body.dark #viewer{
   background:linear-gradient(180deg,#182234 0%,#111827 100%)!important;
@@ -186,7 +201,7 @@ body.dark .print-help{background:#1e3a5f;border-color:#315784;color:#dbeafe}
 .report-kv{display:grid;grid-template-columns:120px 1fr;gap:8px 12px;font-size:13px;line-height:1.6}
 .report-kv .k{color:#6b7280;font-weight:700}
 .report-kv .v{color:#111827;font-weight:800}
-.report-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}
+.report-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}
 .report-metric{border:1px solid #dbe2ea;background:#f8fafc;border-radius:14px;padding:10px 8px;text-align:center}
 .report-metric .k{font-size:12px;color:#6b7280}
 .report-metric .v{font-size:20px;color:#0f4c81;font-weight:900;margin-top:4px}
@@ -224,6 +239,23 @@ body.dark .report-note pre{background:#111827;color:#e5e7eb;border-color:#374151
 .image-save-note{display:block;text-align:center;margin-top:10px;font-weight:800;color:#ffffff;text-shadow:0 1px 2px rgba(0,0,0,.35)}
 body.dark .report-language label{color:#cbd5e1}
 @media print{.pdf-modal{display:none!important}}
+
+
+#reportPage.report-zh,
+#reportPage.report-zh *{
+  font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif!important;
+}
+#reportPage.report-en,
+#reportPage.report-en *{
+  font-family:"Segoe UI",Arial,sans-serif!important;
+}
+
+
+body{font-weight:400}
+h1,h2,h3,.metric .v,.currentitem .v,.report-title,.report-metric .v{letter-spacing:.01em}
+label,.muted,.hint,.metric .k,.currentitem .k{font-weight:500}
+button,.btn,.pallettab{font-family:inherit}
+input,select,textarea{font-family:inherit}
 
 </style>
 </head>
@@ -339,6 +371,8 @@ body.dark .report-language label{color:#cbd5e1}
       <div class="report-metrics">
         <div class="report-metric"><div id="rQtyLabel" class="k">產品總數量</div><div id="rQty" class="v">-</div></div>
         <div class="report-metric"><div id="rPalletsLabel" class="k">棧板數</div><div id="rPallets" class="v">-</div></div>
+        <div class="report-metric"><div id="rCargoSizeLabel" class="k">貨物尺寸</div><div id="rCargoSize" class="v">-</div></div>
+        <div class="report-metric"><div id="rOuterSizeLabel" class="k">運輸外部尺寸</div><div id="rOuterSize" class="v">-</div></div>
         <div class="report-metric"><div id="rWeightLabel" class="k">總毛重</div><div id="rWeight" class="v">-</div></div>
         <div class="report-metric"><div id="rCBMLabel" class="k">總運輸 CBM</div><div id="rCBM" class="v">-</div></div>
       </div>
@@ -480,6 +514,8 @@ function buildReport(){
   }
   const lang=$('reportLanguage').value;
   const zh=lang==='zh';
+  $('reportPage').classList.remove('report-zh','report-en');
+  $('reportPage').classList.add(zh?'report-zh':'report-en');
   const c=result.c;
   const current=result.pallets[selectedPallet];
   const now=new Date();
@@ -492,6 +528,8 @@ function buildReport(){
   $('reportSub').textContent=zh?`產生時間：${dateText}｜目前畫面：第 ${selectedPallet+1} 板`:`Generated: ${dateText} | Current View: Pallet ${selectedPallet+1}`;
   $('rQtyLabel').textContent=zh?'產品總數量':'Product Quantity';
   $('rPalletsLabel').textContent=zh?'棧板數':'Pallets';
+  $('rCargoSizeLabel').textContent=zh?'貨物尺寸':'Cargo Size';
+  $('rOuterSizeLabel').textContent=zh?'運輸外部尺寸':'Outer Transport Size';
   $('rWeightLabel').textContent=zh?'總毛重':'Gross Weight';
   $('rCBMLabel').textContent=zh?'總運輸 CBM':'Transport CBM';
   $('reportSummaryTitle').textContent=zh?'出貨摘要':'Shipment Summary';
@@ -500,6 +538,8 @@ function buildReport(){
   $('generatePdf').textContent=zh?'產生 PDF 檔案':'Generate PDF File';
   $('rQty').textContent=`${c.qty}`;
   $('rPallets').textContent=`${result.pallets.length}`;
+  $('rCargoSize').textContent=`${result.usedL} × ${result.usedW} × ${current.height} cm`;
+  $('rOuterSize').textContent=`${c.palletL} × ${c.palletW} × ${current.height} cm`;
   $('rWeight').textContent=`${result.totalGross.toFixed(2)} kg`;
   $('rCBM').textContent=result.totalTransport.toFixed(2);
   $('reportCaption').textContent=zh
@@ -509,6 +549,10 @@ function buildReport(){
     ['產品名稱',c.productName],
     ['紙箱尺寸',`${c.boxW} × ${c.boxH} × ${c.boxD} cm`],
     ['單箱重量',`${c.unitWeight} kg／箱`],
+    ['貨物尺寸（本板）',`${result.usedL} × ${result.usedW} × ${current.height} cm`],
+    ['運輸外部尺寸（本板）',`${c.palletL} × ${c.palletW} × ${current.height} cm`],
+    ['總毛重（不含棧板）',`${result.totalGross.toFixed(2)} kg`],
+    ['總運輸 CBM',`${result.totalTransport.toFixed(2)} CBM`],
     ['棧板尺寸',`${c.palletL} × ${c.palletW} × ${c.palletH} cm`],
     ['排列方式',`${result.layout.cols} 欄 × ${result.layout.rows} 排，每層 ${result.perLayer} 箱`],
     ['分板方式',c.distribution==='minimum'?'優先裝滿，使用最少棧板':'平均分配'],
@@ -520,6 +564,10 @@ function buildReport(){
     ['Commodity',c.productName],
     ['Carton Size',`${c.boxW} × ${c.boxH} × ${c.boxD} cm`],
     ['Unit Weight',`${c.unitWeight} kg / carton`],
+    ['Cargo Size (Current Pallet)',`${result.usedL} × ${result.usedW} × ${current.height} cm`],
+    ['Outer Transport Size (Current Pallet)',`${c.palletL} × ${c.palletW} × ${current.height} cm`],
+    ['Gross Weight (Pallet Excluded)',`${result.totalGross.toFixed(2)} kg`],
+    ['Total Transport CBM',`${result.totalTransport.toFixed(2)} CBM`],
     ['Pallet Size',`${c.palletL} × ${c.palletW} × ${c.palletH} cm`],
     ['Packing Pattern',`${result.layout.cols} × ${result.layout.rows} per layer (${result.perLayer} cartons)`],
     ['Distribution',c.distribution==='minimum'?'Minimum pallets first':'Balanced'],
@@ -530,12 +578,12 @@ function buildReport(){
   ];
   $('reportSummary').innerHTML=summary.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('');
   $('reportTableHead').innerHTML=zh
-    ?'<tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>完成尺寸 (cm)</th><th>毛重 (kg)</th><th>CBM</th></tr>'
-    :'<tr><th>Pallet</th><th>Cartons</th><th>Layers</th><th>Final Size (cm)</th><th>Gross Weight (kg)</th><th>CBM</th></tr>';
-  $('reportTableBody').innerHTML=result.pallets.map(p=>`<tr><td>${zh?'第 '+(p.index+1)+' 板':'Pallet '+(p.index+1)}</td><td>${p.q}</td><td>${p.layers}</td><td>${result.usedL} × ${result.usedW} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('');
+    ?'<tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>貨物尺寸 (cm)</th><th>運輸外部尺寸 (cm)</th><th>毛重 (kg)</th><th>CBM</th></tr>'
+    :'<tr><th>Pallet</th><th>Cartons</th><th>Layers</th><th>Cargo Size (cm)</th><th>Outer Size (cm)</th><th>Gross Weight (kg)</th><th>CBM</th></tr>';
+  $('reportTableBody').innerHTML=result.pallets.map(p=>`<tr><td>${zh?'第 '+(p.index+1)+' 板':'Pallet '+(p.index+1)}</td><td>${p.q}</td><td>${p.layers}</td><td>${result.usedL} × ${result.usedW} × ${p.height}</td><td>${c.palletL} × ${c.palletW} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('');
   $('reportShipping').textContent=zh
-    ?`產品名稱：${c.productName}\n產品數量：${c.qty} 箱／${c.qty} 台\n棧板數：${result.pallets.length}\n排列方式：每層 ${result.layout.cols} × ${result.layout.rows}（${result.perLayer} 箱）\n\n${result.pallets.map(p=>`第 ${p.index+1} 板：${p.q} 箱／${p.layers} 層／${result.usedL} × ${result.usedW} × ${p.height} cm／毛重 ${p.gross.toFixed(2)} kg／${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\n總毛重：${result.totalGross.toFixed(2)} kg\n總產品體積：${result.productCBM.toFixed(2)} CBM\n總運輸體積：${result.totalTransport.toFixed(2)} CBM`
-    :$('shippingText').textContent;
+    ?`產品名稱：${c.productName}\n產品數量：${c.qty} 箱／${c.qty} 台\n棧板數：${result.pallets.length}\n排列方式：每層 ${result.layout.cols} × ${result.layout.rows}（${result.perLayer} 箱）\n\n${result.pallets.map(p=>`第 ${p.index+1} 板：${p.q} 箱／${p.layers} 層／貨物尺寸 ${result.usedL} × ${result.usedW} × ${p.height} cm／運輸外部尺寸 ${c.palletL} × ${c.palletW} × ${p.height} cm／毛重 ${p.gross.toFixed(2)} kg／${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\n總毛重（不含棧板）：${result.totalGross.toFixed(2)} kg\n總產品體積：${result.productCBM.toFixed(2)} CBM\n總運輸體積：${result.totalTransport.toFixed(2)} CBM`
+    :`Commodity: ${c.productName}\nQuantity: ${c.qty} cartons / ${c.qty} units\nPallets: ${result.pallets.length}\nPacking Pattern: ${result.layout.cols} × ${result.layout.rows} (${result.perLayer} cartons per layer)\n\n${result.pallets.map(p=>`Pallet ${p.index+1}: ${p.q} cartons / ${p.layers} layers / Cargo Size ${result.usedL} × ${result.usedW} × ${p.height} cm / Outer Size ${c.palletL} × ${c.palletW} × ${p.height} cm / Gross Weight ${p.gross.toFixed(2)} kg / ${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\nTotal Gross Weight (Pallet Excluded): ${result.totalGross.toFixed(2)} kg\nTotal Product Volume: ${result.productCBM.toFixed(2)} CBM\nTotal Transport Volume: ${result.totalTransport.toFixed(2)} CBM`;
   $('reportPage').classList.add('show');
   $('reportWrap').scrollIntoView({behavior:'smooth',block:'start'});
   showActionStatus(zh?'模擬報告已產生。':'Report generated.');
@@ -583,15 +631,24 @@ $('generatePdf').onclick=async()=>{
   button.disabled=true;
   button.textContent=$('reportLanguage').value==='zh'?'正在產生 PDF…':'Generating PDF...';
   try{
-    await new Promise(resolve=>setTimeout(resolve,120));
-    const canvas=await window.html2canvas($('reportPage'),{scale:2,useCORS:true,backgroundColor:'#ffffff',logging:false});
+    if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+    const canvas=await window.html2canvas($('reportPage'),{
+      scale:3,
+      useCORS:true,
+      backgroundColor:'#ffffff',
+      logging:false,
+      imageTimeout:15000,
+      scrollX:0,
+      scrollY:-window.scrollY
+    });
     const {jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
-    const pageW=210,pageH=297,margin=8;
+    const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4',compress:true});
+    const pageW=297,pageH=210,margin=8;
     const usableW=pageW-margin*2,usableH=pageH-margin*2;
     const imgW=usableW;
     const imgH=canvas.height*imgW/canvas.width;
-    const imgData=canvas.toDataURL('image/jpeg',0.94);
+    const imgData=canvas.toDataURL('image/jpeg',0.97);
     let heightLeft=imgH;
     let y=margin;
     pdf.addImage(imgData,'JPEG',margin,y,imgW,imgH,undefined,'FAST');
