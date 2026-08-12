@@ -496,6 +496,59 @@ body.dark .container-alert{background:#1e3a5f;color:#dbeafe;border-color:#315784
   .container-grid3{grid-template-columns:1fr}
 }
 
+
+.container-qty-counter{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
+  gap:6px;
+  margin-top:7px
+}
+.container-qty-counter button{
+  border:1px solid #cbd5e1;
+  background:#fff;
+  border-radius:10px;
+  padding:9px 5px;
+  font-size:12px;
+  font-weight:800;
+  cursor:pointer
+}
+.container-qty-counter .qty-display{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #cbd5e1;
+  border-radius:10px;
+  background:#fff;
+  font-size:18px;
+  font-weight:900
+}
+.container-preset-note{
+  margin-top:7px;
+  font-size:11px;
+  line-height:1.55;
+  color:#64748b
+}
+body.dark .container-qty-counter button,
+body.dark .container-qty-counter .qty-display{
+  background:#314158;
+  color:#f3f4f6;
+  border-color:#556275
+}
+body.dark .container-preset-note{color:#cbd5e1}
+
+
+.container-3d-card{background:#fff;border:1px solid #d1d5db;border-radius:16px;padding:14px;margin-bottom:12px}
+.container-3d-card h3{margin:0 0 10px;font-size:17px}
+.container-3d-toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
+.container-3d-toolbar button{border:1px solid #cbd5e1;background:#fff;color:#475569;padding:8px 12px;border-radius:999px;font-weight:800;cursor:pointer}
+.container-3d-toolbar button.active{background:#0f4c81;color:#fff;border-color:#0f4c81}
+#container3D{width:100%;height:470px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#eef4f8 0%,#f8fafc 100%);border:1px solid #dbe4ee}
+.container-3d-note{text-align:center;color:#64748b;font-size:12px;margin-top:8px;line-height:1.5}
+body.dark .container-3d-card{background:#273449;color:#e5e7eb;border-color:#475569}
+body.dark #container3D{background:linear-gradient(180deg,#182234 0%,#202b3d 100%);border-color:#475569}
+body.dark .container-3d-toolbar button{background:#314158;color:#f3f4f6;border-color:#556275}
+body.dark .container-3d-toolbar button.active{background:#2563a6;color:#fff;border-color:#60a5fa}
+
 </style>
 </head>
 <body>
@@ -658,6 +711,8 @@ body.dark .container-alert{background:#1e3a5f;color:#dbeafe;border-color:#315784
         <label>貨櫃模板
           <select id="cContainerPreset">
             <option value="20ft">20FT｜590 × 235 × 239 cm</option>
+            <option value="40ft">40FT｜1203 × 235 × 239 cm</option>
+            <option value="40hq">40HQ｜1203 × 235 × 269 cm</option>
             <option value="custom">自訂貨櫃</option>
           </select>
         </label>
@@ -665,6 +720,9 @@ body.dark .container-alert{background:#1e3a5f;color:#dbeafe;border-color:#315784
           <label>內長 cm<input id="cL" type="number" value="590" min="1"></label>
           <label>內寬 cm<input id="cW" type="number" value="235" min="1"></label>
           <label>內高 cm<input id="cH" type="number" value="239" min="1"></label>
+        </div>
+        <div class="container-preset-note">
+          尺寸可自行修改；預設值先作為模擬用。正式出貨仍建議依實際船公司／貨櫃規格確認。
         </div>
       </div>
 
@@ -693,10 +751,17 @@ body.dark .container-alert{background:#1e3a5f;color:#dbeafe;border-color:#315784
           <label>箱寬 cm<input id="cBoxW" type="number" value="18" min="1"></label>
           <label>箱高 cm<input id="cBoxH" type="number" value="62" min="1"></label>
         </div>
-        <div class="container-grid2" style="margin-top:8px">
+        <div style="margin-top:8px">
           <label>總數量<input id="cQty" type="number" value="351" min="0"></label>
-          <label>單箱重量 kg<input id="cUnitWeight" type="number" value="5.56" min="0" step="0.01"></label>
+          <div class="container-qty-counter">
+            <button type="button" id="cMinus10">-10</button>
+            <button type="button" id="cMinus1">-1</button>
+            <div id="cQtyDisplay" class="qty-display">351</div>
+            <button type="button" id="cPlus1">+1</button>
+            <button type="button" id="cPlus10">+10</button>
+          </div>
         </div>
+        <label style="margin-top:8px">單箱重量 kg<input id="cUnitWeight" type="number" value="5.56" min="0" step="0.01"></label>
         <button type="button" id="syncFromPallet" class="btn full" style="margin-top:8px">從棧板模式帶入產品資料</button>
       </div>
 
@@ -717,6 +782,23 @@ body.dark .container-alert{background:#1e3a5f;color:#dbeafe;border-color:#315784
         <h3 id="cResultTitle">20FT 棧板裝櫃結果</h3>
         <div id="cResultKV" class="container-kv"></div>
         <div id="cDistribution" class="container-distribution"></div>
+      </section>
+
+      <section class="container-3d-card">
+        <h3>3D 貨櫃模擬</h3>
+        <div class="container-3d-toolbar">
+          <button type="button" id="shellSemi" class="active">半透明外殼</button>
+          <button type="button" id="shellSolid">顯示外殼</button>
+        </div>
+        <div id="container3D"></div>
+        <div class="container-3d-toolbar">
+          <button type="button" id="cViewFront">前視</button>
+          <button type="button" id="cViewTop">頂視</button>
+          <button type="button" id="cViewSide">側視</button>
+          <button type="button" id="cViewAngle" class="active">斜角</button>
+          <button type="button" id="cViewReset">重設</button>
+        </div>
+        <div id="container3DNote" class="container-3d-note">四邊完整框體＋左右雙門外開｜紙箱改為貼齊排列版（兩扇門都打開），補上未開門側與左側上緣的邊框線，方便同時看見貨櫃輪廓與內部排列。</div>
       </section>
 
       <section class="container-result-card">
@@ -1194,6 +1276,7 @@ function updateContainerMode(){
     :floorContainerPlan(L,W,H,qty,bL,bW,bH);
 
   $('cMQty').textContent=qty;
+  $('cQtyDisplay').textContent=qty;
   $('cMCapacity').textContent=p.error?'—':p.capacity;
   $('cMContainers').textContent=p.error?'—':p.containersNeeded;
   $('cMMethod').textContent=containerLoadMethod==='pallet'?'棧板':'散裝';
@@ -1253,6 +1336,7 @@ function updateContainerMode(){
   }
 
   $('cDistribution').innerHTML=dist.map((d,i)=>`<span class="container-chip">第 ${i+1} 櫃：${d.q} 台${p.method==='pallet'?`｜${d.pallets} 板`:''}</span>`).join('');
+  if(typeof refreshContainer3D==='function') refreshContainer3D();
 }
 
 $('modePallet').onclick=()=>{
@@ -1269,6 +1353,7 @@ $('modeContainer').onclick=()=>{
   $('containerModePanel').classList.add('active');
   document.querySelector('.titlebar h1').textContent='智慧貨櫃模擬器';
   updateContainerMode();
+  setTimeout(()=>{if(typeof initContainer3D==='function'){initContainer3D();refreshContainer3D();}},50);
 };
 
 $('loadPallet').onclick=()=>{
@@ -1287,11 +1372,26 @@ $('loadFloor').onclick=()=>{
 };
 
 $('cContainerPreset').onchange=()=>{
-  if($('cContainerPreset').value==='20ft'){
+  const preset=$('cContainerPreset').value;
+  if(preset==='20ft'){
     $('cL').value=590;$('cW').value=235;$('cH').value=239;
+  }else if(preset==='40ft'){
+    $('cL').value=1203;$('cW').value=235;$('cH').value=239;
+  }else if(preset==='40hq'){
+    $('cL').value=1203;$('cW').value=235;$('cH').value=269;
   }
   updateContainerMode();
 };
+
+
+function setContainerQty(v){
+  $('cQty').value=Math.max(0,Math.floor(v));
+  updateContainerMode();
+}
+$('cMinus10').onclick=()=>setContainerQty(cnum('cQty')-10);
+$('cMinus1').onclick=()=>setContainerQty(cnum('cQty')-1);
+$('cPlus1').onclick=()=>setContainerQty(cnum('cQty')+1);
+$('cPlus10').onclick=()=>setContainerQty(cnum('cQty')+10);
 
 $('syncFromPallet').onclick=()=>{
   $('cProductName').value=$('productName').value;
@@ -1305,8 +1405,233 @@ $('syncFromPallet').onclick=()=>{
 };
 
 ['cL','cW','cH','cProductName','cBoxL','cBoxW','cBoxH','cQty','cUnitWeight','floorLayoutMode'].forEach(id=>{
-  $(id).addEventListener(id==='cQty'?'input':'change',updateContainerMode);
+  const evt=['cQty','cL','cW','cH','cBoxL','cBoxW','cBoxH','cUnitWeight'].includes(id)?'input':'change';
+  $(id).addEventListener(evt,updateContainerMode);
 });
+
+
+// ---------------- Container 3D ----------------
+let cScene,cCamera,cRenderer,cControls,cShellGroup,cCargoGroup,cContainerRoot;
+let cShellMode='semi';
+let c3DReady=false;
+
+function initContainer3D(){
+  const host=$('container3D');
+  if(!host || c3DReady || typeof THREE==='undefined') return;
+  c3DReady=true;
+  cScene=new THREE.Scene();
+  cCamera=new THREE.PerspectiveCamera(42,host.clientWidth/host.clientHeight,.1,5000);
+  cRenderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  cRenderer.setPixelRatio(Math.min(window.devicePixelRatio||1,2));
+  cRenderer.setSize(host.clientWidth,host.clientHeight);
+  cRenderer.shadowMap.enabled=true;
+  host.innerHTML=''; host.appendChild(cRenderer.domElement);
+  if(typeof OrbitControls!=='undefined'){
+    cControls=new OrbitControls(cCamera,cRenderer.domElement);
+    cControls.enableDamping=true; cControls.dampingFactor=.06;
+  }
+  cScene.add(new THREE.HemisphereLight(0xffffff,0x667788,1.35));
+  const dir=new THREE.DirectionalLight(0xffffff,1.15); dir.position.set(300,450,260); dir.castShadow=true; cScene.add(dir);
+  cContainerRoot=new THREE.Group(); cShellGroup=new THREE.Group(); cCargoGroup=new THREE.Group();
+  cContainerRoot.add(cShellGroup,cCargoGroup); cScene.add(cContainerRoot);
+  const floorGeo=new THREE.PlaneGeometry(1800,900);
+  const floorMat=new THREE.MeshStandardMaterial({color:0xdfe7ed,roughness:.95,metalness:0});
+  const floor=new THREE.Mesh(floorGeo,floorMat); floor.rotation.x=-Math.PI/2; floor.position.y=-1; floor.receiveShadow=true; cScene.add(floor);
+  setContainerCamera('angle'); animateContainer3D();
+  const ro=new ResizeObserver(()=>{ if(!host.clientWidth||!host.clientHeight)return; cCamera.aspect=host.clientWidth/host.clientHeight; cCamera.updateProjectionMatrix(); cRenderer.setSize(host.clientWidth,host.clientHeight); });
+  ro.observe(host);
+}
+
+function clearGroup(g){
+  while(g.children.length){
+    const o=g.children.pop();
+    if(o.geometry)o.geometry.dispose();
+    if(o.material){ if(Array.isArray(o.material))o.material.forEach(m=>m.dispose&&m.dispose()); else o.material.dispose&&o.material.dispose(); }
+  }
+}
+
+function cBox(w,h,d,color,opacity=1){
+  const geo=new THREE.BoxGeometry(w,h,d);
+  const mat=new THREE.MeshStandardMaterial({color,transparent:opacity<1,opacity,roughness:.75,metalness:0});
+  const m=new THREE.Mesh(geo,mat); m.castShadow=true; m.receiveShadow=true; return m;
+}
+
+function buildContainerShell(L,W,H){
+  clearGroup(cShellGroup);
+  const t=Math.max(3,Math.min(8,Math.min(L,W,H)*.02));
+  const shellOpacity=cShellMode==='solid'?.72:.18;
+  const edgeOpacity=cShellMode==='hide'?.16:1;
+  const bottom=cBox(L,t,W,0x75889a,cShellMode==='hide'?.18:.95); bottom.position.y=t/2; cShellGroup.add(bottom);
+  if(cShellMode!=='hide'){
+    const roof=cBox(L,t,W,0x9aa9b7,shellOpacity); roof.position.y=H-t/2; cShellGroup.add(roof);
+    const left=cBox(L,H,t,0x8c9aa7,shellOpacity); left.position.set(0,H/2,-W/2+t/2); cShellGroup.add(left);
+    const right=cBox(L,H,t,0x8c9aa7,shellOpacity); right.position.set(0,H/2,W/2-t/2); cShellGroup.add(right);
+    const back=cBox(t,H,W,0x8c9aa7,shellOpacity); back.position.set(-L/2+t/2,H/2,0); cShellGroup.add(back);
+  }
+  const beamColor=0x536779;
+  const addBeam=(w,h,d,x,y,z,opacity=edgeOpacity)=>{ const b=cBox(w,h,d,beamColor,opacity); b.position.set(x,y,z); cShellGroup.add(b); };
+  // longitudinal outer edges
+  addBeam(L,t,t,0,H,W/2); addBeam(L,t,t,0,H,-W/2); addBeam(L,t,t,0,0,W/2); addBeam(L,t,t,0,0,-W/2);
+  // vertical outer corners
+  addBeam(t,H,t,-L/2,H/2,W/2); addBeam(t,H,t,-L/2,H/2,-W/2); addBeam(t,H,t,L/2,H/2,W/2); addBeam(t,H,t,L/2,H/2,-W/2);
+  // add the missing top-left side edge so the left side forms a complete 4-sided rectangle
+  addBeam(t,t,W,-L/2,H,0,Math.max(edgeOpacity,.96));
+  // front frame rectangle so all four sides are clearly framed
+  addBeam(t,t,W, L/2, H, 0, edgeOpacity);
+  addBeam(t,t,W, L/2, 0, 0, edgeOpacity);
+  addBeam(t,H,t, L/2, H/2, -W/2, edgeOpacity);
+  addBeam(t,H,t, L/2, H/2,  W/2, edgeOpacity);
+
+  // extra front portal frame slightly offset forward to keep the 4-sided outline visible even when a door is open
+  const frameInset = Math.max(1.4,t*.55);
+  const portalX = L/2 + frameInset*.18;
+  const portalBeam = (w,h,d,x,y,z,opacity=edgeOpacity)=>{ const b=cBox(w,h,d,beamColor,opacity); b.position.set(x,y,z); cShellGroup.add(b); };
+  portalBeam(frameInset, H, frameInset, portalX, H/2, -W/2 + frameInset/2, Math.max(edgeOpacity, .92));
+  portalBeam(frameInset, H, frameInset, portalX, H/2,  W/2 - frameInset/2, Math.max(edgeOpacity, .92));
+  portalBeam(frameInset, frameInset, W - frameInset, portalX, H - frameInset/2, 0, Math.max(edgeOpacity, .92));
+  portalBeam(frameInset, frameInset, W - frameInset, portalX, frameInset/2, 0, Math.max(edgeOpacity, .92));
+
+  if(cShellMode!=='hide'){
+    const doorColor=0x72879a;
+    const panelW=W/2 - t*2.6;
+    const panelH=H - t*1.4;
+    const panelT=frameInset;
+    const doorOpacity=cShellMode==='solid'?.72:.26;
+
+    const makeDoor=(hingeZ, side)=>{
+      const g=new THREE.Group();
+      g.position.set(L/2-panelT/2, H/2, hingeZ);
+      const panel=cBox(panelT,panelH,panelW,doorColor,doorOpacity);
+      const panelCenterZ = side==='left' ? panelW/2 : -panelW/2;
+      panel.position.z = panelCenterZ;
+      g.add(panel);
+
+      // add a clear four-sided outline so the closed-door side does not visually lose its outer edge
+      const frameColor=0x526676;
+      const frameOpacity=Math.max(.9, doorOpacity+.22);
+      const frameT=Math.max(.72, panelT*.38);
+      const addFrame=(w,h,d,x,y,z)=>{ const f=cBox(w,h,d,frameColor,frameOpacity); f.position.set(x,y,z); g.add(f); };
+      addFrame(panelT, frameT, panelW, 0,  panelH/2, panelCenterZ);
+      addFrame(panelT, frameT, panelW, 0, -panelH/2, panelCenterZ);
+      addFrame(panelT, panelH, frameT, 0, 0, panelCenterZ-panelW/2);
+      addFrame(panelT, panelH, frameT, 0, 0, panelCenterZ+panelW/2);
+
+      // lock bars
+      const rodGeo=new THREE.BoxGeometry(panelT*.32, panelH*.84, Math.max(.55,panelT*.25));
+      const rodMat=new THREE.MeshStandardMaterial({color:0x5d7181,transparent:true,opacity:Math.max(.35,doorOpacity+.1),roughness:.7});
+      [-panelW*.22, panelW*.22].forEach(zz=>{
+        const rod=new THREE.Mesh(rodGeo,rodMat); rod.position.set(0,0,panelCenterZ+zz); g.add(rod);
+      });
+      return g;
+    };
+
+    // default display: left door opens outward, right door stays closed so the front still feels enclosed
+    const leftDoor=makeDoor(-W/2+t, 'left');
+    leftDoor.rotation.y = 1.28; // outward opening, opened even wider
+    cShellGroup.add(leftDoor);
+
+    const rightDoor=makeDoor(W/2-t, 'right');
+    rightDoor.rotation.y = -1.28; // outward opening, opened even wider
+    cShellGroup.add(rightDoor);
+  }
+
+  // transparent shell should stay clean and not throw distracting shadows onto cartons
+  cShellGroup.traverse(obj=>{
+    if(obj.isMesh){
+      if(obj.material && obj.material.transparent){ obj.castShadow=false; obj.receiveShadow=false; }
+    }
+  });
+}
+
+function addCarton(x,y,z,l,w,h){
+  // keep cartons almost fully touching so the same pallet looks packed tightly
+  const cartonW=Math.max(3,w*.995), cartonL=Math.max(3,l*.995), cartonH=Math.max(3,h*.995);
+  const carton=cBox(cartonL,cartonH,cartonW,0xc99b69,1);
+  carton.position.set(x,y,z);
+  cCargoGroup.add(carton);
+
+  // top sealing tape: one clear long strip from left to right, matching the approved single-carton look
+  const tape=cBox(cartonL*.94,Math.max(1.2,cartonH*.02),Math.max(1.6,cartonW*.075),0xe4c894,.98);
+  tape.position.set(x,y+cartonH/2-.12,z);
+  tape.castShadow=false; tape.receiveShadow=false;
+  cCargoGroup.add(tape);
+
+  // one oval handle slot on a narrow side only, to avoid strange shadow artifacts on the front face
+  const slotW=Math.max(2.4,cartonW*.34), slotH=Math.max(4.6,cartonH*.13), slotT=.55;
+  const slotColor=0x3a2817;
+  const slot=cBox(slotT,slotH,slotW,slotColor,.98);
+  slot.position.set(x-cartonL/2+.22,y,z-cartonW*.02);
+  slot.castShadow=false; slot.receiveShadow=false;
+  cCargoGroup.add(slot);
+}
+
+function addPalletStack(x,z,pL,pW,stackH,units){
+  const palletH=15;
+  const pallet=cBox(pL*.94,palletH*.9,pW*.94,0xa97845,1);
+  pallet.position.set(x,palletH*.45,z);
+  cCargoGroup.add(pallet);
+
+  const cols=2,rows=5,layers=Math.max(1,Math.min(3,Math.ceil(units/(cols*rows))));
+  const cartonH=(stackH-palletH)/layers;
+  const cartonL=pL/cols;
+  const cartonW=pW/rows;
+  let placed=0;
+
+  for(let ly=0;ly<layers;ly++) for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+    if(placed>=units)return;
+    // use exact grid centers so cartons on the same pallet visually sit flush together
+    const cx=x-pL/2+cartonL*(c+.5);
+    const cy=palletH+cartonH*(ly+.5);
+    const cz=z-pW/2+cartonW*(r+.5);
+    addCarton(cx,cy,cz,cartonL,cartonW,cartonH);
+    placed++;
+  }
+}
+
+function buildContainerCargo(p,qty,L,W,H){
+  clearGroup(cCargoGroup); const firstQty=Math.min(qty,p.capacity);
+  if(p.method==='floor'){
+    let placed=0; const startX=-L/2+p.boxL/2, startZ=-W/2+p.boxW/2;
+    for(let k=0;k<p.nz;k++) for(let j=0;j<p.ny;j++) for(let i=0;i<p.nx;i++){
+      if(placed>=firstQty)return;
+      addCarton(startX+i*p.boxL,p.boxH*(k+.5),startZ+j*p.boxW,p.boxL,p.boxW,p.boxH); placed++;
+    }
+  }else{
+    const palletsNeeded=Math.min(p.palletPerContainer,Math.ceil(firstQty/p.unitPerPallet));
+    let n=0; const startX=-L/2+p.palletL/2, startZ=-W/2+p.palletW/2;
+    for(let j=0;j<p.ny;j++) for(let i=0;i<p.nx;i++){
+      if(n>=palletsNeeded)return;
+      const units=Math.min(p.unitPerPallet,firstQty-n*p.unitPerPallet);
+      addPalletStack(startX+i*p.palletL,startZ+j*p.palletW,p.palletL,p.palletW,p.palletHeight,units); n++;
+    }
+  }
+}
+
+function refreshContainer3D(){
+  if(!$('containerModePanel') || !$('containerModePanel').classList.contains('active')) return;
+  initContainer3D(); if(!c3DReady)return;
+  const L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1),qty=Math.floor(cnum('cQty'));
+  const bL=cnum('cBoxL',1),bW=cnum('cBoxW',1),bH=cnum('cBoxH',1);
+  const p=containerLoadMethod==='pallet'?palletContainerPlan(L,W,H,qty):floorContainerPlan(L,W,H,qty,bL,bW,bH);
+  if(p.error)return;
+  buildContainerShell(L,W,H); buildContainerCargo(p,qty,L,W,H);
+  $('container3DNote').textContent=containerLoadMethod==='pallet'?`第 1 櫃預覽｜棧板裝櫃｜最多 ${p.capacity} 台／櫃`:`第 1 櫃預覽｜散裝｜最多 ${p.capacity} 台／櫃`;
+}
+
+function setContainerCamera(mode){
+  if(!cCamera)return;
+  const L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1),s=Math.max(L,W,H),target=new THREE.Vector3(0,H*.35,0);
+  if(mode==='front')cCamera.position.set(L*.72,H*.42,0);
+  else if(mode==='top')cCamera.position.set(0,H+s*.72,.01);
+  else if(mode==='side')cCamera.position.set(0,H*.42,W+s*.72);
+  else cCamera.position.set(L*.72,H*.68,W*.72);
+  if(cControls){cControls.target.copy(target);cControls.update();}else cCamera.lookAt(target);
+}
+
+function animateContainer3D(){ if(!c3DReady)return; requestAnimationFrame(animateContainer3D); if(cControls)cControls.update(); cRenderer.render(cScene,cCamera); }
+function setShellMode(mode){ cShellMode=(mode==='solid'?'solid':'semi'); ['shellSemi','shellSolid'].forEach(id=>$(id).classList.remove('active')); $(cShellMode==='solid'?'shellSolid':'shellSemi').classList.add('active'); refreshContainer3D(); }
+$('shellSemi').onclick=()=>setShellMode('semi'); $('shellSolid').onclick=()=>setShellMode('solid');
+$('cViewFront').onclick=()=>setContainerCamera('front'); $('cViewTop').onclick=()=>setContainerCamera('top'); $('cViewSide').onclick=()=>setContainerCamera('side'); $('cViewAngle').onclick=()=>setContainerCamera('angle'); $('cViewReset').onclick=()=>setContainerCamera('angle');
 
 updateContainerMode();
 
