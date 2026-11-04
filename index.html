@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>智慧棧板模擬器｜Smart Pallet Planner</title>
+<title>智慧棧板規劃工具｜Smart Pallet Planner</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,12 +135,9 @@ body.dark .viewer-tools .btn:hover{background:#35445a!important;color:#fff!impor
 @media(min-width:821px){
   .layout{grid-template-columns:330px minmax(0,1fr)!important}
   aside.card{
-    position:sticky;top:16px;max-height:calc(100vh - 32px);
-    overflow-y:auto;scrollbar-gutter:stable
+    position:static;max-height:none;
+    overflow:visible
   }
-  aside.card::-webkit-scrollbar{width:8px}
-  aside.card::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
-  body.dark aside.card::-webkit-scrollbar-thumb{background:#556275}
 }
 @media(max-width:820px){
   .layout{grid-template-columns:1fr!important}
@@ -542,6 +539,12 @@ body.dark .container-preset-note{color:#cbd5e1}
 .container-3d-toolbar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:10px 0}
 .container-3d-toolbar button{border:1px solid #cbd5e1;background:#fff;color:#475569;padding:8px 12px;border-radius:999px;font-weight:800;cursor:pointer}
 .container-3d-toolbar button.active{background:#0f4c81;color:#fff;border-color:#0f4c81}
+
+/* v13: compact two-row container 3D controls, matching pallet view menu */
+.view-menu .container-3d-toolbar{display:grid!important;gap:7px!important;margin:0!important}
+.view-menu .container-shell-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+.view-menu .container-view-row{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:8px!important}
+.view-menu .container-3d-toolbar button{width:100%;min-width:0;border-radius:10px;padding:8px 6px;font-size:12px}
 #container3D{width:100%;height:470px;border-radius:14px;overflow:hidden;background:linear-gradient(180deg,#eef4f8 0%,#f8fafc 100%);border:1px solid #dbe4ee}
 .container-3d-note{text-align:center;color:#64748b;font-size:12px;margin-top:8px;line-height:1.5}
 body.dark .container-3d-card{background:#273449;color:#e5e7eb;border-color:#475569}
@@ -549,54 +552,330 @@ body.dark #container3D{background:linear-gradient(180deg,#182234 0%,#202b3d 100%
 body.dark .container-3d-toolbar button{background:#314158;color:#f3f4f6;border-color:#556275}
 body.dark .container-3d-toolbar button.active{background:#2563a6;color:#fff;border-color:#60a5fa}
 
+
+
+/* === Compact workflow redesign === */
+.compact-summary{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 12px;border:1px solid #dbe4ee;background:#f8fafc;border-radius:12px}
+.compact-summary .main{font-weight:900;color:#1e293b;font-size:14px}.compact-summary .sub{font-size:11px;color:#64748b;margin-top:3px;line-height:1.45}
+.linkbtn{border:0;background:transparent;color:#0f4c81;font-weight:800;cursor:pointer;padding:5px;white-space:nowrap}
+.compact-details{margin-top:8px;border:1px solid #e2e8f0;border-radius:12px;background:#fff;overflow:hidden}.compact-details summary{padding:10px 12px;cursor:pointer;font-size:12px;font-weight:800;color:#475569;list-style:none}.compact-details summary::-webkit-details-marker{display:none}.compact-details .inside{padding:0 12px 12px}
+.workflow-card{border:1px solid #cbd5e1;border-radius:14px;padding:12px;background:linear-gradient(180deg,#fbfdff,#f8fafc)}
+.workflow-card h3{margin:0;font-size:15px}.workflow-card p{margin:4px 0 10px;font-size:11px;color:#64748b;line-height:1.5}
+.smart-launch{width:100%;padding:12px;border-radius:12px;border:1px solid #8fb4cf;background:#eaf3fa;color:#0f4c81;font-size:14px;font-weight:900;cursor:pointer}
+.applied-plan{margin-top:8px;padding:10px 11px;border-radius:12px;background:#ecfdf5;border:1px solid #bbf7d0;color:#166534;font-size:12px;line-height:1.55}.applied-plan strong{font-size:13px}
+.transport-compact{font-size:12px;color:#475569;line-height:1.5}
+#settingsPanel{overflow:visible!important;max-height:none!important}
+
+.smart-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.65);z-index:10050;padding:24px;align-items:center;justify-content:center}.smart-modal.open{display:flex}
+.smart-modal-card{width:min(900px,96vw);max-height:92vh;overflow:auto;background:#fff;border-radius:20px;padding:18px;box-shadow:0 28px 80px rgba(0,0,0,.32)}
+.smart-modal-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}.smart-modal-head h2{margin:0}.smart-modal-head p{margin:4px 0 0;color:#64748b;font-size:12px}
+.smart-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.smart-mode-tabs button{border:1px solid #cbd5e1;background:#fff;border-radius:12px;padding:11px;font-weight:900;cursor:pointer}.smart-mode-tabs button.active{background:#0f4c81;color:#fff;border-color:#0f4c81}
+.smart-pane{display:none}.smart-pane.active{display:block}.pallet-entry-list{display:grid;gap:8px}.pallet-entry{display:grid;grid-template-columns:1fr 1fr 110px auto;gap:8px;align-items:end;padding:10px;border:1px solid #e2e8f0;border-radius:12px;background:#f8fafc}.pallet-entry input{margin-top:4px}.remove-entry{border:1px solid #fecaca;background:#fff;color:#b91c1c;border-radius:9px;padding:9px 10px;font-weight:800;cursor:pointer}
+.smart-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}.smart-results-v2{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px}.smart-result-v2{border:1px solid #dbe4ee;border-radius:14px;padding:11px;background:#fff}.smart-result-v2.best{border:2px solid #0f4c81;background:#f5faff}.smart-result-v2 h4{margin:0;font-size:14px}.smart-result-v2 .meta{font-size:11px;color:#64748b;line-height:1.55;margin-top:5px}.smart-mini-preview{position:relative;width:150px;height:150px;margin:10px auto;border:2px solid #64748b;background:#f8fafc;border-radius:6px;overflow:hidden}.smart-mini-box{position:absolute;background:#c99b69;border:1px solid #8d6748;box-sizing:border-box}.smart-mini-box::after{content:'';position:absolute;left:10%;right:10%;top:49%;height:2px;background:#e4c894}.apply-smart{width:100%;border:0;border-radius:10px;padding:9px;background:#0f4c81;color:white;font-weight:900;cursor:pointer;margin-top:7px}.recommended-note{font-size:12px;color:#64748b;line-height:1.6;padding:10px 12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px}
+
+.collapse-tools{margin:10px 0;border:1px solid #dbe4ee;border-radius:12px;background:#f8fafc}.collapse-tools summary{cursor:pointer;padding:10px 12px;font-size:12px;font-weight:800;color:#475569}.collapse-tools .collapse-body{padding:0 10px 10px}
+
+.top-control-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:10px 0 14px}.top-control-row .mode-switch{margin:0}.view-dropdown{position:relative}.view-dropdown>summary{list-style:none;border:1px solid #cbd5e1;background:#fff;color:#475569;padding:9px 15px;border-radius:999px;font-weight:800;cursor:pointer;user-select:none}.view-dropdown>summary::-webkit-details-marker{display:none}.view-dropdown[open]>summary{background:#eef6fb;color:#0f4c81;border-color:#8fb4cf}.view-menu{position:absolute;left:0;top:46px;z-index:50;min-width:250px;background:#fff;border:1px solid #dbe4ee;border-radius:14px;padding:10px;box-shadow:0 14px 35px rgba(15,23,42,.16)}.view-menu .viewer-tools{display:grid!important;grid-template-columns:1fr 1fr;gap:7px;margin:0!important}.view-menu .viewer-tools .btn{width:100%}.view-menu-note{font-size:10.5px;color:#64748b;margin:7px 2px 0;line-height:1.4}.report-language-compact{display:flex;align-items:center;gap:7px;justify-content:center;margin:8px 0 0;font-size:12px;color:#64748b}.report-language-compact select{width:auto;min-width:120px;margin:0;padding:7px 9px}.viewer-tools-inline-hidden{display:none!important}body.dark .view-dropdown>summary,body.dark .view-menu{background:#273449;color:#e5e7eb;border-color:#52647b}body.dark .view-dropdown[open]>summary{background:#314b67;color:#dbeafe;border-color:#60a5fa}body.dark .view-menu-note,body.dark .report-language-compact{color:#cbd5e1}
+
+/* One-page shipping sheet */
+.report-page{max-width:794px!important;margin:0 auto;background:#fff!important;color:#111827!important;border:1px solid #d1d5db!important;border-radius:12px!important;padding:26px!important;box-shadow:0 8px 28px rgba(15,23,42,.08)!important}
+.shipsheet-head{display:flex;justify-content:space-between;gap:18px;border-bottom:2px solid #0f4c81;padding-bottom:12px}.shipsheet-company{font-size:15px;font-weight:900;color:#0f4c81}.shipsheet-title{font-size:24px;font-weight:900;margin-top:3px}.shipsheet-date{text-align:right;font-size:11px;color:#64748b;line-height:1.5}.shipsheet-summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}.shipsheet-stat{border:1px solid #dbe4ee;border-radius:10px;padding:9px 8px;text-align:center;background:#f8fafc}.shipsheet-stat .k{font-size:10px;color:#64748b}.shipsheet-stat .v{font-size:15px;font-weight:900;color:#0f4c81;margin-top:3px}.shipsheet-product{font-size:12px;border:1px solid #e2e8f0;border-radius:10px;padding:9px 11px;margin-bottom:12px}.shipsheet-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.shipsheet-pallet{border:1px solid #dbe4ee;border-radius:12px;padding:9px;break-inside:avoid}.shipsheet-pallet img{display:block;width:100%;height:155px;object-fit:contain;background:#f8fafc;border-radius:8px}.shipsheet-pallet h4{margin:7px 0 4px;font-size:13px}.shipsheet-line{font-size:10.5px;color:#475569;line-height:1.5}.shipsheet-foot{display:none!important}.report-actions{position:static!important;display:flex!important;justify-content:flex-end!important;margin-bottom:12px!important}.report-actions button{min-width:130px!important}.report-toolbar,.report-metrics,.report-grid,.report-table,.report-note{display:none!important}
+@media(max-width:760px){.smart-results-v2{grid-template-columns:1fr}.smart-mode-tabs{grid-template-columns:1fr}.shipsheet-summary{grid-template-columns:repeat(2,1fr)}.shipsheet-grid{grid-template-columns:1fr}}
+body.dark .compact-summary,body.dark .workflow-card,body.dark .compact-details,body.dark .collapse-tools{background:#24364b;border-color:#52647b}body.dark .compact-summary .main,body.dark .workflow-card h3{color:#f8fafc}body.dark .compact-summary .sub,body.dark .workflow-card p,body.dark .transport-compact{color:#cbd5e1}body.dark .smart-modal-card{background:#273449;color:#e5e7eb}body.dark .pallet-entry,body.dark .smart-result-v2,body.dark .recommended-note{background:#314158;border-color:#52647b}body.dark .smart-result-v2.best{background:#2b425c;border-color:#60a5fa}body.dark .smart-result-v2 .meta,body.dark .recommended-note{color:#cbd5e1}
+
+
+/* v3 stock-planning refinements */
+@media(min-width:821px){
+  aside.card{max-height:none!important;overflow:visible!important;scrollbar-gutter:auto!important}
+}
+#settingsPanel .section{margin-bottom:12px}
+#settingsPanel .compact-summary,#settingsPanel .workflow-card{padding:10px}
+.smart-stock-summary{grid-column:1/-1;border:1px solid #dbe4ee;background:#f8fafc;border-radius:14px;padding:12px}
+.smart-stock-summary h4{margin:0 0 5px;font-size:15px}
+.smart-stock-summary .big{font-size:20px;font-weight:900;color:#0f4c81}
+.smart-stock-lines{display:grid;gap:6px;margin-top:9px}
+.smart-stock-line{display:grid;grid-template-columns:1.25fr .85fr .85fr .85fr;gap:8px;align-items:center;padding:7px 9px;border-radius:10px;background:#fff;border:1px solid #e2e8f0;font-size:11px}
+.smart-stock-line b{font-size:12px}
+.smart-supplement{margin-top:10px;border:1px solid #bfdbfe;background:#eff6ff;color:#1e3a8a;border-radius:11px;padding:10px;font-size:12px;line-height:1.55}
+.smart-limit-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.smart-limit-row label{margin:0}
+.smart-mode-tabs button{font-size:13px}
+body.dark .smart-stock-summary,body.dark .smart-stock-line{background:#314158;border-color:#52647b;color:#f8fafc}
+body.dark .smart-stock-summary .big{color:#93c5fd}
+body.dark .smart-supplement{background:#1e3a5f;border-color:#315784;color:#dbeafe}
+@media(max-width:720px){.pallet-entry{grid-template-columns:1fr 1fr}.pallet-entry .qty-col{grid-column:1/2}.pallet-entry .remove-entry{grid-column:2/3}.smart-stock-line{grid-template-columns:1fr 1fr}}
+
+
+
+/* === v4 compact desktop UI === */
+.wrap{padding-top:12px!important}
+.titlebar h1{font-size:27px!important}
+.intro{font-size:13px!important;margin:3px 0 8px!important;line-height:1.45!important}
+.top-control-row{margin:6px 0 10px!important}
+@media(min-width:821px){
+  .layout{grid-template-columns:315px minmax(0,1fr)!important;gap:14px!important}
+  #settingsPanel{padding:12px!important}
+}
+#settingsPanel .section{margin-bottom:10px!important}
+#settingsPanel .section h2{font-size:15px!important;margin-bottom:5px!important}
+#settingsPanel .compact-summary{padding:9px 10px!important}
+#settingsPanel .workflow-card{padding:10px!important}
+.workflow-card h3{font-size:14px!important}.workflow-card p{margin:3px 0 7px!important;line-height:1.4!important}
+.smart-launch{padding:9px!important;font-size:13px!important}
+.applied-plan{padding:8px 9px!important;margin-top:7px!important}
+.sidebar-action-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px}
+.sidebar-action-row .mini-action{border:0;background:transparent;color:#0f4c81;font-weight:800;font-size:11px;cursor:pointer;padding:3px 0}
+.qty-inline{display:grid;grid-template-columns:48px 48px minmax(78px,1fr) 48px 48px;gap:5px;align-items:stretch}
+.qty-inline button{border:1px solid #d1d5db;background:#fff;border-radius:9px;font-weight:900;cursor:pointer;padding:8px 2px}
+.qty-inline button.primary{background:#0f4c81;color:#fff;border-color:#0f4c81}
+.qty-inline input{margin:0!important;text-align:center;font-size:18px;font-weight:900;padding:7px 5px!important;border-radius:9px}
+#qtyCounter{display:none!important}
+#fitMessage{font-size:11px!important;padding:7px 9px!important;line-height:1.35!important;margin-top:7px!important}
+#warningMessage{font-size:11px!important;padding:7px 9px!important}
+#reset{padding:8px!important;font-size:12px!important}
+.sidebar-modal{display:none;position:fixed;inset:0;background:rgba(15,23,42,.62);z-index:10070;padding:22px;align-items:center;justify-content:center}
+.sidebar-modal.open{display:flex}
+.sidebar-modal-card{width:min(620px,95vw);max-height:90vh;overflow:auto;background:#fff;border-radius:18px;padding:18px;box-shadow:0 26px 70px rgba(0,0,0,.3)}
+.sidebar-modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px}.sidebar-modal-head h2{margin:0;font-size:19px}.sidebar-modal-head p{font-size:11px;color:#64748b;margin:4px 0 0}
+.sidebar-modal-close{border:1px solid #cbd5e1;background:#f8fafc;border-radius:9px;padding:8px 10px;font-weight:800;cursor:pointer}
+.sidebar-modal .modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+body.dark .sidebar-modal-card{background:#273449;color:#e5e7eb}body.dark .sidebar-modal-close{background:#314158;color:#e5e7eb;border-color:#556275}
+
+.metrics{gap:8px!important;margin-bottom:8px!important}
+.metric{padding:8px 6px!important;border-radius:12px!important;min-height:58px;display:flex;flex-direction:column;justify-content:center}
+.metric .k{font-size:10.5px!important}.metric .v{font-size:19px!important;margin-top:1px!important}
+.currentpanel{margin-top:0!important;padding:10px 12px!important;border-radius:13px!important}
+.current-head-row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.currentpanel h3{font-size:15px!important;margin:0!important}
+#palletTabs.pallettabs{margin:0!important;justify-content:flex-end!important;gap:6px!important}
+.pallettab{min-width:78px!important;padding:6px 12px!important;font-size:11px!important}
+.currentgrid{display:flex!important;align-items:center;gap:0!important;margin-top:8px;border-top:1px solid #e2e8f0;padding-top:8px;flex-wrap:wrap}
+.currentitem{background:transparent!important;border:0!important;border-radius:0!important;padding:2px 14px 2px 0!important;margin-right:14px;box-shadow:none!important;position:relative}
+.currentitem:not(:last-child)::after{content:'';position:absolute;right:0;top:4px;bottom:4px;width:1px;background:#e2e8f0}
+.currentitem .k{font-size:9.5px!important}.currentitem .v{font-size:13px!important;margin-top:1px!important;white-space:nowrap}
+.viewer-hint-compact{font-size:10.5px;color:#64748b;text-align:right;margin:4px 2px 6px}
+#viewer{height:clamp(430px,62vh,620px)!important}
+body.dark .currentgrid{border-color:#475569}body.dark .currentitem:not(:last-child)::after{background:#475569}
+@media(max-width:1100px){.currentgrid{gap:6px!important}.currentitem{padding-right:8px!important;margin-right:8px!important}}
+@media(max-width:820px){.sidebar-modal{padding:12px}.current-head-row{align-items:flex-start}.currentgrid{display:grid!important;grid-template-columns:repeat(2,1fr)!important}.currentitem::after{display:none}.qty-inline{grid-template-columns:46px 46px 1fr 46px 46px}}
+
+
+/* v5 layout refinement */
+.top-control-row{margin:8px 0 10px!important}
+.titlebar h1{font-size:27px!important}
+.intro{margin:3px 0 8px!important;font-size:12px!important}
+.viewer-topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:5px 2px 6px;min-height:36px}
+.viewer-topbar .viewer-hint-compact{margin:0!important;text-align:left!important}
+.viewer-local-dropdown{margin-left:auto}
+.viewer-local-dropdown>summary{padding:7px 12px!important;font-size:12px}
+.view-menu-right{left:auto!important;right:0!important;top:40px!important}
+.currentpanel{padding:9px 11px!important}
+.current-head-row{min-height:31px}
+.currentgrid{display:grid!important;grid-template-columns:.85fr .75fr 1.45fr 1fr .9fr!important;gap:7px!important;margin-top:7px!important;border-top:0!important;padding-top:0!important}
+.currentitem{background:#f1f5f9!important;border:1px solid #d9e2ec!important;border-radius:9px!important;padding:7px 9px!important;margin:0!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.55)!important;min-height:48px;display:flex;flex-direction:column;justify-content:center}
+.currentitem::after{display:none!important}
+.currentitem .k{font-size:9.5px!important;color:#64748b!important}
+.currentitem .v{font-size:13px!important;margin-top:2px!important}
+body.dark .currentitem{background:#334760!important;border-color:#5a6d84!important}
+body.dark .currentitem .k{color:#cbd5e1!important}
+.sidebar-export-block{margin-top:10px;padding-top:10px;border-top:1px solid #e2e8f0}
+.sidebar-export-title{font-size:13px;font-weight:800;margin-bottom:6px}
+.sidebar-export-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.sidebar-export-actions .btn{padding:8px 5px!important;font-size:11px!important}
+.sidebar-export-language{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px;font-size:11px;color:#64748b}
+.sidebar-export-language select{width:auto;min-width:105px;margin:0!important;padding:6px 8px!important;font-size:11px}
+body.dark .sidebar-export-block{border-color:#475569}
+body.dark .sidebar-export-language{color:#cbd5e1}
+.container-3d-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.container-3d-head h3{margin:0!important}
+@media(max-width:820px){.currentgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.currentitem:nth-child(3){grid-column:span 2}.sidebar-export-actions{grid-template-columns:1fr}.viewer-topbar{align-items:flex-start}}
+
+
+/* v6 guided workflow + practical packing */
+#settingsPanel{display:flex;flex-direction:column}
+#stepProduct{order:1}#stepQty{order:2}#stepPallet{order:3}#stepTransport{order:4}
+#settingsPanel>#reset{order:5}#settingsPanel>#fitMessage{order:6}#settingsPanel>#warningMessage{order:7}#settingsPanel>.sidebar-export-block{order:8}
+.step-heading{display:flex;align-items:center;margin:0 0 8px!important;padding-left:12px;font-size:15px!important;font-weight:900!important;color:#172033;position:relative;line-height:1.2}
+.step-heading::before{content:"";position:absolute;left:0;top:1px;bottom:1px;width:3px;border-radius:999px;background:#7f93a8}
+body.dark .step-heading{color:#f8fafc}
+body.dark .step-heading::before{background:#7f93a8}
+.workflow-card p{margin-top:2px}
+.practical-badge{display:inline-flex;align-items:center;padding:3px 7px;border-radius:999px;background:#ecfdf5;color:#166534;font-size:10px;font-weight:800;margin-left:5px}
+
+
+.smart-mini-box{border-radius:1px!important;border-width:1px!important}
+
+/* === v10 compact section markers + true viewer/sidebar bottom alignment === */
+#settingsPanel{--side-accent:#8ea3b7}
+#settingsPanel .section{
+  width:100%;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding-left:0!important;
+  border-left:0!important;
+}
+#settingsPanel .step-heading,
+#settingsPanel .sidebar-export-title{
+  display:flex;
+  align-items:center;
+  min-height:22px;
+  margin:0 0 7px!important;
+  padding-left:12px!important;
+  font-size:15px!important;
+  font-weight:900!important;
+  line-height:1.2;
+  color:#172033;
+  position:relative;
+}
+#settingsPanel .step-heading::before,
+#settingsPanel .sidebar-export-title::before{
+  content:""!important;
+  display:block!important;
+  position:absolute;
+  left:0;
+  top:2px;
+  width:3px;
+  height:18px;
+  border-radius:999px;
+  background:var(--side-accent);
+}
+#settingsPanel .compact-summary,
+#settingsPanel .workflow-card,
+#settingsPanel .qty-inline,
+#settingsPanel #reset,
+#settingsPanel #fitMessage,
+#settingsPanel #warningMessage,
+#settingsPanel .sidebar-export-actions,
+#settingsPanel .sidebar-export-language{
+  width:100%;
+  margin-left:0!important;
+  margin-right:0!important;
+}
+#settingsPanel .sidebar-export-block{
+  width:100%;
+  margin-left:0!important;
+  margin-right:0!important;
+  padding:10px 0 0 0;
+  border-left:0!important;
+  border-top:1px solid #e2e8f0;
+}
+body.dark #settingsPanel .step-heading,
+body.dark #settingsPanel .sidebar-export-title{color:#f8fafc}
+body.dark #settingsPanel .step-heading::before,
+body.dark #settingsPanel .sidebar-export-title::before{background:#7f93a8}
+@media(min-width:821px){#viewer{min-height:360px!important}}
+
+
+/* v12 container workflow redesign */
+.container-shell{grid-template-columns:330px minmax(0,1fr)!important;gap:16px!important}
+.container-settings{position:static!important}
+.container-side-section{margin-bottom:14px}
+.container-side-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900;margin:0 0 8px;color:#0f172a}
+.container-side-title:before{content:"";width:3px;height:18px;border-radius:999px;background:#7f9bb4;display:block;flex:0 0 auto}
+.container-summary-card{border:1px solid #dbe4ee;background:#f8fafc;border-radius:12px;padding:10px 11px}
+.container-summary-card .top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:800}
+.container-summary-card .sub{margin-top:4px;color:#64748b;font-size:12px}
+.container-linkbtn{border:0;background:transparent;color:#0f4c81;font-weight:800;cursor:pointer;padding:2px 0}
+.container-qty-inline{display:grid;grid-template-columns:48px 48px minmax(68px,1fr) 48px 48px;gap:6px}
+.container-qty-inline button,.container-qty-inline input{height:42px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;font-weight:800;text-align:center;margin:0}
+.container-qty-inline button.plus{background:#0f4c81;color:#fff;border-color:#0f4c81}
+.container-method-tabs{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.container-method-tabs button{padding:11px 8px;border:1px solid #cbd5e1;border-radius:11px;background:#fff;color:#475569;font-weight:800;cursor:pointer}
+.container-method-tabs button.active{background:#eaf3fa;color:#0f4c81;border-color:#8fb4cf}
+.container-method-note{margin-top:8px;font-size:12px;line-height:1.55;color:#64748b}
+.container-output-row{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.container-output-row .btn{padding:9px 6px}
+.container-output-lang{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:8px;color:#64748b;font-size:12px}
+.container-output-lang select{width:118px;margin:0}
+.container-current-card{background:#fff;border:1px solid #d1d5db;border-radius:16px;padding:12px 14px;margin-bottom:12px}
+.container-current-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:9px}
+.container-current-head h3{margin:0;font-size:17px}
+.container-tabs{display:flex;gap:7px;flex-wrap:wrap}
+.container-tab{border:1px solid #cbd5e1;background:#fff;border-radius:999px;padding:7px 13px;font-size:12px;font-weight:800;cursor:pointer}
+.container-tab.active{background:#0f4c81;color:#fff;border-color:#0f4c81;box-shadow:0 3px 10px rgba(15,76,129,.18)}
+.container-current-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.container-current-item{background:#f1f5f9;border:1px solid #d9e2ec;border-radius:10px;padding:9px 10px;min-height:56px}
+.container-current-item .k{font-size:10.5px;color:#64748b}.container-current-item .v{font-size:14px;font-weight:900;margin-top:3px;color:#0f172a}
+.container-detail-body{padding-top:10px}
+.container-detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px 12px;font-size:12px}
+.container-detail-grid .k{color:#64748b}.container-detail-grid .v{font-weight:800;color:#1e293b}
+#containerReportWrap{margin-top:14px}
+#containerReportPage{display:none;background:#fff;border:1px solid #d1d5db;border-radius:18px;padding:20px;position:relative}
+#containerReportPage.show{display:block}
+.container-report-actions{display:flex;justify-content:flex-end;gap:8px;margin-bottom:10px}
+body.dark .container-side-title{color:#f8fafc}
+body.dark .container-summary-card,body.dark .container-current-card,body.dark .container-current-item{background:#273449;color:#e5e7eb;border-color:#475569}
+body.dark .container-current-item .v{color:#f8fafc}
+body.dark .container-method-tabs button,.body.dark .container-tab{background:#314158;color:#e5e7eb;border-color:#556275}
+body.dark .container-method-tabs button.active,body.dark .container-tab.active{background:#2563a6;color:#fff;border-color:#60a5fa}
+@media(max-width:1050px){.container-shell{grid-template-columns:1fr!important}.container-current-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
+</style>
+
+<style>
+/* v11 export fixes */
+.report-actions.is-capturing{display:none!important}
+.total-row td{font-weight:900;background:#eef5fa;border-top:2px solid #b8cddd}
+body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f96}
 </style>
 </head>
 <body>
 <button id="themeToggle" class="theme-toggle">🌙 深色模式</button>
 <div class="wrap">
-<div class="titlebar"><h1>智慧棧板模擬器</h1><span class="badge">Smart Pallet Planner</span></div>
-<p class="intro">可切換產品與棧板模板、自動比較方向、限制高度與重量、自動分板，並以 3D 查看每一板。</p>
-<div class="mode-switch">
-  <button type="button" id="modePallet" class="active">棧板模式</button>
-  <button type="button" id="modeContainer">貨櫃模式</button>
+<div class="titlebar"><h1>智慧棧板規劃工具</h1><span class="badge">Smart Pallet Planner</span></div>
+<p class="intro">棧板配置、智慧選板、即時尺寸／重量／CBM 與 3D 預覽。</p>
+<div class="top-control-row">
+  <div class="mode-switch">
+    <button type="button" id="modePallet" class="active">棧板模式</button>
+    <button type="button" id="modeContainer">貨櫃模式</button>
+  </div>
 </div>
 <div class="layout" id="palletModePanel">
 <aside class="card" id="settingsPanel">
-  <div class="section"><h2>產品設定</h2><p class="muted">選擇模板或自行修改</p>
-    <label>產品模板<select id="productTemplate"><option value="w888">W-888 一般風扇</option><option value="custom">自訂產品</option></select></label>
-    <label style="margin-top:8px">產品名稱<input id="productName" value="W-888 Ceiling Fan"></label>
-    <div class="grid3" style="margin-top:8px"><label>正面寬<input id="boxW" type="number" value="62" min="1"></label><label>高度<input id="boxH" type="number" value="62" min="1"></label><label>厚度<input id="boxD" type="number" value="18" min="1"></label></div>
-    <div class="grid2" style="margin-top:8px"><label>單台重量 kg<input id="unitWeight" type="number" value="5.56" min="0" step="0.01"></label><label>產品總數量<input id="qtyInput" type="number" value="50" min="0"></label></div>
+  <div class="section" id="stepProduct">
+    <h2 class="step-heading">產品</h2>
+    <div class="compact-summary">
+      <div><div class="main" id="productSummaryName">W-888 一般風扇</div><div class="sub" id="productSummarySpec">62 × 62 × 18 cm｜5.56 kg</div></div>
+      <button type="button" class="linkbtn" id="toggleProductEdit">修改</button>
+    </div>
   </div>
 
-  <div class="section"><h2>棧板設定</h2>
-    <label>棧板模板<select id="palletTemplate"><option value="130x110">130 × 110 cm</option><option value="120x100">120 × 100 cm</option><option value="120x80">120 × 80 cm</option><option value="110x110">110 × 110 cm</option><option value="custom">自訂尺寸</option></select></label>
-    <div class="grid3" style="margin-top:8px"><label>長度<input id="palletL" type="number" value="130" min="1"></label><label>寬度<input id="palletW" type="number" value="110" min="1"></label><label>高度<input id="palletH" type="number" value="15" min="0"></label></div>
-    <label style="margin-top:8px">棧板重量 kg<input id="palletWeight" type="number" value="0" min="0" step="0.1"></label>
+  <div class="section" id="stepPallet">
+    <h2 class="step-heading">棧板規劃</h2>
+    <div class="workflow-card">
+      <h3>智慧選板 <span class="practical-badge">實務排法</span></h3>
+      
+      <button type="button" id="openSmartSelector" class="smart-launch">開始規劃</button>
+      <div id="appliedPlan" class="applied-plan"><strong>目前方案：130 × 110 cm</strong><br>W-888 固定排法｜10 台／層｜最多 30 台／板</div>
+      <div class="sidebar-action-row"><span class="muted" style="margin:0">需要指定尺寸時</span><button type="button" id="openPalletEdit" class="mini-action">手動修改尺寸</button></div>
+    </div>
   </div>
 
-  <div class="section"><h2>排法與限制</h2>
-    <label>排法模式<select id="layoutMode"><option value="template">W-888 固定排法（2 欄 × 5 排）</option><option value="auto">系統自動最佳排法</option><option value="manual">手動指定排法</option></select></label>
-    <div id="manualLayout" class="grid2 hidden" style="margin-top:8px"><label>每排欄數<input id="manualCols" type="number" value="2" min="1"></label><label>排數<input id="manualRows" type="number" value="5" min="1"></label></div>
-    <div id="layoutInfo" class="layoutinfo"></div>
-    <label style="margin-top:8px">分板模式<select id="distribution"><option value="minimum">最少棧板數</option><option value="balanced">平均分配</option></select></label>
-    <label style="margin-top:8px">運輸方式<select id="transportMode"><option value="sea">海運</option><option value="air">空運</option><option value="custom">自訂</option></select></label>
-<label id="seaTypeWrap" style="margin-top:8px">貨櫃類型<select id="seaType"><option value="standard">一般櫃</option><option value="highcube">高櫃</option><option value="custom">自訂高度</option></select></label>
-<label style="margin-top:8px">整板最高限制 cm<input id="maxHeight" type="number" value="220" min="1"></label>
-<div id="transportHint" class="notice" style="margin-top:8px"></div>
-<details style="margin-top:8px"><summary style="cursor:pointer;font-weight:700">進階設定</summary><label style="margin-top:8px">每板重量上限 kg<input id="maxWeight" type="number" value="500" min="1"></label></details>
-<div class="transportnote">海運與空運高度為常用參考值，實際限制請依貨運公司、航空公司、貨櫃門高及裝卸條件確認。</div>
-<div id="errorBox" class="errbox hidden"></div>
+  <div class="section" id="stepQty"><h2 class="step-heading">出貨數量</h2>
+    <div class="qty-inline"><button id="minus10">−10</button><button id="minus1">−1</button><input id="qtyInput" type="number" value="50" min="0"><button id="plus1" class="primary">＋1</button><button id="plus10" class="primary">＋10</button></div>
+    <div id="qtyCounter" class="qty">50</div>
   </div>
 
-  <div class="section"><h2>數量調整</h2>
-    <div class="counter"><button id="minus10">−10</button><button id="minus1">−1</button><div id="qtyCounter" class="qty">50</div><button id="plus1" class="primary">＋1</button><button id="plus10" class="primary">＋10</button></div>
-    <button id="reset" class="btn full" style="margin-top:8px">恢復預設</button>
+  <div class="section" id="stepTransport">
+    <h2 class="step-heading">運輸設定</h2>
+    <div id="transportCompactSummary" class="compact-summary"><div><div class="main">海運｜最高 3 層｜220 cm</div></div><button type="button" id="openTransportEdit" class="linkbtn">修改</button></div>
   </div>
+  <button id="reset" class="btn full">恢復預設</button>
+  <div id="fitMessage" class="notice" style="margin-top:7px"></div>
+  <div id="warningMessage" class="notice warning" style="margin-top:7px;display:none"></div>
 
-  <div id="fitMessage" class="notice"></div>
-  <div id="warningMessage" class="notice warning" style="margin-top:8px;display:none"></div>
-
+  <div class="sidebar-export-block">
+    <div class="sidebar-export-title">輸出</div>
+    <div class="sidebar-export-actions">
+      <button type="button" id="downloadImage" class="btn btnsecondary">產生 3D 圖片</button>
+      <button type="button" id="buildReport" class="btn btnsecondary">產生出貨單</button>
+    </div>
+    <div class="sidebar-export-language">
+      <span>出貨單語言</span>
+      <select id="reportLanguage"><option value="zh">中文</option><option value="en">English</option></select>
+    </div>
+    <div id="actionStatus" class="hint" style="text-align:left;min-height:18px;margin-top:5px"></div>
+  </div>
 </aside>
 
 <main>
@@ -608,7 +887,7 @@ body.dark .container-3d-toolbar button.active{background:#2563a6;color:#fff;bord
   </div>
 
   <section class="currentpanel">
-    <h3 id="currentTitle">目前查看：第 1 板</h3>
+    <div class="current-head-row"><h3 id="currentTitle">目前查看：第 1 板</h3><div id="palletTabs" class="pallettabs"></div></div>
     <div class="currentgrid">
       <div class="currentitem"><div class="k">紙箱數量</div><div id="currentQty" class="v">—</div></div>
       <div class="currentitem"><div class="k">層數</div><div id="currentLayers" class="v">—</div></div>
@@ -617,28 +896,21 @@ body.dark .container-3d-toolbar button.active{background:#2563a6;color:#fff;bord
       <div class="currentitem"><div class="k">運輸 CBM</div><div id="currentCBM" class="v">—</div></div>
     </div>
   </section>
-
-  <div id="palletTabs" class="pallettabs"></div>
-  <p class="hint" style="margin-bottom:8px">點選第 1 板、第 2 板，可切換查看 3D 模擬。</p>
-  <div class="viewer-tools">
-    <button id="frontView" class="btn">正面</button>
-    <button id="topView" class="btn">俯視</button>
-    <button id="angleView" class="btn">立體角度</button>
-    <button id="resetView" class="btn btnsecondary">重設視角</button>
+  <div class="viewer-topbar">
+    <span class="viewer-hint-compact">點選板號可切換查看 3D。</span>
+    <details id="palletViewDropdown" class="view-dropdown viewer-local-dropdown">
+      <summary>3D 檢視 ▾</summary>
+      <div class="view-menu view-menu-right">
+        <div class="viewer-tools">
+          <button id="frontView" class="btn">正面</button>
+          <button id="topView" class="btn">俯視</button>
+          <button id="angleView" class="btn">全景</button>
+          <button id="resetView" class="btn btnsecondary">置中</button>
+        </div>
+      </div>
+    </details>
   </div>
   <div id="viewer"><div id="loading">正在載入 3D 模型…</div></div>
-  <div class="report-language">
-    <label for="reportLanguage">模擬報告語言</label>
-    <select id="reportLanguage">
-      <option value="zh">中文</option>
-      <option value="en">English</option>
-    </select>
-  </div>
-  <div class="export-tools">
-    <button type="button" id="downloadImage" class="btn btnsecondary">產生 3D 圖片</button>
-    <button type="button" id="buildReport" class="btn btnsecondary">產生模擬報告</button>
-  </div>
-  <div id="actionStatus" class="hint" style="text-align:center;min-height:20px;margin-top:6px"></div>
 
   <div class="resultgrid">
     <section class="resultcard">
@@ -652,87 +924,47 @@ body.dark .container-3d-toolbar button.active{background:#2563a6;color:#fff;bord
   </div>
 
   <section id="reportWrap" class="report-wrap">
-    <div id="reportPage" class="report-page">
-      <div class="report-actions">
-        <button type="button" id="generatePdf" class="btn">產生 PDF 檔案</button>
-      </div>
-      <div class="report-toolbar">
-        <div>
-          <div id="reportTitle" class="report-title">棧板模擬報告</div>
-          <div id="reportSub" class="report-sub">Generated report</div>
-        </div>
-        <div id="reportBadge" class="report-badge-clean">報告預覽</div>
-      </div>
-
-      <div class="report-metrics">
-        <div class="report-metric"><div id="rQtyLabel" class="k">產品總數量</div><div id="rQty" class="v">-</div></div>
-        <div class="report-metric"><div id="rPalletsLabel" class="k">棧板數</div><div id="rPallets" class="v">-</div></div>
-        <div class="report-metric"><div id="rCargoSizeLabel" class="k">貨物尺寸</div><div id="rCargoSize" class="v">-</div></div>
-        <div class="report-metric priority"><div id="rOuterSizeLabel" class="k">運輸外部尺寸</div><div id="rOuterSize" class="v">-</div></div>
-        <div class="report-metric priority"><div id="rWeightLabel" class="k">總毛重</div><div id="rWeight" class="v">-</div></div>
-        <div class="report-metric priority"><div id="rCBMLabel" class="k">總運輸 CBM</div><div id="rCBM" class="v">-</div></div>
-      </div>
-
-      <div class="report-grid">
-        <div class="report-image">
-          <img id="reportImage" alt="3D pallet preview">
-          <div id="reportCaption" class="report-caption">3D preview</div>
-        </div>
-
-        <div class="report-box">
-          <h4 id="reportSummaryTitle">出貨摘要</h4>
-          <div id="reportSummary" class="report-kv"></div>
-        </div>
-      </div>
-
-      <div class="report-box report-table" style="margin-top:14px">
-        <h4 id="reportBreakdownTitle">棧板明細</h4>
-        <table>
-          <thead id="reportTableHead"><tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>完成尺寸 (cm)</th><th>毛重 (kg)</th><th>CBM</th></tr></thead>
-          <tbody id="reportTableBody"></tbody>
-        </table>
-      </div>
-
-      <div class="report-note">
-        <h4 id="reportShippingTitle" style="margin:0 0 12px;font-size:15px;color:#334155">貨運資料</h4>
-        <div id="reportShipping"></div>
-      </div>
+  <div id="reportPage" class="report-page">
+    <div class="report-actions">
+      <button type="button" id="downloadWord" class="btn btnsecondary">下載 Word</button>
+      <button type="button" id="generatePdf" class="btn primary">下載 PDF</button>
     </div>
-  </section>
+    <div id="shippingSheetContent"></div>
+  </div>
+</section>
 </main>
 </div>
 
 <section id="containerModePanel" class="container-mode">
   <div class="container-shell">
     <aside class="card container-settings">
-      <div class="section">
-        <h2>貨櫃設定</h2>
-        <p class="muted">20 呎貨櫃已帶入目前使用的內部尺寸</p>
-        <label>貨櫃模板
-          <select id="cContainerPreset">
-            <option value="20ft">20FT｜590 × 235 × 239 cm</option>
-            <option value="40ft">40FT｜1203 × 235 × 239 cm</option>
-            <option value="40hq">40HQ｜1203 × 235 × 269 cm</option>
-            <option value="custom">自訂貨櫃</option>
-          </select>
-        </label>
-        <div class="container-grid3" style="margin-top:8px">
-          <label>內長 cm<input id="cL" type="number" value="590" min="1"></label>
-          <label>內寬 cm<input id="cW" type="number" value="235" min="1"></label>
-          <label>內高 cm<input id="cH" type="number" value="239" min="1"></label>
-        </div>
-        <div class="container-preset-note">
-          尺寸可自行修改；預設值先作為模擬用。正式出貨仍建議依實際船公司／貨櫃規格確認。
+      <div class="container-side-section">
+        <div class="container-side-title">產品</div>
+        <div class="container-summary-card">
+          <div class="top"><span id="cProductSummaryName">W-888 一般風扇</span><button type="button" id="cProductEdit" class="container-linkbtn">修改</button></div>
+          <div id="cProductSummaryMeta" class="sub">62 × 62 × 18 cm｜5.56 kg</div>
         </div>
       </div>
 
-      <div class="section">
-        <h2>裝櫃方式</h2>
-        <div class="load-method-tabs">
-          <button type="button" id="loadPallet" class="active">棧板裝櫃</button>
-          <button type="button" id="loadFloor">散裝 Floor Loading</button>
+      <div class="container-side-section">
+        <div class="container-side-title">出貨數量</div>
+        <div class="container-qty-inline">
+          <button type="button" id="cMinus10">-10</button>
+          <button type="button" id="cMinus1">-1</button>
+          <input id="cQty" type="number" value="50" min="0" aria-label="出貨數量">
+          <button type="button" id="cPlus1" class="plus">+1</button>
+          <button type="button" id="cPlus10" class="plus">+10</button>
         </div>
-        <div id="palletLoadHint" class="layoutinfo" style="margin-top:8px"></div>
+        <div id="cQtyDisplay" class="hidden">50</div>
+      </div>
+
+      <div class="container-side-section">
+        <div class="container-side-title">裝櫃方式</div>
+        <div class="container-method-tabs">
+          <button type="button" id="loadPallet" class="active">棧板裝櫃</button>
+          <button type="button" id="loadFloor">散裝</button>
+        </div>
+        <div id="palletLoadHint" class="container-method-note"></div>
         <div id="floorLoadOptions" class="hidden" style="margin-top:8px">
           <label>散裝排法
             <select id="floorLayoutMode">
@@ -743,84 +975,86 @@ body.dark .container-3d-toolbar button.active{background:#2563a6;color:#fff;bord
         </div>
       </div>
 
-      <div class="section">
-        <h2>貨品設定</h2>
-        <label>產品名稱<input id="cProductName" value="W-888 Ceiling Fan"></label>
-        <div class="container-grid3" style="margin-top:8px">
-          <label>箱長 cm<input id="cBoxL" type="number" value="62" min="1"></label>
-          <label>箱寬 cm<input id="cBoxW" type="number" value="18" min="1"></label>
-          <label>箱高 cm<input id="cBoxH" type="number" value="62" min="1"></label>
+      <div class="container-side-section">
+        <div class="container-side-title">貨櫃規格</div>
+        <div class="container-summary-card">
+          <div class="top"><span id="cContainerSummary">20FT｜590 × 235 × 239 cm</span><button type="button" id="cContainerEdit" class="container-linkbtn">修改</button></div>
         </div>
-        <div style="margin-top:8px">
-          <label>總數量<input id="cQty" type="number" value="351" min="0"></label>
-          <div class="container-qty-counter">
-            <button type="button" id="cMinus10">-10</button>
-            <button type="button" id="cMinus1">-1</button>
-            <div id="cQtyDisplay" class="qty-display">351</div>
-            <button type="button" id="cPlus1">+1</button>
-            <button type="button" id="cPlus10">+10</button>
-          </div>
-        </div>
-        <label style="margin-top:8px">單箱重量 kg<input id="cUnitWeight" type="number" value="5.56" min="0" step="0.01"></label>
-        <button type="button" id="syncFromPallet" class="btn full" style="margin-top:8px">從棧板模式帶入產品資料</button>
       </div>
 
-      <div class="container-alert">
-        棧板裝櫃會先依目前棧板模式計算「每板可放幾台」，再計算一個 20FT 可放幾板。散裝則直接依紙箱尺寸計算。
+      <div class="container-side-section" style="margin-bottom:0">
+        <div class="container-side-title">輸出</div>
+        <div class="container-output-row">
+          <button type="button" id="cDownloadImage" class="btn btnsecondary">產生 3D 圖片</button>
+          <button type="button" id="cBuildReport" class="btn btnsecondary">產生出貨單</button>
+        </div>
+        <div class="container-output-lang"><span>出貨單語言</span><select id="cReportLanguage"><option value="zh">中文</option><option value="en">English</option></select></div>
+        <div id="cActionStatus" class="hint" style="text-align:left;min-height:18px;margin-top:6px"></div>
+      </div>
+
+      <div class="hidden" aria-hidden="true">
+        <input id="cProductName" value="W-888 Ceiling Fan">
+        <input id="cBoxL" type="number" value="62"><input id="cBoxW" type="number" value="18"><input id="cBoxH" type="number" value="62">
+        <input id="cUnitWeight" type="number" value="5.56">
       </div>
     </aside>
 
     <main>
       <div class="container-summary">
-        <div class="metric"><div class="k">目前數量</div><div id="cMQty" class="v">351</div></div>
+        <div class="metric"><div class="k">目前數量</div><div id="cMQty" class="v">50</div></div>
         <div class="metric important"><div class="k">單櫃最大台數</div><div id="cMCapacity" class="v">240</div></div>
-        <div class="metric"><div class="k">需要貨櫃</div><div id="cMContainers" class="v">2</div></div>
-        <div class="metric important"><div class="k">裝載方式</div><div id="cMMethod" class="v">棧板</div></div>
+        <div class="metric"><div class="k">需要貨櫃</div><div id="cMContainers" class="v">1</div></div>
+        <div class="metric important"><div class="k">裝櫃方式</div><div id="cMMethod" class="v">棧板</div></div>
       </div>
 
-      <section class="container-result-card">
-        <h3 id="cResultTitle">20FT 棧板裝櫃結果</h3>
-        <div id="cResultKV" class="container-kv"></div>
-        <div id="cDistribution" class="container-distribution"></div>
+      <section class="container-current-card">
+        <div class="container-current-head">
+          <h3 id="cCurrentTitle">目前查看：第 1 櫃</h3>
+          <div id="cContainerTabs" class="container-tabs"></div>
+        </div>
+        <div class="container-current-grid">
+          <div class="container-current-item"><div class="k">本櫃產品</div><div id="cCurrentQty" class="v">—</div></div>
+          <div class="container-current-item"><div class="k" id="cCurrentSecondLabel">棧板數</div><div id="cCurrentSecond" class="v">—</div></div>
+          <div class="container-current-item"><div class="k">貨櫃規格</div><div id="cCurrentType" class="v">—</div></div>
+          <div class="container-current-item"><div class="k">裝載尺寸</div><div id="cCurrentUsed" class="v">—</div></div>
+          <div class="container-current-item"><div class="k">貨物重量</div><div id="cCurrentWeight" class="v">—</div></div>
+        </div>
       </section>
 
       <section class="container-3d-card">
-        <h3>3D 貨櫃模擬</h3>
-        <div class="container-3d-toolbar">
-          <button type="button" id="shellSemi" class="active">半透明外殼</button>
-          <button type="button" id="shellSolid">顯示外殼</button>
+        <div class="container-3d-head"><h3>3D 貨櫃預覽</h3>
+          <details id="containerViewDropdown" class="view-dropdown viewer-local-dropdown">
+            <summary>3D 檢視 ▾</summary>
+            <div class="view-menu view-menu-right">
+              <div class="container-3d-toolbar container-shell-row"><button type="button" id="shellSemi" class="active">半透明</button><button type="button" id="shellSolid">實體外殼</button></div>
+              <div class="container-3d-toolbar container-view-row"><button type="button" id="cViewFront">前視</button><button type="button" id="cViewTop">頂視</button><button type="button" id="cViewSide">側視</button><button type="button" id="cViewAngle" class="active">全景</button></div>
+            </div>
+          </details>
         </div>
         <div id="container3D"></div>
-        <div class="container-3d-toolbar">
-          <button type="button" id="cViewFront">前視</button>
-          <button type="button" id="cViewTop">頂視</button>
-          <button type="button" id="cViewSide">側視</button>
-          <button type="button" id="cViewAngle" class="active">斜角</button>
-          <button type="button" id="cViewReset">重設</button>
-        </div>
-        <div id="container3DNote" class="container-3d-note">四邊完整框體＋左右雙門外開｜紙箱改為貼齊排列版（兩扇門都打開），補上未開門側與左側上緣的邊框線，方便同時看見貨櫃輪廓與內部排列。</div>
+        <div id="container3DNote" class="container-3d-note">目前貨櫃與裝載結果的 3D 預覽。</div>
       </section>
 
       <section class="container-result-card">
-        <h3>貨櫃排列視圖</h3>
-        <div class="ortho-grid">
-          <div class="ortho-card">
-            <h4>頂視圖 Top View</h4>
-            <div class="ortho-frame"><div id="viewTop" class="pack-grid"></div></div>
-            <div id="viewTopNote" class="view-note"></div>
+        <details class="collapse-tools" style="margin:0">
+          <summary>裝櫃明細 ▾</summary>
+          <div class="collapse-body">
+            <div id="cResultKV" class="container-detail-grid"></div>
+            <div style="height:12px"></div>
+            <details class="collapse-tools" style="margin:0"><summary>排列視圖（頂視／正視／側視） ▾</summary><div class="collapse-body"><div class="ortho-grid">
+              <div class="ortho-card"><h4>頂視圖 Top View</h4><div class="ortho-frame"><div id="viewTop" class="pack-grid"></div></div><div id="viewTopNote" class="view-note"></div></div>
+              <div class="ortho-card"><h4>側內正視圖 Front Interior View</h4><div class="ortho-frame"><div id="viewFront" class="pack-grid"></div></div><div id="viewFrontNote" class="view-note"></div></div>
+              <div class="ortho-card"><h4>櫃內側視圖 Side Interior View</h4><div class="ortho-frame"><div id="viewSide" class="pack-grid"></div></div><div id="viewSideNote" class="view-note"></div></div>
+            </div><div id="cFootnote" class="container-footnote"></div></div></details>
           </div>
-          <div class="ortho-card">
-            <h4>側內正視圖 Front Interior View</h4>
-            <div class="ortho-frame"><div id="viewFront" class="pack-grid"></div></div>
-            <div id="viewFrontNote" class="view-note"></div>
-          </div>
-          <div class="ortho-card">
-            <h4>櫃內側視圖 Side Interior View</h4>
-            <div class="ortho-frame"><div id="viewSide" class="pack-grid"></div></div>
-            <div id="viewSideNote" class="view-note"></div>
-          </div>
+        </details>
+      </section>
+
+      <section id="containerReportWrap">
+        <div id="containerReportPage">
+          <div class="container-report-actions"><button type="button" id="cDownloadWord" class="btn btnsecondary">下載 Word</button><button type="button" id="cGeneratePdf" class="btn primary">下載 PDF</button></div>
+          <div id="cShippingSheetContent"></div>
         </div>
-        <div id="cFootnote" class="container-footnote"></div>
       </section>
     </main>
   </div>
@@ -828,16 +1062,92 @@ body.dark .container-3d-toolbar button.active{background:#2563a6;color:#fff;bord
 </div>
 </div>
 
+<div id="containerSpecModal" class="sidebar-modal" aria-hidden="true">
+  <div class="sidebar-modal-card">
+    <div class="sidebar-modal-head"><div><h2>貨櫃規格</h2><p>選擇貨櫃模板或修改內部尺寸。</p></div><button type="button" class="sidebar-modal-close" data-close-modal="containerSpecModal">關閉</button></div>
+    <label>貨櫃模板<select id="cContainerPreset"><option value="20ft">20FT｜590 × 235 × 239 cm</option><option value="40ft">40FT｜1203 × 235 × 239 cm</option><option value="40hq">40HQ｜1203 × 235 × 269 cm</option><option value="custom">自訂貨櫃</option></select></label>
+    <div class="container-grid3" style="margin-top:8px"><label>內長 cm<input id="cL" type="number" value="590" min="1"></label><label>內寬 cm<input id="cW" type="number" value="235" min="1"></label><label>內高 cm<input id="cH" type="number" value="239" min="1"></label></div>
+    <div class="modal-actions"><button type="button" class="btn primary" data-close-modal="containerSpecModal">完成</button></div>
+  </div>
+</div>
+
+
+<div id="productModal" class="sidebar-modal" aria-hidden="true">
+  <div class="sidebar-modal-card">
+    <div class="sidebar-modal-head"><div><h2>產品資料</h2><p>平常使用固定資料，只有需要時再修改。</p></div><button type="button" class="sidebar-modal-close" data-close-modal="productModal">關閉</button></div>
+    <label>產品模板<select id="productTemplate"><option value="w888">W-888 一般風扇</option><option value="custom">自訂產品</option></select></label>
+    <label style="margin-top:8px">產品名稱<input id="productName" value="W-888 Ceiling Fan"></label>
+    <div class="grid3" style="margin-top:8px"><label>正面寬<input id="boxW" type="number" value="62" min="1"></label><label>高度<input id="boxH" type="number" value="62" min="1"></label><label>厚度<input id="boxD" type="number" value="18" min="1"></label></div>
+    <label style="margin-top:8px">單台重量 kg<input id="unitWeight" type="number" value="5.56" min="0" step="0.01"></label>
+    <div class="modal-actions"><button type="button" class="btn primary" data-close-modal="productModal">完成</button></div>
+  </div>
+</div>
+
+<div id="palletEditModal" class="sidebar-modal" aria-hidden="true">
+  <div class="sidebar-modal-card">
+    <div class="sidebar-modal-head"><div><h2>手動修改棧板尺寸</h2><p>直接指定目前要模擬的棧板。</p></div><button type="button" class="sidebar-modal-close" data-close-modal="palletEditModal">關閉</button></div>
+    <label>棧板模板<select id="palletTemplate"><option value="130x110">130 × 110 cm</option><option value="120x100">120 × 100 cm</option><option value="120x80">120 × 80 cm</option><option value="110x110">110 × 110 cm</option><option value="custom">自訂尺寸</option></select></label>
+    <div class="grid3" style="margin-top:8px"><label>長度<input id="palletL" type="number" value="130" min="1"></label><label>寬度<input id="palletW" type="number" value="110" min="1"></label><label>高度<input id="palletH" type="number" value="15" min="0"></label></div>
+    <label style="margin-top:8px">棧板重量 kg<input id="palletWeight" type="number" value="0" min="0" step="0.1"></label>
+    <div class="modal-actions"><button type="button" class="btn primary" data-close-modal="palletEditModal">完成</button></div>
+  </div>
+</div>
+
+<div id="transportModal" class="sidebar-modal" aria-hidden="true">
+  <div class="sidebar-modal-card">
+    <div class="sidebar-modal-head"><div><h2>運輸與限制</h2><p>預設最高 3 層；特殊出貨再調整。</p></div><button type="button" class="sidebar-modal-close" data-close-modal="transportModal">關閉</button></div>
+    <label>排法模式<select id="layoutMode"><option value="template">W-888 固定排法（2 欄 × 5 排）</option><option value="auto">系統自動最佳排法</option><option value="manual">手動指定排法</option></select></label>
+    <div id="manualLayout" class="grid2 hidden" style="margin-top:8px"><label>每排欄數<input id="manualCols" type="number" value="2" min="1"></label><label>排數<input id="manualRows" type="number" value="5" min="1"></label></div>
+    <div id="layoutInfo" class="layoutinfo"></div>
+    <label style="margin-top:8px">分板模式<select id="distribution"><option value="minimum">最少棧板數</option><option value="balanced">平均分配</option></select></label>
+    <label style="margin-top:8px">運輸方式<select id="transportMode"><option value="sea">海運</option><option value="air">空運</option><option value="custom">自訂</option></select></label>
+    <label id="seaTypeWrap" style="margin-top:8px">貨櫃類型<select id="seaType"><option value="standard">一般櫃</option><option value="highcube">高櫃</option><option value="custom">自訂高度</option></select></label>
+    <div class="grid2" style="margin-top:8px"><label>最高層數<input id="maxLayers" type="number" value="3" min="1" max="10"></label><label>整板最高限制 cm<input id="maxHeight" type="number" value="220" min="1"></label></div>
+    <div id="transportHint" class="notice" style="margin-top:8px"></div>
+    <label style="margin-top:8px">每板重量上限 kg<input id="maxWeight" type="number" value="500" min="1"></label>
+    <div id="errorBox" class="errbox hidden"></div>
+    <div class="modal-actions"><button type="button" class="btn primary" data-close-modal="transportModal">完成</button></div>
+  </div>
+</div>
+
+<div id="smartModal" class="smart-modal" aria-hidden="true">
+  <div class="smart-modal-card">
+    <div class="smart-modal-head">
+      <div><h2>智慧選板</h2><p>目前出貨數量：<b id="smartModalQty">50 台</b>｜產品底面：<b id="smartModalBox">62 × 18 cm</b></p></div>
+      <button type="button" id="closeSmartModal" class="btn btnsecondary">關閉</button>
+    </div>
+    <div class="smart-mode-tabs">
+      <button type="button" id="smartModeExisting" class="active">使用現有棧板</button>
+      <button type="button" id="smartModeRecommend">推薦棧板尺寸</button>
+    </div>
+    <div id="smartPaneExisting" class="smart-pane active">
+      <div class="recommended-note">輸入目前可用的棧板尺寸與數量，系統會先安排現有棧板，不足時再建議需要補的尺寸與板數。</div>
+      <div class="smart-limit-row"><label>最高層數<input id="smartMaxLayers" type="number" value="3" min="1" max="10"></label><label>整板限高 cm<input id="smartMaxHeight" type="number" value="220" min="1"></label></div>
+      <div id="palletEntryList" class="pallet-entry-list" style="margin-top:10px"></div>
+      <div class="smart-actions"><button type="button" id="addPalletEntry" class="btn btnsecondary">＋ 新增尺寸</button><button type="button" id="runExistingSearch" class="btn primary">開始規劃</button></div>
+    </div>
+    <div id="smartPaneRecommend" class="smart-pane">
+      <div class="recommended-note">依目前出貨數量、最高層數與限高，推薦合適的棧板尺寸與所需板數。</div>
+      <div class="smart-limit-row"><label>最高層數<input id="smartRecommendMaxLayers" type="number" value="3" min="1" max="10"></label><label>整板限高 cm<input id="smartRecommendMaxHeight" type="number" value="220" min="1"></label></div>
+      <div class="smart-actions"><button type="button" id="runRecommendSearch" class="btn primary">開始規劃</button></div>
+    </div>
+    <div id="smartResultsV2" class="smart-results-v2"></div>
+  </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.164.1/+esm';
 import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.164.1/examples/jsm/controls/OrbitControls.js/+esm';
 
 const $=id=>document.getElementById(id);
-const ids=['productName','boxW','boxH','boxD','unitWeight','qtyInput','palletL','palletW','palletH','palletWeight','layoutMode','distribution','maxHeight','maxWeight','manualCols','manualRows'];
+const ids=['productName','boxW','boxH','boxD','unitWeight','qtyInput','palletL','palletW','palletH','palletWeight','layoutMode','distribution','maxLayers','maxHeight','maxWeight','manualCols','manualRows'];
 const inputs=Object.fromEntries(ids.map(id=>[id,$(id)]));
 let selectedPallet=0, result=null, palletGroup=null, productGroup=null;
+let smartAppliedPlan=null;
+let smartShipmentConfig=null;
 
 const viewer=$('viewer'), scene=new THREE.Scene();scene.background=new THREE.Color(0xf3f4f6);
 const camera=new THREE.PerspectiveCamera(38,1,.1,4000);camera.position.set(220,185,235);
@@ -847,71 +1157,205 @@ scene.add(new THREE.HemisphereLight(0xffffff,0x667085,2.1));const light=new THRE
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(1000,1000),new THREE.MeshStandardMaterial({color:0xe5e7eb,roughness:.9}));floor.rotation.x=-Math.PI/2;floor.position.y=-8;floor.receiveShadow=true;scene.add(floor);const grid=new THREE.GridHelper(800,32,0x9ca3af,0xd1d5db);grid.position.y=-7.8;scene.add(grid);
 
 function num(id,min=0){return Math.max(min,Number($(id).value)||0)}
-function cfg(){return{productName:$('productName').value||'Product',boxW:num('boxW',1),boxH:num('boxH',1),boxD:num('boxD',1),unitWeight:num('unitWeight'),qty:Math.floor(num('qtyInput')),palletL:num('palletL',1),palletW:num('palletW',1),palletH:num('palletH'),palletWeight:num('palletWeight'),layoutMode:$('layoutMode').value,distribution:$('distribution').value,maxHeight:num('maxHeight',1),maxWeight:num('maxWeight',1),productMaxLayers:3,manualCols:Math.max(1,Math.floor(num('manualCols',1))),manualRows:Math.max(1,Math.floor(num('manualRows',1)))}}
-function chooseLayout(c){if(c.layoutMode==='template')return{cols:2,rows:5,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'W-888 固定排法'};if(c.layoutMode==='manual')return{cols:c.manualCols,rows:c.manualRows,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'手動指定排法'};const a={cols:Math.floor(c.palletL/c.boxW),rows:Math.floor(c.palletW/c.boxD),dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'原方向'};const b={cols:Math.floor(c.palletL/c.boxD),rows:Math.floor(c.palletW/c.boxW),dimX:c.boxD,dimZ:c.boxW,rotated:true,label:'旋轉 90°'};a.count=a.cols*a.rows;b.count=b.cols*b.rows;return b.count>a.count?b:a}
-function plan(c){const layout=chooseLayout(c);const perLayer=Math.max(0,layout.cols*layout.rows);if(!perLayer)return{error:'目前尺寸無法放入任何一箱。'};const usedL=layout.cols*layout.dimX,usedW=layout.rows*layout.dimZ;if(usedL>c.palletL||usedW>c.palletW)return{error:`目前排法需要 ${usedL} × ${usedW} cm，已超出 ${c.palletL} × ${c.palletW} cm 棧板。`};const heightLayers=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));const weightUnits=Math.max(0,Math.floor((c.maxWeight-c.palletWeight)/Math.max(c.unitWeight,.000001)));const allowedLayers=Math.min(c.productMaxLayers,heightLayers);const cap=Math.min(perLayer*allowedLayers,weightUnits);if(cap<=0)return{error:'高度或重量限制使每板無法放入產品。'};const count=Math.max(1,Math.ceil(c.qty/cap));let alloc=[];if(c.qty===0)alloc=[];else if(c.distribution==='balanced'){const base=Math.floor(c.qty/count),extra=c.qty%count;alloc=Array.from({length:count},(_,i)=>base+(i<extra?1:0))}else{let r=c.qty;while(r>0){const t=Math.min(cap,r);alloc.push(t);r-=t}}const pallets=alloc.map((q,i)=>{const layers=Math.ceil(q/perLayer),height=c.palletH+layers*c.boxH,cargoWeight=q*c.unitWeight,gross=cargoWeight+c.palletWeight,stackCBM=(usedL*usedW*height)/1e6,transportCBM=(c.palletL*c.palletW*height)/1e6;return{index:i,q,layers,height,cargoWeight,gross,stackCBM,transportCBM}});const productCBM=c.qty*c.boxW*c.boxH*c.boxD/1e6,totalGross=pallets.reduce((s,p)=>s+p.gross,0),totalTransport=pallets.reduce((s,p)=>s+p.transportCBM,0),usage=Math.min(999,(usedL*usedW/(c.palletL*c.palletW))*100);return{c,layout,perLayer,usedL,usedW,cap,pallets,productCBM,totalGross,totalTransport,usage}}
+function cfg(){return{productName:$('productName').value||'Product',boxW:num('boxW',1),boxH:num('boxH',1),boxD:num('boxD',1),unitWeight:num('unitWeight'),qty:Math.floor(num('qtyInput')),palletL:num('palletL',1),palletW:num('palletW',1),palletH:num('palletH'),palletWeight:num('palletWeight'),layoutMode:$('layoutMode').value,distribution:$('distribution').value,maxHeight:num('maxHeight',1),maxWeight:num('maxWeight',1),productMaxLayers:Math.max(1,Math.floor(num('maxLayers',1))),manualCols:Math.max(1,Math.floor(num('manualCols',1))),manualRows:Math.max(1,Math.floor(num('manualRows',1)))}}
+function chooseLayout(c){
+  if(smartAppliedPlan && Math.abs(smartAppliedPlan.palletL-c.palletL)<.01 && Math.abs(smartAppliedPlan.palletW-c.palletW)<.01 && Math.abs(smartAppliedPlan.boxW-c.boxW)<.01 && Math.abs(smartAppliedPlan.boxD-c.boxD)<.01){
+    return{customRects:smartAppliedPlan.rects,label:smartAppliedPlan.label||'智慧混合排列',rotated:false};
+  }
+  if(c.layoutMode==='template')return{cols:2,rows:5,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'W-888 固定排法'};
+  if(c.layoutMode==='manual')return{cols:c.manualCols,rows:c.manualRows,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'手動指定排法'};
+  const a={cols:Math.floor(c.palletL/c.boxW),rows:Math.floor(c.palletW/c.boxD),dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'原方向'};
+  const b={cols:Math.floor(c.palletL/c.boxD),rows:Math.floor(c.palletW/c.boxW),dimX:c.boxD,dimZ:c.boxW,rotated:true,label:'旋轉 90°'};
+  a.count=a.cols*a.rows;b.count=b.cols*b.rows;return b.count>a.count?b:a
+}
+function plan(c){
+  const layout=chooseLayout(c);
+  const perLayer=layout.customRects?layout.customRects.length:Math.max(0,layout.cols*layout.rows);
+  if(!perLayer)return{error:'目前尺寸無法放入任何一箱。'};
+  const usedL=layout.customRects?Math.max(...layout.customRects.map(r=>r.x+r.w))-Math.min(...layout.customRects.map(r=>r.x)):layout.cols*layout.dimX;
+  const usedW=layout.customRects?Math.max(...layout.customRects.map(r=>r.y+r.h))-Math.min(...layout.customRects.map(r=>r.y)):layout.rows*layout.dimZ;
+  if(usedL>c.palletL+.01||usedW>c.palletW+.01)return{error:`目前排法需要 ${usedL} × ${usedW} cm，已超出 ${c.palletL} × ${c.palletW} cm 棧板。`};
+  const heightLayers=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));
+  const weightUnits=Math.max(0,Math.floor((c.maxWeight-c.palletWeight)/Math.max(c.unitWeight,.000001)));
+  const allowedLayers=Math.min(c.productMaxLayers,heightLayers);
+  const cap=Math.min(perLayer*allowedLayers,weightUnits);
+  if(cap<=0)return{error:'高度或重量限制使每板無法放入產品。'};
+  const count=Math.max(1,Math.ceil(c.qty/cap));let alloc=[];
+  if(c.qty===0)alloc=[];else if(c.distribution==='balanced'){const base=Math.floor(c.qty/count),extra=c.qty%count;alloc=Array.from({length:count},(_,i)=>base+(i<extra?1:0))}else{let r=c.qty;while(r>0){const t=Math.min(cap,r);alloc.push(t);r-=t}}
+  const pallets=alloc.map((q,i)=>{const layers=Math.ceil(q/perLayer),height=c.palletH+layers*c.boxH,cargoWeight=q*c.unitWeight,gross=cargoWeight+c.palletWeight,stackCBM=(usedL*usedW*height)/1e6,transportCBM=(c.palletL*c.palletW*height)/1e6;return{index:i,q,layers,height,cargoWeight,gross,stackCBM,transportCBM}});
+  const productCBM=c.qty*c.boxW*c.boxH*c.boxD/1e6,totalGross=pallets.reduce((s,p)=>s+p.gross,0),totalTransport=pallets.reduce((s,p)=>s+p.transportCBM,0),usage=Math.min(999,(usedL*usedW/(c.palletL*c.palletW))*100);
+  return{c,layout,perLayer,usedL,usedW,cap,pallets,productCBM,totalGross,totalTransport,usage}
+}
+function boundsForRects(rects){
+  if(!rects||!rects.length)return{usedL:0,usedW:0};
+  const minX=Math.min(...rects.map(r=>r.x)),maxX=Math.max(...rects.map(r=>r.x+r.w));
+  const minY=Math.min(...rects.map(r=>r.y)),maxY=Math.max(...rects.map(r=>r.y+r.h));
+  return{usedL:maxX-minX,usedW:maxY-minY};
+}
+function palletOptionFor(c,L,W){
+  const a=Math.round(c.boxW),d=Math.round(c.boxD);
+  const direct=searchMixedLayout(L,W,a,d);
+  const swappedRaw=searchMixedLayout(W,L,a,d);
+  const swapped=swappedRaw.map(r=>({x:r.y,y:W-(r.x+r.w),w:r.h,h:r.w}));
+  const edgeScore=rects=>rects.reduce((sum,r)=>sum+(r.x===0)+(r.y===0)+(Math.abs(r.x+r.w-L)<.01)+(Math.abs(r.y+r.h-W)<.01),0);
+  const rects=swapped.length>direct.length||(swapped.length===direct.length&&edgeScore(swapped)>edgeScore(direct))?swapped:direct;
+  const perLayer=rects.length;
+  const heightLayers=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));
+  const layers=Math.min(c.productMaxLayers,heightLayers);
+  const weightUnits=Math.max(0,Math.floor((c.maxWeight-c.palletWeight)/Math.max(c.unitWeight,.000001)));
+  const cap=Math.min(perLayer*layers,weightUnits);
+  const b=boundsForRects(rects);
+  return{L,W,rects,perLayer,layers,cap,usedL:b.usedL,usedW:b.usedW,area:L*W};
+}
+function chooseSupplementOption(c,remaining){
+  const common=[[100,100],[110,100],[110,110],[120,100],[120,110],[130,100],[130,110]];
+  return common.map(([L,W])=>palletOptionFor(c,L,W)).filter(o=>o.cap>0).map(o=>({...o,need:Math.ceil(remaining/o.cap)})).sort((a,b)=>a.need-b.need||a.need*a.area-b.need*b.area||b.cap-a.cap)[0]||null;
+}
+function buildMixedShipmentPlan(c,config){
+  let remaining=c.qty;
+  const types=(config.entries||[]).map(e=>{const L=Number(e[0]),W=Number(e[1]),count=Math.max(0,Math.floor(Number(e[2])||0));return{...palletOptionFor(c,L,W),count,source:'existing'}}).filter(o=>o.cap>0&&o.count>0);
+  types.sort((a,b)=>b.cap-a.cap||a.area-b.area);
+  const pallets=[];let existingUsed=0;
+  const addPallet=(opt,q,source)=>{
+    const layers=Math.max(1,Math.ceil(q/opt.perLayer));
+    const height=c.palletH+layers*c.boxH;
+    const cargoWeight=q*c.unitWeight,gross=cargoWeight+c.palletWeight;
+    const transportCBM=opt.L*opt.W*height/1e6;
+    const stackCBM=opt.usedL*opt.usedW*height/1e6;
+    const pc={...c,palletL:opt.L,palletW:opt.W};
+    pallets.push({index:pallets.length,q,layers,height,cargoWeight,gross,transportCBM,stackCBM,palletL:opt.L,palletW:opt.W,usedL:opt.usedL,usedW:opt.usedW,perLayer:opt.perLayer,layout:{customRects:opt.rects,label:'實務混合排列'},c:pc,source});
+  };
+  for(const opt of types){
+    for(let i=0;i<opt.count&&remaining>0;i++){const q=Math.min(opt.cap,remaining);addPallet(opt,q,'existing');remaining-=q;existingUsed++;}
+    if(remaining<=0)break;
+  }
+  let supplement=null,supplementUsed=0;
+  if(remaining>0){
+    supplement=chooseSupplementOption(c,remaining);
+    if(!supplement)return{error:'目前限制下找不到可補充的棧板尺寸。'};
+    while(remaining>0){const q=Math.min(supplement.cap,remaining);addPallet(supplement,q,'supplement');remaining-=q;supplementUsed++;}
+  }
+  const totalGross=pallets.reduce((s,p)=>s+p.gross,0),totalTransport=pallets.reduce((s,p)=>s+p.transportCBM,0),productCBM=c.qty*c.boxW*c.boxH*c.boxD/1e6;
+  return{mixed:true,c,pallets,totalGross,totalTransport,productCBM,existingUsed,supplementUsed,supplement,stockTypes:types};
+}
 function dispose(g){if(!g)return;g.traverse(o=>{if(o.geometry)o.geometry.dispose();if(o.material){(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose())}});scene.remove(g)}
 function createPallet(c){palletGroup=new THREE.Group();const wood=new THREE.MeshStandardMaterial({color:0xa97449,roughness:.78}),slats=7,gap=2.2,sw=(c.palletL-gap*(slats-1))/slats;for(let i=0;i<slats;i++){const s=new THREE.Mesh(new THREE.BoxGeometry(sw,4.5,c.palletW),wood);s.position.set(-c.palletL/2+sw/2+i*(sw+gap),5.5,0);s.castShadow=s.receiveShadow=true;palletGroup.add(s)}[-c.palletW*.34,0,c.palletW*.34].forEach(z=>{const s=new THREE.Mesh(new THREE.BoxGeometry(c.palletL,7,9),wood);s.position.set(0,0,z);s.castShadow=s.receiveShadow=true;palletGroup.add(s)});scene.add(palletGroup)}
-function addDetails(box,c,rotated){
-const edges=new THREE.LineSegments(new THREE.EdgesGeometry(box.geometry),new THREE.LineBasicMaterial({color:0x6e4b31,transparent:true,opacity:.45}));box.add(edges);
-const faceW=rotated?c.boxD:c.boxW,depth=rotated?c.boxW:c.boxD;
-const tape=new THREE.Mesh(
-  new THREE.BoxGeometry(faceW*.99,.3,Math.max(2.8,depth*.075)),
-  new THREE.MeshStandardMaterial({color:0xd8c49a,roughness:.72,metalness:0,transparent:true,opacity:.94})
-);
-tape.position.set(0,c.boxH/2+.18,0);
-tape.receiveShadow=true;
-box.add(tape);
-const r=Math.max(.75,Math.min(depth*.065,1.15)),holeY=c.boxH*.18,off=depth*.23,eps=.04;
-[-1,1].forEach(sx=>[-1,1].forEach(sz=>{
-  const h=new THREE.Mesh(new THREE.CircleGeometry(r,24),new THREE.MeshBasicMaterial({color:0x111111,side:THREE.DoubleSide,depthWrite:false}));
-  h.rotation.y=sx===1?-Math.PI/2:Math.PI/2;
-  h.position.set(sx*(faceW/2+eps),holeY,sz*off);
-  box.add(h)
-}))
+function addDetails(box,c,boxL,boxD){
+  const edges=new THREE.LineSegments(new THREE.EdgesGeometry(box.geometry),new THREE.LineBasicMaterial({color:0x6e4b31,transparent:true,opacity:.45}));box.add(edges);
+  // Sealing tape ALWAYS follows the long edge of the carton top.
+  const alongX=boxL>=boxD;
+  const tape=new THREE.Mesh(
+    new THREE.BoxGeometry(alongX?boxL*.99:Math.max(2.8,boxL*.075),.3,alongX?Math.max(2.8,boxD*.075):boxD*.99),
+    new THREE.MeshStandardMaterial({color:0xd8c49a,roughness:.72,metalness:0,transparent:true,opacity:.94})
+  );
+  tape.position.set(0,c.boxH/2+.18,0);tape.receiveShadow=true;box.add(tape);
+  // Two small round handle holes on the narrow side, matching the approved carton appearance.
+  const narrow=Math.min(boxL,boxD),r=Math.max(.7,Math.min(narrow*.055,1.05)),holeY=c.boxH*.18,eps=.04,off=Math.max(r*2.2,narrow*.20);
+  [-1,1].forEach(k=>{
+    const h=new THREE.Mesh(new THREE.CircleGeometry(r,24),new THREE.MeshBasicMaterial({color:0x111111,side:THREE.DoubleSide,depthWrite:false}));
+    if(boxL>=boxD){h.rotation.y=-Math.PI/2;h.position.set(boxL/2+eps,holeY,k*off)}
+    else{h.rotation.x=-Math.PI/2;h.position.set(k*off,holeY,boxD/2+eps)}
+    box.add(h);
+  });
 }
-function createProducts(p){productGroup=new THREE.Group();const {c,layout,perLayer,usedL,usedW}=result,mat=new THREE.MeshStandardMaterial({color:0xb68a5a,roughness:.9});const startX=-usedL/2+layout.dimX/2,startZ=-usedW/2+layout.dimZ/2,topY=7.75;for(let i=0;i<p.q;i++){const layer=Math.floor(i/perLayer),idx=i%perLayer,row=Math.floor(idx/layout.cols),col=idx%layout.cols;const box=new THREE.Mesh(new THREE.BoxGeometry(layout.dimX,c.boxH,layout.dimZ),mat.clone());box.position.set(startX+col*layout.dimX,topY+c.boxH/2+layer*c.boxH,startZ+row*layout.dimZ);box.castShadow=box.receiveShadow=true;addDetails(box,c,layout.rotated);productGroup.add(box)}scene.add(productGroup)}
-function render3D(){if(!result||result.error)return;dispose(palletGroup);dispose(productGroup);createPallet(result.c);const p=result.pallets[selectedPallet];if(p)createProducts(p);const h=p?p.height:result.c.palletH;controls.target.set(0,Math.min(h*.42,145),0)}
-function updateUI(){const c=cfg();
-$('errorBox').classList.add('hidden');
-$('errorBox').textContent='';
-
-const byHeight=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));
-const finalLayers=Math.min(c.productMaxLayers,byHeight);
-const completedHeight=c.palletH+finalLayers*c.boxH;
-const remainingHeight=Math.max(0,c.maxHeight-completedHeight);
-const transportName=$('transportMode').value==='sea'?'海運':$('transportMode').value==='air'?'空運':'自訂';
-$('transportHint').innerHTML=`<b>${transportName}</b>｜整板最高 ${c.maxHeight} cm<br>運輸高度最多 ${byHeight} 層；產品安全上限 3 層；<b>實際採用 ${finalLayers} 層</b><br>完成高度 ${completedHeight} cm，剩餘 ${remainingHeight} cm。`;$('manualLayout').classList.toggle('hidden',c.layoutMode!=='manual');$('qtyCounter').textContent=c.qty;$('mQty').textContent=c.qty;result=plan(c);const previewLayout=chooseLayout(c),previewUsedL=previewLayout.cols*previewLayout.dimX,previewUsedW=previewLayout.rows*previewLayout.dimZ,remainL=c.palletL-previewUsedL,remainW=c.palletW-previewUsedW,diagram=Array.from({length:Math.min(previewLayout.rows,8)},()=>Array.from({length:Math.min(previewLayout.cols,10)},()=> '□').join(' ')).join('\n');$('layoutInfo').innerHTML=`<b>目前排法：${previewLayout.label}</b><br>${previewLayout.cols} 欄 × ${previewLayout.rows} 排，每層 <b>${previewLayout.cols*previewLayout.rows}</b> 箱<br>占地：${previewUsedL} × ${previewUsedW} cm<br>棧板剩餘：長邊 ${remainL} cm、寬邊 ${remainW} cm<div class="layoutdiagram">${diagram}</div>`;const errors=[];
-if(c.qty===0)errors.push('請先輸入產品數量。');
-if(remainL<0||remainW<0)errors.push('目前排法超出棧板範圍，請更換排法或棧板尺寸。');
-if(Math.floor((c.maxHeight-c.palletH)/c.boxH)<1)errors.push('目前整板高度限制不足以放入一層紙箱。');
-if(c.maxWeight<=c.palletWeight+c.unitWeight)errors.push('每板重量上限過低，無法放入任何紙箱。');
-if(errors.length){
-  $('errorBox').textContent=errors.join(' ');
-  $('errorBox').classList.remove('hidden');
+function createProducts(p){
+  productGroup=new THREE.Group();
+  const c=p.c||result.c,layout=p.layout||result.layout,perLayer=p.perLayer||result.perLayer,mat=new THREE.MeshStandardMaterial({color:0xb68a5a,roughness:.9});
+  const topY=7.75;
+  for(let i=0;i<p.q;i++){
+    const layer=Math.floor(i/perLayer),idx=i%perLayer;
+    let bx,bz,bw,bd,rot=false;
+    if(layout.customRects){
+      const r=layout.customRects[idx];bw=r.w;bd=r.h;bx=-c.palletL/2+r.x+r.w/2;bz=-c.palletW/2+r.y+r.h/2;rot=Math.abs(r.w-c.boxD)<.01;
+    }else{
+      const row=Math.floor(idx/layout.cols),col=idx%layout.cols;
+      const usedL=p.usedL||result.usedL,usedW=p.usedW||result.usedW;
+      const startX=-usedL/2+layout.dimX/2,startZ=-usedW/2+layout.dimZ/2;
+      bw=layout.dimX;bd=layout.dimZ;bx=startX+col*layout.dimX;bz=startZ+row*layout.dimZ;rot=layout.rotated;
+    }
+    const box=new THREE.Mesh(new THREE.BoxGeometry(bw,c.boxH,bd),mat.clone());
+    box.position.set(bx,topY+c.boxH/2+layer*c.boxH,bz);box.castShadow=box.receiveShadow=true;addDetails(box,c,bw,bd);productGroup.add(box);
+  }
+  scene.add(productGroup);
 }
-if(result.error){$('fitMessage').className='notice warning';$('fitMessage').textContent=result.error;$('warningMessage').style.display='none';$('palletTabs').innerHTML='';$('resultBody').innerHTML='';$('shippingText').textContent=result.error;dispose(palletGroup);dispose(productGroup);createPallet(c);return}selectedPallet=Math.min(selectedPallet,Math.max(0,result.pallets.length-1));const fits=true;$('fitMessage').className='notice ok';$('fitMessage').textContent=`採用${result.layout.label}：每層 ${result.perLayer} 台，占用 ${result.usedL} × ${result.usedW} cm，未超出棧板。`;$('warningMessage').style.display='none';$('mPallets').textContent=result.pallets.length;$('mWeight').textContent=result.totalGross.toFixed(1)+' kg';$('mCBM').textContent=result.totalTransport.toFixed(2);$('palletTabs').innerHTML=result.pallets.map((p,i)=>`<button class="pallettab ${i===selectedPallet?'active':''}" data-i="${i}">第 ${i+1} 板</button>`).join('');
-document.querySelectorAll('.pallettab').forEach(tab=>tab.onclick=()=>{selectedPallet=Number(tab.dataset.i);updateUI()});
-const current=result.pallets[selectedPallet];
-$('currentTitle').textContent=`目前查看：第 ${selectedPallet+1} 板`;
-$('currentQty').textContent=`${current.q} 箱`;
-$('currentLayers').textContent=`${current.layers} 層`;
-$('currentSize').textContent=`${result.usedL} × ${result.usedW} × ${current.height} cm`;
-$('currentWeight').textContent=`${current.gross.toFixed(2)} kg`;
-$('currentCBM').textContent=current.transportCBM.toFixed(2);$('resultBody').innerHTML=result.pallets.map(p=>`<tr><td>第 ${p.index+1} 板</td><td>${p.q}</td><td>${p.layers}</td><td>${result.usedL} × ${result.usedW} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('');$('shippingText').textContent=`Commodity: ${c.productName}\nQuantity: ${c.qty} Cartons / ${c.qty} Units\nPallets: ${result.pallets.length}\nPacking Pattern: ${result.layout.cols} × ${result.layout.rows} per layer (${result.perLayer} cartons)\n\n${result.pallets.map(p=>`Pallet ${p.index+1}: ${p.q} cartons / ${p.layers} layers / ${result.usedL} × ${result.usedW} × ${p.height} cm / Gross Weight ${p.gross.toFixed(2)} kg / ${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\nTotal Gross Weight: ${result.totalGross.toFixed(2)} kg\nTotal Product Volume: ${result.productCBM.toFixed(2)} CBM\nTotal Transport Volume: ${result.totalTransport.toFixed(2)} CBM`;render3D()}
+function render3D(){
+  if(!result||result.error)return;dispose(palletGroup);dispose(productGroup);
+  const p=result.pallets[selectedPallet];const pc=p&&p.c?p.c:result.c;createPallet(pc);if(p)createProducts(p);const h=p?p.height:pc.palletH;controls.target.set(0,Math.min(h*.42,145),0);
+}
+function updateUI(){
+  const c=cfg();
+  $('errorBox').classList.add('hidden');$('errorBox').textContent='';
+  const byHeight=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));
+  const finalLayers=Math.min(c.productMaxLayers,byHeight);
+  const completedHeight=c.palletH+finalLayers*c.boxH;
+  const remainingHeight=Math.max(0,c.maxHeight-completedHeight);
+  const transportName=$('transportMode').value==='sea'?'海運':$('transportMode').value==='air'?'空運':'自訂';
+  $('transportHint').innerHTML=`<b>${transportName}</b>｜整板最高 ${c.maxHeight} cm<br>高度最多 ${byHeight} 層；設定上限 ${c.productMaxLayers} 層；<b>實際最多 ${finalLayers} 層</b><br>滿層完成高度 ${completedHeight} cm，剩餘 ${remainingHeight} cm。`;
+  $('manualLayout').classList.toggle('hidden',c.layoutMode!=='manual');$('qtyCounter').textContent=c.qty;$('mQty').textContent=c.qty;
+  result=smartShipmentConfig?buildMixedShipmentPlan(c,smartShipmentConfig):plan(c);
+  if(result.error){$('fitMessage').className='notice warning';$('fitMessage').textContent=result.error;$('palletTabs').innerHTML='';$('resultBody').innerHTML='';$('shippingText').textContent=result.error;dispose(palletGroup);dispose(productGroup);createPallet(c);return}
+  selectedPallet=Math.min(selectedPallet,Math.max(0,result.pallets.length-1));
+  $('mPallets').textContent=result.pallets.length;$('mWeight').textContent=result.totalGross.toFixed(1)+' kg';$('mCBM').textContent=result.totalTransport.toFixed(2);
+  $('productSummaryName').textContent=c.productName==='W-888 Ceiling Fan'?'W-888 一般風扇':c.productName;
+  $('productSummarySpec').textContent=`${c.boxW} × ${c.boxH} × ${c.boxD} cm｜${c.unitWeight} kg`;
+  $('transportCompactSummary').querySelector('.main').textContent=`${transportName}｜最高 ${c.productMaxLayers} 層 / ${c.maxHeight} cm`;
+  if(result.mixed){
+    $('layoutInfo').innerHTML=`<b>智慧混合配置已套用</b><br>現有棧板使用 ${result.existingUsed} 板${result.supplementUsed?`，另補 ${result.supplementUsed} 板`:''}。<br>可切換各板查看實際尺寸與排列。`;
+    $('fitMessage').className='notice ok';$('fitMessage').textContent=result.supplementUsed?`現有棧板先使用 ${result.existingUsed} 板，仍需補 ${result.supplementUsed} 板（建議 ${result.supplement.L} × ${result.supplement.W} cm）。`:`現有棧板足夠，共使用 ${result.existingUsed} 板。`;
+    $('appliedPlan').innerHTML=`<strong>目前方案：智慧混合配置</strong><br>現有 ${result.existingUsed} 板${result.supplementUsed?`＋補 ${result.supplementUsed} 板`:''}｜最高 ${c.productMaxLayers} 層`;
+  }else{
+    const previewLayout=chooseLayout(c),previewCount=previewLayout.customRects?previewLayout.customRects.length:previewLayout.cols*previewLayout.rows;
+    const previewUsedL=previewLayout.customRects?boundsForRects(previewLayout.customRects).usedL:previewLayout.cols*previewLayout.dimX;
+    const previewUsedW=previewLayout.customRects?boundsForRects(previewLayout.customRects).usedW:previewLayout.rows*previewLayout.dimZ;
+    const remainL=c.palletL-previewUsedL,remainW=c.palletW-previewUsedW,diagram=previewLayout.customRects?'智慧混合排列已套用':Array.from({length:Math.min(previewLayout.rows,8)},()=>Array.from({length:Math.min(previewLayout.cols,10)},()=> '□').join(' ')).join('\n');
+    $('layoutInfo').innerHTML=`<b>目前排法：${previewLayout.label}</b><br>每層 <b>${previewCount}</b> 箱<br>占地：約 ${previewUsedL} × ${previewUsedW} cm<br>棧板剩餘：長邊 ${remainL} cm、寬邊 ${remainW} cm<div class="layoutdiagram">${diagram}</div>`;
+    $('fitMessage').className='notice ok';$('fitMessage').textContent=`採用${result.layout.label}：每層 ${result.perLayer} 台，占用 ${result.usedL} × ${result.usedW} cm。`;
+    $('appliedPlan').innerHTML=`<strong>目前方案：${c.palletL} × ${c.palletW} cm</strong><br>${result.layout.label}｜${result.perLayer} 台／層｜最多 ${result.cap} 台／板`;
+  }
+  const errors=[];if(c.qty===0)errors.push('請先輸入產品數量。');if(byHeight<1)errors.push('目前整板高度限制不足以放入一層紙箱。');if(c.maxWeight<=c.palletWeight+c.unitWeight)errors.push('每板重量上限過低，無法放入任何紙箱。');if(errors.length){$('errorBox').textContent=errors.join(' ');$('errorBox').classList.remove('hidden')}
+  $('warningMessage').style.display='none';
+  $('palletTabs').innerHTML=result.pallets.map((p,i)=>`<button class="pallettab ${i===selectedPallet?'active':''}" data-i="${i}">第 ${i+1} 板${result.mixed?` · ${p.palletL}×${p.palletW}`:''}</button>`).join('');
+  document.querySelectorAll('.pallettab').forEach(tab=>tab.onclick=()=>{selectedPallet=Number(tab.dataset.i);updateUI()});
+  const current=result.pallets[selectedPallet];
+  $('currentTitle').textContent=`目前查看：第 ${selectedPallet+1} 板`;
+  $('currentQty').textContent=`${current.q} 箱`;$('currentLayers').textContent=`${current.layers} 層`;
+  $('currentSize').textContent=result.mixed?`${current.palletL} × ${current.palletW} × ${current.height} cm`:`${result.usedL} × ${result.usedW} × ${current.height} cm`;
+  $('currentWeight').textContent=`${current.gross.toFixed(2)} kg`;$('currentCBM').textContent=current.transportCBM.toFixed(2);
+  $('resultBody').innerHTML=result.pallets.map(p=>`<tr><td>第 ${p.index+1} 板</td><td>${p.q}</td><td>${p.layers}</td><td>${result.mixed?`${p.palletL} × ${p.palletW}`:`${result.usedL} × ${result.usedW}`} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('')+`<tr class="total-row"><td>總計 ${result.pallets.length} 板</td><td>${result.c.qty}</td><td>—</td><td>—</td><td>${result.totalGross.toFixed(2)}</td><td>${result.totalTransport.toFixed(2)}</td></tr>`;
+  $('shippingText').textContent=`Commodity: ${c.productName}\nQuantity: ${c.qty} Cartons / ${c.qty} Units\nPallets: ${result.pallets.length}\n\n${result.pallets.map(p=>`Pallet ${p.index+1}: ${p.q} cartons / ${(p.palletL||c.palletL)} × ${(p.palletW||c.palletW)} × ${p.height} cm / Gross Weight ${p.gross.toFixed(2)} kg / ${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\nTotal Gross Weight: ${result.totalGross.toFixed(2)} kg\nTotal Transport Volume: ${result.totalTransport.toFixed(2)} CBM`;
+  render3D();
+}
 function setQty(v){$('qtyInput').value=Math.max(0,Math.floor(v));updateUI()}
+function openSidebarModal(id){const m=$(id);if(!m)return;m.classList.add('open');m.setAttribute('aria-hidden','false')}
+function closeSidebarModal(id){const m=$(id);if(!m)return;m.classList.remove('open');m.setAttribute('aria-hidden','true');updateUI()}
 $('minus10').onclick=()=>setQty(num('qtyInput')-10);$('minus1').onclick=()=>setQty(num('qtyInput')-1);$('plus1').onclick=()=>setQty(num('qtyInput')+1);$('plus10').onclick=()=>setQty(num('qtyInput')+10);
-$('reset').onclick=()=>{$('productTemplate').value='w888';$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('qtyInput').value=50;$('palletTemplate').value='130x110';$('palletL').value=130;$('palletW').value=110;$('palletH').value=15;$('palletWeight').value=0;$('layoutMode').value='template';$('manualCols').value=2;$('manualRows').value=5;$('distribution').value='minimum';$('transportMode').value='sea';$('seaType').value='standard';$('seaTypeWrap').classList.remove('hidden');$('maxHeight').value=220;$('maxWeight').value=500;selectedPallet=0;updateUI()};
-$('productTemplate').onchange=()=>{if($('productTemplate').value==='w888'){$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('layoutMode').value='template'}updateUI()};
-$('palletTemplate').onchange=()=>{const m={"130x110":[130,110],"120x100":[120,100],"120x80":[120,80],"110x110":[110,110]};if(m[$('palletTemplate').value]){[$('palletL').value,$('palletW').value]=m[$('palletTemplate').value]}updateUI()};
+$('reset').onclick=()=>{smartAppliedPlan=null;smartShipmentConfig=null;$('productTemplate').value='w888';$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('qtyInput').value=50;$('palletTemplate').value='130x110';$('palletL').value=130;$('palletW').value=110;$('palletH').value=15;$('palletWeight').value=0;$('layoutMode').value='template';$('manualCols').value=2;$('manualRows').value=5;$('distribution').value='minimum';$('transportMode').value='sea';$('seaType').value='standard';$('seaTypeWrap').classList.remove('hidden');$('maxLayers').value=3;$('maxHeight').value=220;$('maxWeight').value=500;selectedPallet=0;updateUI()};
+$('productTemplate').onchange=()=>{smartShipmentConfig=null;smartAppliedPlan=null;if($('productTemplate').value==='w888'){$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('layoutMode').value='template'}updateUI()};
+$('palletTemplate').onchange=()=>{smartAppliedPlan=null;smartShipmentConfig=null;const m={"130x110":[130,110],"120x100":[120,100],"120x80":[120,80],"110x110":[110,110]};if(m[$('palletTemplate').value]){[$('palletL').value,$('palletW').value]=m[$('palletTemplate').value]}updateUI()};
 ids.forEach(id=>{if($(id))$(id).addEventListener('change',updateUI)});$('qtyInput').addEventListener('input',()=>{
   $('qtyCounter').textContent=Math.floor(num('qtyInput'));
   updateUI();
 });
-$('frontView').onclick=()=>{camera.position.set(0,75,340);controls.target.set(0,55,0);controls.update()};$('topView').onclick=()=>{camera.position.set(0,400,.1);controls.target.set(0,0,0);controls.update()};$('angleView').onclick=()=>{camera.position.set(220,185,235);controls.target.set(0,50,0);controls.update()};
+$('toggleProductEdit').onclick=()=>openSidebarModal('productModal');
+
+$('openPalletEdit').onclick=()=>openSidebarModal('palletEditModal');
+$('openTransportEdit').onclick=()=>openSidebarModal('transportModal');
+document.querySelectorAll('[data-close-modal]').forEach(btn=>btn.onclick=()=>closeSidebarModal(btn.dataset.closeModal));
+['productModal','palletEditModal','transportModal'].forEach(id=>{const m=$(id);if(m)m.addEventListener('click',e=>{if(e.target===m)closeSidebarModal(id)})});
+
+['palletL','palletW','palletH'].forEach(id=>$(id).addEventListener('input',()=>{if(document.activeElement===$(id)){smartAppliedPlan=null;smartShipmentConfig=null;}}));
+
+$('frontView').onclick=()=>{camera.position.set(0,75,340);controls.target.set(0,55,0);controls.update()};$('topView').onclick=()=>{camera.position.set(0,400,.1);controls.target.set(0,0,0);controls.update()};$('angleView').onclick=()=>{const p=result&&result.pallets?result.pallets[selectedPallet]:null;const h=p?p.height:180;const d=Math.max(310,Math.min(430,h*1.7));camera.position.set(d*.80,d*.62,d*.92);controls.target.set(0,p?Math.min(p.height*.40,125):55,0);controls.update()};
 if($('resetView')) $('resetView').onclick=()=>{
-  camera.position.set(220,185,235);
-  controls.target.set(0,50,0);
+  const p=result&&result.pallets?result.pallets[selectedPallet]:null;
+  const targetY=p?Math.min(p.height*.42,145):50;
+  const oldTarget=controls.target.clone();
+  const dir=camera.position.clone().sub(oldTarget).normalize();
+  const pc=p&&p.c?p.c:(result?result.c:cfg());
+  const span=Math.max(pc.palletL,pc.palletW,p?p.height:pc.palletH);
+  const dist=Math.max(190,span*1.55);
+  controls.target.set(0,targetY,0);
+  camera.position.copy(controls.target.clone().add(dir.multiplyScalar(dist)));
   controls.update();
 };
 
@@ -928,116 +1372,26 @@ function getSceneImageDataUrl(){
   ctx.drawImage(source,0,0);
   return output.toDataURL('image/png');
 }
+function setReportCamera(){
+  camera.position.set(315,235,350);
+  controls.target.set(0,82,0);
+  controls.update();
+}
 function buildReport(){
-  if(!result||result.error){
-    showActionStatus('目前沒有可產生的報告資料。',true);
-    return false;
-  }
-  const lang=$('reportLanguage').value;
-  const zh=lang==='zh';
-  $('reportPage').classList.remove('report-zh','report-en');
-  $('reportPage').classList.add(zh?'report-zh':'report-en');
-  const c=result.c;
-  const current=result.pallets[selectedPallet];
-  const now=new Date();
-  const dateText=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')} ${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const modeZh={sea:'海運',air:'空運',custom:'自訂'};
-  const modeEn={sea:'Sea Freight',air:'Air Freight',custom:'Custom'};
-  $('reportImage').src=getSceneImageDataUrl();
-  $('reportTitle').textContent=zh?'棧板模擬報告':'Pallet Loading Report';
-  $('reportBadge').textContent=zh?'報告預覽':'Report Preview';
-  $('reportSub').textContent=zh?`產生時間：${dateText}｜目前畫面：第 ${selectedPallet+1} 板`:`Generated: ${dateText} | Current View: Pallet ${selectedPallet+1}`;
-  $('rQtyLabel').textContent=zh?'產品總數量':'Product Quantity';
-  $('rPalletsLabel').textContent=zh?'棧板數':'Pallets';
-  $('rCargoSizeLabel').textContent=zh?'貨物尺寸':'Cargo Size';
-  $('rOuterSizeLabel').textContent=zh?'運輸外部尺寸（目前棧板）':'Outer Size (Current Pallet)';
-  $('rWeightLabel').textContent=zh?'總重（不含棧板）':'Total Weight (Pallet Excluded)';
-  $('rCBMLabel').textContent=zh?'總運輸 CBM':'Total Transport CBM';
-  $('reportSummaryTitle').textContent=zh?'出貨摘要':'Shipment Summary';
-  $('reportBreakdownTitle').textContent=zh?'棧板明細':'Pallet Breakdown';
-  $('reportShippingTitle').textContent=zh?'貨運資料':'Shipping Text';
-  $('generatePdf').textContent=zh?'產生 PDF 檔案':'Generate PDF File';
-  $('rQty').textContent=`${c.qty}`;
-  $('rPallets').textContent=`${result.pallets.length}`;
-  $('rCargoSize').textContent=`${result.usedL} × ${result.usedW} × ${current.height} cm`;
-  $('rOuterSize').textContent=`${c.palletL} × ${c.palletW} × ${current.height} cm`;
-  $('rWeight').textContent=`${result.totalGross.toFixed(2)} kg`;
-  $('rCBM').textContent=result.totalTransport.toFixed(2);
-  $('reportCaption').textContent=zh
-    ?`目前 3D 畫面：第 ${selectedPallet+1} 板｜${current.q} 箱｜${current.layers} 層｜${result.usedL} × ${result.usedW} × ${current.height} cm`
-    :`Current 3D view: Pallet ${selectedPallet+1} | ${current.q} cartons | ${current.layers} layers | ${result.usedL} × ${result.usedW} × ${current.height} cm`;
-  const summary=zh?[
-    ['產品名稱',c.productName],
-    ['紙箱尺寸',`${c.boxW} × ${c.boxH} × ${c.boxD} cm`],
-    ['單箱重量',`${c.unitWeight} kg／箱`],
-    ['貨物尺寸（本板）',`${result.usedL} × ${result.usedW} × ${current.height} cm`],
-    ['運輸外部尺寸（本板）',`${c.palletL} × ${c.palletW} × ${current.height} cm`],
-    ['總毛重（不含棧板）',`${result.totalGross.toFixed(2)} kg`],
-    ['總運輸 CBM',`${result.totalTransport.toFixed(2)} CBM`],
-    ['棧板尺寸',`${c.palletL} × ${c.palletW} × ${c.palletH} cm`],
-    ['排列方式',`${result.layout.cols} 欄 × ${result.layout.rows} 排，每層 ${result.perLayer} 箱`],
-    ['分板方式',c.distribution==='minimum'?'優先裝滿，使用最少棧板':'平均分配'],
-    ['運輸方式',modeZh[c.transportMode]||'自訂'],
-    ['整板限高',`${c.maxHeight} cm`],
-    ['高度計算',`貨物 ${current.layers*c.boxH} cm＋棧板 ${c.palletH} cm＝${current.height} cm`],
-    ['每板重量上限',`${c.maxWeight} kg`]
-  ]:[
-    ['Commodity',c.productName],
-    ['Carton Size',`${c.boxW} × ${c.boxH} × ${c.boxD} cm`],
-    ['Unit Weight',`${c.unitWeight} kg / carton`],
-    ['Cargo Size (Current Pallet)',`${result.usedL} × ${result.usedW} × ${current.height} cm`],
-    ['Outer Transport Size (Current Pallet)',`${c.palletL} × ${c.palletW} × ${current.height} cm`],
-    ['Gross Weight (Pallet Excluded)',`${result.totalGross.toFixed(2)} kg`],
-    ['Total Transport CBM',`${result.totalTransport.toFixed(2)} CBM`],
-    ['Pallet Size',`${c.palletL} × ${c.palletW} × ${c.palletH} cm`],
-    ['Packing Pattern',`${result.layout.cols} × ${result.layout.rows} per layer (${result.perLayer} cartons)`],
-    ['Distribution',c.distribution==='minimum'?'Minimum pallets first':'Balanced'],
-    ['Transport Mode',modeEn[c.transportMode]||'Custom'],
-    ['Max Height',`${c.maxHeight} cm`],
-    ['Height Rule',`Cargo ${current.layers*c.boxH} cm + pallet ${c.palletH} cm = ${current.height} cm`],
-    ['Weight Limit / Pallet',`${c.maxWeight} kg`]
-  ];
-  $('reportSummary').innerHTML=summary.map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('');
-  $('reportTableHead').innerHTML=zh
-    ?'<tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>貨物尺寸 (cm)</th><th>運輸外部尺寸 (cm)</th><th>毛重 (kg)</th><th>CBM</th></tr>'
-    :'<tr><th>Pallet</th><th>Cartons</th><th>Layers</th><th>Cargo Size (cm)</th><th>Outer Size (cm)</th><th>Gross Weight (kg)</th><th>CBM</th></tr>';
-  $('reportTableBody').innerHTML=result.pallets.map(p=>`<tr><td>${zh?'第 '+(p.index+1)+' 板':'Pallet '+(p.index+1)}</td><td>${p.q}</td><td>${p.layers}</td><td>${result.usedL} × ${result.usedW} × ${p.height}</td><td>${c.palletL} × ${c.palletW} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('');
-  const overview=zh?[
-    ['產品名稱',c.productName],
-    ['產品數量',`${c.qty} 箱／${c.qty} 台`],
-    ['棧板數',`${result.pallets.length} 板`],
-    ['排列方式',`每層 ${result.layout.cols} × ${result.layout.rows}（${result.perLayer} 箱）`]
-  ]:[
-    ['Commodity',c.productName],
-    ['Quantity',`${c.qty} cartons / ${c.qty} units`],
-    ['Pallets',`${result.pallets.length}`],
-    ['Packing Pattern',`${result.layout.cols} × ${result.layout.rows} (${result.perLayer} cartons/layer)`]
-  ];
-  const overviewHtml=`<div class="shipping-overview">${overview.map(([k,v])=>`<div class="shipping-overview-item"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')}</div>`;
-  const palletHtml=`<div class="shipping-pallets">${result.pallets.map(p=>`<div class="shipping-pallet-card">
-    <div class="title">${zh?'第 '+(p.index+1)+' 板':'Pallet '+(p.index+1)}</div>
-    <div class="line">${zh?'紙箱數量':'Cartons'}：${p.q}</div>
-    <div class="line">${zh?'層數':'Layers'}：${p.layers}</div>
-    <div class="line">${zh?'貨物尺寸':'Cargo Size'}：${result.usedL} × ${result.usedW} × ${p.height} cm</div>
-    <div class="line">${zh?'運輸外部尺寸':'Outer Size'}：${c.palletL} × ${c.palletW} × ${p.height} cm</div>
-    <div class="line">${zh?'毛重':'Gross Weight'}：${p.gross.toFixed(2)} kg</div>
-    <div class="line">CBM：${p.transportCBM.toFixed(2)}</div>
-  </div>`).join('')}</div>`;
-  const totals=zh?[
-    ['總重（不含棧板）',`${result.totalGross.toFixed(2)} kg`],
-    ['總產品體積',`${result.productCBM.toFixed(2)} CBM`],
-    ['總運輸 CBM',`${result.totalTransport.toFixed(2)} CBM`]
-  ]:[
-    ['Total Weight (Pallet Excluded)',`${result.totalGross.toFixed(2)} kg`],
-    ['Total Product Volume',`${result.productCBM.toFixed(2)} CBM`],
-    ['Total Transport CBM',`${result.totalTransport.toFixed(2)} CBM`]
-  ];
-  const totalsHtml=`<div class="shipping-totals">${totals.map(([k,v])=>`<div class="shipping-total"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')}</div>`;
-  $('reportShipping').innerHTML=overviewHtml+palletHtml+totalsHtml;
-  $('reportPage').classList.add('show');
-  $('reportWrap').scrollIntoView({behavior:'smooth',block:'start'});
-  showActionStatus(zh?'模擬報告已產生。':'Report generated.');
-  return true;
+  if(!result||result.error||!result.pallets.length){showActionStatus('目前沒有可產生的出貨資料。',true);return false}
+  const c=result.c,oldSelected=selectedPallet,oldCam=camera.position.clone(),oldTarget=controls.target.clone();
+  const lang=$('reportLanguage')?$('reportLanguage').value:'zh',zh=lang==='zh';
+  const groups=[];
+  result.pallets.forEach((p,i)=>{const L=p.palletL||c.palletL,W=p.palletW||c.palletW,key=[L,W,p.q,p.height,p.gross.toFixed(2),p.transportCBM.toFixed(2)].join('|');let g=groups.find(x=>x.key===key);if(!g){g={key,p,indexes:[]};groups.push(g)}g.indexes.push(i)});
+  const shown=groups.slice(0,6),imgs=[];
+  shown.forEach(g=>{selectedPallet=g.indexes[0];render3D();setReportCamera();renderer.render(scene,camera);imgs.push(getSceneImageDataUrl())});
+  selectedPallet=oldSelected;render3D();camera.position.copy(oldCam);controls.target.copy(oldTarget);controls.update();
+  const now=new Date(),dateText=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+  const title=zh?'棧板出貨資料單':'PALLET PACKING & SHIPPING SHEET';
+  const cards=shown.map((g,i)=>{const p=g.p,L=p.palletL||c.palletL,W=p.palletW||c.palletW,count=g.indexes.length;const range=count===1?`${zh?'第':'Pallet '}${g.indexes[0]+1}${zh?' 板':''}`:(zh?`第 ${g.indexes[0]+1}–${g.indexes[g.indexes.length-1]+1} 板（${count} 板相同）`:`Pallets ${g.indexes[0]+1}–${g.indexes[g.indexes.length-1]+1} (${count} same)`);return `<div class="shipsheet-pallet"><img src="${imgs[i]}"><h4>${range}</h4><div class="shipsheet-line"><b>${p.q} ${zh?'箱／板':'Cartons / pallet'}</b><br>${zh?'外部尺寸':'Outer Size'}: ${L} × ${W} × ${p.height} cm<br>${zh?'毛重':'Gross Weight'}: ${p.gross.toFixed(2)} kg<br>CBM: ${p.transportCBM.toFixed(2)}</div></div>`}).join('');
+  const labels=zh?{qty:'總數量',pallets:'總板數',weight:'總毛重',cbm:'總 CBM',commodity:'品名',date:'日期'}:{qty:'Quantity',pallets:'Total Pallets',weight:'Gross Weight',cbm:'Total CBM',commodity:'Commodity',date:'Date'};
+  $('shippingSheetContent').innerHTML=`<div class="shipsheet-head"><div><div class="shipsheet-company">WEI CHUNG FUNG TRADING CO., LTD.</div><div class="shipsheet-title">${title}</div></div><div class="shipsheet-date">${labels.date}<br><b>${dateText}</b></div></div><div class="shipsheet-summary"><div class="shipsheet-stat"><div class="k">${labels.qty}</div><div class="v">${c.qty}</div></div><div class="shipsheet-stat"><div class="k">${labels.pallets}</div><div class="v">${result.pallets.length}</div></div><div class="shipsheet-stat"><div class="k">${labels.weight}</div><div class="v">${result.totalGross.toFixed(2)} kg</div></div><div class="shipsheet-stat"><div class="k">${labels.cbm}</div><div class="v">${result.totalTransport.toFixed(2)}</div></div></div><div class="shipsheet-product"><b>${labels.commodity}:</b> ${c.productName}</div><div class="shipsheet-grid">${cards}</div>`;
+  $('reportPage').classList.add('show');$('reportWrap').scrollIntoView({behavior:'smooth',block:'start'});showActionStatus(zh?'正式出貨單已產生。':'Shipping sheet generated.');return true
 }
 
 function showActionStatus(message,isError=false){
@@ -1067,73 +1421,90 @@ $('imageModal').onclick=e=>{
   if(e.target===$('imageModal')) $('closeImageModal').click();
 };
 $('buildReport').onclick=()=>{ buildReport(); };
-$('reportLanguage').addEventListener('change',()=>{ if($('reportPage').classList.contains('show')) buildReport(); });
+if($('reportLanguage')) $('reportLanguage').addEventListener('change',()=>{if($('reportPage').classList.contains('show'))buildReport();});
+
 $('generatePdf').onclick=async()=>{
-  if(!buildReport()) return;
-  if(!window.html2canvas||!window.jspdf){
-    showActionStatus('PDF 元件載入失敗，請確認網路連線後重新開啟。',true);
-    return;
-  }
-  const wasDark=document.body.classList.contains('dark');
-  if(wasDark) document.body.classList.remove('dark');
-  const button=$('generatePdf');
-  const oldText=button.textContent;
-  button.disabled=true;
-  const actions=button.closest('.report-actions');
-  const toast=$('pdfStatusToast');
-  if(actions) actions.classList.add('is-capturing');
-  toast.textContent=$('reportLanguage').value==='zh'?'正在產生 PDF…':'Generating PDF...';
-  toast.classList.add('show');
+  if(!buildReport())return;
+  if(!window.html2canvas||!window.jspdf){showActionStatus('PDF 元件載入失敗，請確認網路連線後重新開啟。',true);return}
+  const wasDark=document.body.classList.contains('dark');if(wasDark)document.body.classList.remove('dark');
+  const button=$('generatePdf');button.disabled=true;const toast=$('pdfStatusToast');toast.textContent='正在產生 PDF…';toast.classList.add('show');
+  const actions=$('reportPage').querySelector('.report-actions');if(actions)actions.classList.add('is-capturing');
   try{
-    if(document.fonts&&document.fonts.ready) await document.fonts.ready;
-    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-    const canvas=await window.html2canvas($('reportPage'),{
-      scale:3,
-      useCORS:true,
-      backgroundColor:'#ffffff',
-      logging:false,
-      imageTimeout:15000,
-      scrollX:0,
-      scrollY:-window.scrollY
-    });
-    const {jsPDF}=window.jspdf;
-    const pdf=new jsPDF({orientation:'landscape',unit:'mm',format:'a4',compress:true});
-    const pageW=297,pageH=210,margin=8;
-    const usableW=pageW-margin*2,usableH=pageH-margin*2;
-    const imgW=usableW;
-    const imgH=canvas.height*imgW/canvas.width;
-    const imgData=canvas.toDataURL('image/jpeg',0.97);
-    let heightLeft=imgH;
-    let y=margin;
-    pdf.addImage(imgData,'JPEG',margin,y,imgW,imgH,undefined,'FAST');
-    heightLeft-=usableH;
-    while(heightLeft>0){
-      pdf.addPage();
-      y=margin-(imgH-heightLeft);
-      pdf.addImage(imgData,'JPEG',margin,y,imgW,imgH,undefined,'FAST');
-      heightLeft-=usableH;
-    }
-    const now=new Date();
-    const dateStamp=`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;
-    const nameLower=result.c.productName.toLowerCase();
-    const categoryZh=nameLower.includes('fan')?'風扇':nameLower.includes('valve')?'閥門':'貨品';
-    const categoryEn=nameLower.includes('fan')?'fan':nameLower.includes('valve')?'valve':'cargo';
-    const fileName=$('reportLanguage').value==='zh'
-      ?`${dateStamp}-${result.c.qty}台${categoryZh}.pdf`
-      :`${dateStamp}-${result.c.qty}units-${categoryEn}.pdf`;
-    pdf.save(fileName);
-    showActionStatus($('reportLanguage').value==='zh'?'PDF 已產生並開始下載。':'PDF generated and download started.');
-  }catch(err){
-    console.error(err);
-    showActionStatus('PDF 產生失敗，請重新整理後再試。',true);
-  }finally{
-    if(wasDark) document.body.classList.add('dark');
-    button.disabled=false;
-    if(actions) actions.classList.remove('is-capturing');
-    toast.classList.remove('show');
-    button.textContent=oldText;
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    const canvas=await window.html2canvas($('reportPage'),{scale:2.4,useCORS:true,backgroundColor:'#ffffff',logging:false});
+    const {jsPDF}=window.jspdf;const pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+    const pageW=210,pageH=297,marginX=10,marginTop=12,marginBottom=10;
+    const usableW=pageW-marginX*2,usableH=pageH-marginTop-marginBottom;
+    let imgW=usableW,imgH=canvas.height*imgW/canvas.width;
+    if(imgH>usableH){imgH=usableH;imgW=canvas.width*imgH/canvas.height}
+    const x=(pageW-imgW)/2,y=marginTop;
+    pdf.addImage(canvas.toDataURL('image/jpeg',0.95),'JPEG',x,y,imgW,imgH,undefined,'FAST');
+    const now=new Date(),stamp=`${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}`;const zh=$('reportLanguage')&&$('reportLanguage').value==='zh';
+    pdf.save(zh?`${stamp}-${result.c.qty}台-棧板出貨單.pdf`:`${stamp}-${result.c.qty}units-pallet-shipping-sheet.pdf`);
+    showActionStatus(zh?'PDF 出貨單已產生。':'PDF shipping sheet generated.');
+  }catch(err){console.error(err);showActionStatus('PDF 產生失敗，請重新整理後再試。',true)}finally{
+    if(actions)actions.classList.remove('is-capturing');
+    if(wasDark)document.body.classList.add('dark');button.disabled=false;toast.classList.remove('show')
   }
 };
+
+function dataUrlToUint8Array(dataUrl){
+  const base64=dataUrl.split(',')[1]||'';const bin=atob(base64);const arr=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);return arr;
+}
+function xmlEscape(v){return String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&apos;')}
+
+$('downloadWord').onclick=async()=>{
+  if(!buildReport())return;
+  if(!window.html2canvas||!window.JSZip){showActionStatus('Word 元件載入失敗，請確認網路連線後重新開啟。',true);return}
+  const button=$('downloadWord');button.disabled=true;
+  const wasDark=document.body.classList.contains('dark');if(wasDark)document.body.classList.remove('dark');
+  const actions=$('reportPage').querySelector('.report-actions');if(actions)actions.classList.add('is-capturing');
+  try{
+    if(document.fonts&&document.fonts.ready)await document.fonts.ready;
+    await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+    // Capture the finished one-page shipping sheet so photos and layout remain identical in Word.
+    const canvas=await window.html2canvas($('reportPage'),{scale:2.2,useCORS:true,backgroundColor:'#ffffff',logging:false});
+    const pngData=canvas.toDataURL('image/png');
+    const zip=new JSZip();
+    zip.file('[Content_Types].xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Default Extension="png" ContentType="image/png"/>
+<Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/>
+</Types>`);
+    zip.folder('_rels').file('.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/>
+</Relationships>`);
+    const word=zip.folder('word');
+    word.folder('media').file('shipping-sheet.png',dataUrlToUint8Array(pngData));
+    word.folder('_rels').file('document.xml.rels',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/shipping-sheet.png"/>
+</Relationships>`);
+    const maxWIn=7.25,maxHIn=10.15,ratio=canvas.height/canvas.width;
+    let wIn=maxWIn,hIn=wIn*ratio;if(hIn>maxHIn){hIn=maxHIn;wIn=hIn/ratio}
+    const cx=Math.round(wIn*914400),cy=Math.round(hIn*914400);
+    word.file('document.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture">
+<w:body>
+<w:p><w:pPr><w:jc w:val="center"/><w:spacing w:before="0" w:after="0"/></w:pPr><w:r><w:drawing>
+<wp:inline distT="0" distB="0" distL="0" distR="0"><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="1" name="Pallet Shipping Sheet"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="shipping-sheet.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic>
+</wp:inline></w:drawing></w:r></w:p>
+<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="680" w:right="720" w:bottom="720" w:left="720" w:header="0" w:footer="0" w:gutter="0"/></w:sectPr>
+</w:body></w:document>`);
+    const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',compression:'DEFLATE'});
+    const a=document.createElement('a');a.href=URL.createObjectURL(blob);const zh=$('reportLanguage')&&$('reportLanguage').value==='zh';
+    a.download=zh?`${result.c.qty}台-棧板出貨單.docx`:`${result.c.qty}units-pallet-shipping-sheet.docx`;
+    document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1200);
+    showActionStatus(zh?'Word (.docx) 出貨單已產生。':'Word (.docx) shipping sheet generated.');
+  }catch(err){console.error(err);showActionStatus('Word 產生失敗，請重新整理後再試。',true)}finally{
+    if(actions)actions.classList.remove('is-capturing');if(wasDark)document.body.classList.add('dark');button.disabled=false;
+  }
+};
+
 $('copyShipping').onclick=async()=>{
   const value=$('shippingText').textContent;
   let copied=false;
@@ -1169,12 +1540,28 @@ $('seaType').addEventListener('change',()=>{
   if(type==='highcube')$('maxHeight').value=240;
   updateUI();
 });
-new ResizeObserver(()=>{const w=viewer.clientWidth,h=viewer.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}).observe(viewer);function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}$('loading').remove();updateUI();animate();
+new ResizeObserver(()=>{const w=viewer.clientWidth,h=viewer.clientHeight;renderer.setSize(w,h,false);camera.aspect=w/h;camera.updateProjectionMatrix()}).observe(viewer);
+
+function syncViewerBottomToSidebar(){
+  if(!viewer || !$('settingsPanel')) return;
+  if(window.innerWidth<821){viewer.style.removeProperty('height');return;}
+  const sideBottom=$('settingsPanel').getBoundingClientRect().bottom;
+  const viewerTop=viewer.getBoundingClientRect().top;
+  const target=Math.max(360,Math.round(sideBottom-viewerTop));
+  viewer.style.setProperty('height',target+'px','important');
+}
+const sidebarAlignObserver=new ResizeObserver(()=>{requestAnimationFrame(syncViewerBottomToSidebar)});
+sidebarAlignObserver.observe($('settingsPanel'));
+window.addEventListener('resize',()=>requestAnimationFrame(syncViewerBottomToSidebar));
+requestAnimationFrame(syncViewerBottomToSidebar);function animate(){requestAnimationFrame(animate);controls.update();renderer.render(scene,camera)}$('loading').remove();updateUI();animate();
 
 
 
 // ---------------- Container Mode ----------------
 let containerLoadMethod='pallet';
+let selectedContainer=0;
+let currentContainerPlan=null;
+let currentContainerDist=[];
 
 function cnum(id,min=0){return Math.max(min,Number($(id).value)||0)}
 
@@ -1266,98 +1653,118 @@ function renderPackGrid(id,cols,rows,count,type='box'){
   el.innerHTML=Array.from({length:total},(_,i)=>`<div class="pack-cell ${type==='pallet'?'pallet':''}">${type==='pallet'?'P'+(i+1):''}</div>`).join('');
 }
 
+function containerPresetLabel(){
+  const v=$('cContainerPreset').value;
+  return v==='20ft'?'20FT':v==='40ft'?'40FT':v==='40hq'?'40HQ':'自訂';
+}
+function syncContainerProductFromPallet(){
+  $('cProductName').value=$('productName').value;
+  $('cUnitWeight').value=$('unitWeight').value;
+  $('cBoxL').value=$('boxW').value;
+  $('cBoxW').value=$('boxD').value;
+  $('cBoxH').value=$('boxH').value;
+  $('cProductSummaryName').textContent=$('productTemplate').value==='w888'?'W-888 一般風扇':($('productName').value||'自訂產品');
+  $('cProductSummaryMeta').textContent=`${num('boxW',1)} × ${num('boxH',1)} × ${num('boxD',1)} cm｜${num('unitWeight').toFixed(2)} kg`;
+}
+function showContainerStatus(msg,isError=false){const el=$('cActionStatus');if(!el)return;el.textContent=msg;el.style.color=isError?'#b91c1c':'';clearTimeout(showContainerStatus.timer);showContainerStatus.timer=setTimeout(()=>{el.textContent='';el.style.color=''},3200)}
+
 function updateContainerMode(){
+  syncContainerProductFromPallet();
   const L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1);
   const qty=Math.floor(cnum('cQty'));
   const bL=cnum('cBoxL',1),bW=cnum('cBoxW',1),bH=cnum('cBoxH',1);
-
-  const p=containerLoadMethod==='pallet'
-    ?palletContainerPlan(L,W,H,qty)
-    :floorContainerPlan(L,W,H,qty,bL,bW,bH);
-
+  const p=containerLoadMethod==='pallet'?palletContainerPlan(L,W,H,qty):floorContainerPlan(L,W,H,qty,bL,bW,bH);
+  currentContainerPlan=p;
   $('cMQty').textContent=qty;
   $('cQtyDisplay').textContent=qty;
   $('cMCapacity').textContent=p.error?'—':p.capacity;
   $('cMContainers').textContent=p.error?'—':p.containersNeeded;
   $('cMMethod').textContent=containerLoadMethod==='pallet'?'棧板':'散裝';
+  $('cContainerSummary').textContent=`${containerPresetLabel()}｜${L} × ${W} × ${H} cm`;
 
   if(p.error){
-    $('cResultTitle').textContent='目前無法計算';
+    currentContainerDist=[];selectedContainer=0;
+    $('cContainerTabs').innerHTML='';
+    $('cCurrentTitle').textContent='目前無法計算';
     $('cResultKV').innerHTML=`<div class="k">原因</div><div class="v">${p.error}</div>`;
     return;
   }
 
-  const dist=containerDistribution(p,qty);
-  $('cResultTitle').textContent=containerLoadMethod==='pallet'?'20FT 棧板裝櫃結果':'20FT 散裝裝櫃結果';
+  const dist=containerDistribution(p,qty);currentContainerDist=dist;
+  selectedContainer=Math.min(selectedContainer,Math.max(0,dist.length-1));
+  const cur=dist[selectedContainer]||{q:0,pallets:0};
+  $('cContainerTabs').innerHTML=dist.map((d,i)=>`<button type="button" class="container-tab ${i===selectedContainer?'active':''}" data-container-index="${i}">第 ${i+1} 櫃</button>`).join('');
+  document.querySelectorAll('[data-container-index]').forEach(btn=>btn.onclick=()=>{selectedContainer=Number(btn.dataset.containerIndex);updateContainerMode();});
+  $('cCurrentTitle').textContent=`目前查看：第 ${selectedContainer+1} 櫃`;
+  $('cCurrentQty').textContent=`${cur.q} 台`;
+  $('cCurrentType').textContent=containerPresetLabel();
+  $('cCurrentWeight').textContent=`${(cur.q*cnum('cUnitWeight')).toFixed(2)} kg`;
 
   if(p.method==='pallet'){
+    const pallets=cur.pallets||Math.ceil(cur.q/p.unitPerPallet);
+    const fullRows=Math.floor(Math.max(0,pallets-1)/Math.max(1,p.nx))+1;
+    const usedL=Math.min(p.nx,pallets)*p.palletL;
+    const usedW=Math.min(p.ny,fullRows)*p.palletW;
+    $('cCurrentSecondLabel').textContent='棧板數';$('cCurrentSecond').textContent=`${pallets} 板`;
+    $('cCurrentUsed').textContent=`${usedL} × ${usedW} × ${p.usedH} cm`;
+    $('palletLoadHint').innerHTML=`目前棧板：<b>${p.unitPerPallet} 台／板</b>｜單櫃最多 <b>${p.palletPerContainer} 板 / ${p.capacity} 台</b>`;
     $('cResultKV').innerHTML=[
-      ['貨櫃內部尺寸',`${L} × ${W} × ${H} cm`],
-      ['目前棧板外部尺寸',`${p.palletL} × ${p.palletW} × ${p.palletHeight} cm`],
-      ['每板產品數',`${p.unitPerPallet} 台`],
-      ['單櫃棧板排列',`長向 ${p.nx} 板 × 寬向 ${p.ny} 板`],
-      ['單櫃最多棧板',`${p.palletPerContainer} 板`],
-      ['單櫃最大產品數',`${p.capacity} 台`],
-      ['目前數量所需棧板',`${p.palletsNeeded} 板`],
-      ['目前數量所需 20FT',`${p.containersNeeded} 櫃`],
-      ['單櫃占用尺寸',`${p.usedL} × ${p.usedW} × ${p.usedH} cm`],
-      ['總貨物重量',`${p.totalWeight.toFixed(2)} kg`]
+      ['貨櫃內部尺寸',`${L} × ${W} × ${H} cm`],['目前棧板外部尺寸',`${p.palletL} × ${p.palletW} × ${p.palletHeight} cm`],
+      ['每板產品數',`${p.unitPerPallet} 台`],['單櫃棧板排列',`長向 ${p.nx} 板 × 寬向 ${p.ny} 板`],
+      ['單櫃最多棧板',`${p.palletPerContainer} 板`],['單櫃最大產品數',`${p.capacity} 台`],
+      ['總需棧板',`${p.palletsNeeded} 板`],['總需貨櫃',`${p.containersNeeded} 櫃`]
     ].map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('');
-
-    $('palletLoadHint').innerHTML=`依目前棧板模式：<b>${p.unitPerPallet} 台／板</b><br>20FT 可排 <b>${p.nx} × ${p.ny} = ${p.palletPerContainer} 板</b><br>單櫃約 <b>${p.capacity} 台</b>。`;
-
-    renderPackGrid('viewTop',p.nx,p.ny,p.palletPerContainer,'pallet');
-    renderPackGrid('viewFront',p.ny,1,p.ny,'pallet');
-    renderPackGrid('viewSide',p.nx,1,p.nx,'pallet');
-    $('viewTopNote').textContent=`長向 ${p.nx} 板 × 寬向 ${p.ny} 板`;
-    $('viewFrontNote').textContent=`由櫃門往內看：寬向 ${p.ny} 板，高度 1 板`;
-    $('viewSideNote').textContent=`側視：長向 ${p.nx} 板，高度 1 板`;
-    $('cFootnote').textContent='棧板裝櫃以整板叉車裝卸為主，搬運效率高；此模式以目前棧板模式的每板容量為基礎。';
+    renderPackGrid('viewTop',p.nx,p.ny,Math.min(pallets,p.palletPerContainer),'pallet');
+    renderPackGrid('viewFront',p.ny,1,Math.min(p.ny,pallets),'pallet');
+    renderPackGrid('viewSide',p.nx,1,Math.min(p.nx,pallets),'pallet');
+    $('viewTopNote').textContent=`本櫃 ${pallets} 板｜最大 ${p.nx} × ${p.ny}`;
+    $('viewFrontNote').textContent=`由櫃門往內看：寬向最多 ${p.ny} 板`;
+    $('viewSideNote').textContent=`側視：長向最多 ${p.nx} 板`;
+    $('cFootnote').textContent='棧板裝櫃以目前棧板模式的每板容量為基礎。';
   }else{
+    const perLayer=p.nx*p.ny, layersUsed=Math.max(1,Math.ceil(cur.q/Math.max(1,perLayer)));
+    $('cCurrentSecondLabel').textContent='排列';$('cCurrentSecond').textContent=`${p.nx} × ${p.ny} × ${layersUsed}`;
+    $('cCurrentUsed').textContent=`${p.usedL} × ${p.usedW} × ${Math.min(p.usedH,layersUsed*p.boxH)} cm`;
+    $('palletLoadHint').innerHTML='紙箱直接裝櫃，不使用棧板。';
     $('cResultKV').innerHTML=[
-      ['貨櫃內部尺寸',`${L} × ${W} × ${H} cm`],
-      ['紙箱放置方向',`${p.boxL} × ${p.boxW} × ${p.boxH} cm`],
-      ['整齊排列',`長向 ${p.nx} 箱 × 寬向 ${p.ny} 箱 × ${p.nz} 層`],
-      ['單櫃最大產品數',`${p.capacity} 台`],
-      ['目前數量所需 20FT',`${p.containersNeeded} 櫃`],
-      ['貨物整體占用',`${p.usedL} × ${p.usedW} × ${p.usedH} cm`],
-      ['剩餘空間',`長 ${Math.max(0,L-p.usedL)} cm｜寬 ${Math.max(0,W-p.usedW)} cm｜高 ${Math.max(0,H-p.usedH)} cm`],
-      ['總貨物重量',`${p.totalWeight.toFixed(2)} kg`]
+      ['貨櫃內部尺寸',`${L} × ${W} × ${H} cm`],['紙箱放置方向',`${p.boxL} × ${p.boxW} × ${p.boxH} cm`],
+      ['最大排列',`長向 ${p.nx} 箱 × 寬向 ${p.ny} 箱 × ${p.nz} 層`],['單櫃最大產品數',`${p.capacity} 台`],
+      ['總需貨櫃',`${p.containersNeeded} 櫃`],['滿櫃占用尺寸',`${p.usedL} × ${p.usedW} × ${p.usedH} cm`]
     ].map(([k,v])=>`<div class="k">${k}</div><div class="v">${v}</div>`).join('');
-
-    $('palletLoadHint').innerHTML=`散裝模式直接依紙箱尺寸計算，不使用棧板。`;
-    renderPackGrid('viewTop',p.nx,p.ny,p.nx*p.ny,'box');
-    renderPackGrid('viewFront',p.ny,p.nz,p.ny*p.nz,'box');
-    renderPackGrid('viewSide',p.nx,p.nz,p.nx*p.nz,'box');
-    $('viewTopNote').textContent=`每層：${p.nx} × ${p.ny} = ${p.nx*p.ny} 箱`;
-    $('viewFrontNote').textContent=`寬向 ${p.ny} 箱 × 高度 ${p.nz} 層`;
-    $('viewSideNote').textContent=`長向 ${p.nx} 箱 × 高度 ${p.nz} 層`;
-    $('cFootnote').textContent='散裝可提高貨櫃空間利用率，但裝櫃與拆櫃需逐箱作業，人工與卸貨時間通常高於棧板裝櫃。';
+    renderPackGrid('viewTop',p.nx,p.ny,Math.min(cur.q,p.nx*p.ny),'box');
+    renderPackGrid('viewFront',p.ny,layersUsed,Math.min(cur.q,p.ny*layersUsed),'box');
+    renderPackGrid('viewSide',p.nx,layersUsed,Math.min(cur.q,p.nx*layersUsed),'box');
+    $('viewTopNote').textContent=`每層最多 ${p.nx*p.ny} 箱｜本櫃 ${cur.q} 台`;
+    $('viewFrontNote').textContent=`寬向 ${p.ny} 箱 × 使用 ${layersUsed} 層`;
+    $('viewSideNote').textContent=`長向 ${p.nx} 箱 × 使用 ${layersUsed} 層`;
+    $('cFootnote').textContent='散裝直接依紙箱尺寸配置，不使用棧板。';
   }
-
-  $('cDistribution').innerHTML=dist.map((d,i)=>`<span class="container-chip">第 ${i+1} 櫃：${d.q} 台${p.method==='pallet'?`｜${d.pallets} 板`:''}</span>`).join('');
-  if(typeof refreshContainer3D==='function') refreshContainer3D();
+  if(typeof refreshContainer3D==='function')refreshContainer3D();
+  if($('containerReportPage').classList.contains('show'))buildContainerReport();
 }
-
 $('modePallet').onclick=()=>{
   $('modePallet').classList.add('active');
   $('modeContainer').classList.remove('active');
   $('palletModePanel').style.display='';
   $('containerModePanel').classList.remove('active');
-  document.querySelector('.titlebar h1').textContent='智慧棧板模擬器';
+  document.querySelector('.titlebar h1').textContent='智慧棧板規劃工具';
 };
 $('modeContainer').onclick=()=>{
+  syncContainerProductFromPallet();
+  $('cQty').value=Math.floor(num('qtyInput'));
+  selectedContainer=0;
   $('modeContainer').classList.add('active');
   $('modePallet').classList.remove('active');
   $('palletModePanel').style.display='none';
   $('containerModePanel').classList.add('active');
-  document.querySelector('.titlebar h1').textContent='智慧貨櫃模擬器';
+  document.querySelector('.titlebar h1').textContent='智慧裝櫃規劃工具';
   updateContainerMode();
   setTimeout(()=>{if(typeof initContainer3D==='function'){initContainer3D();refreshContainer3D();}},50);
 };
 
 $('loadPallet').onclick=()=>{
   containerLoadMethod='pallet';
+  selectedContainer=0;
   $('loadPallet').classList.add('active');
   $('loadFloor').classList.remove('active');
   $('floorLoadOptions').classList.add('hidden');
@@ -1365,6 +1772,7 @@ $('loadPallet').onclick=()=>{
 };
 $('loadFloor').onclick=()=>{
   containerLoadMethod='floor';
+  selectedContainer=0;
   $('loadFloor').classList.add('active');
   $('loadPallet').classList.remove('active');
   $('floorLoadOptions').classList.remove('hidden');
@@ -1385,7 +1793,10 @@ $('cContainerPreset').onchange=()=>{
 
 
 function setContainerQty(v){
-  $('cQty').value=Math.max(0,Math.floor(v));
+  const q=Math.max(0,Math.floor(v));
+  $('cQty').value=q;
+  $('qtyInput').value=q;
+  updateUI();
   updateContainerMode();
 }
 $('cMinus10').onclick=()=>setContainerQty(cnum('cQty')-10);
@@ -1393,20 +1804,10 @@ $('cMinus1').onclick=()=>setContainerQty(cnum('cQty')-1);
 $('cPlus1').onclick=()=>setContainerQty(cnum('cQty')+1);
 $('cPlus10').onclick=()=>setContainerQty(cnum('cQty')+10);
 
-$('syncFromPallet').onclick=()=>{
-  $('cProductName').value=$('productName').value;
-  $('cQty').value=$('qtyInput').value;
-  $('cUnitWeight').value=$('unitWeight').value;
-  // For floor loading, use the physical W-888 carton orientation 62 × 18 × 62.
-  $('cBoxL').value=$('boxW').value;
-  $('cBoxW').value=$('boxD').value;
-  $('cBoxH').value=$('boxH').value;
-  updateContainerMode();
-};
 
-['cL','cW','cH','cProductName','cBoxL','cBoxW','cBoxH','cQty','cUnitWeight','floorLayoutMode'].forEach(id=>{
-  const evt=['cQty','cL','cW','cH','cBoxL','cBoxW','cBoxH','cUnitWeight'].includes(id)?'input':'change';
-  $(id).addEventListener(evt,updateContainerMode);
+['cL','cW','cH','cQty','floorLayoutMode'].forEach(id=>{
+  const evt=['cQty','cL','cW','cH'].includes(id)?'input':'change';
+  $(id).addEventListener(evt,()=>{if(id==='cQty'){$('qtyInput').value=Math.floor(cnum('cQty'));updateUI()}updateContainerMode()});
 });
 
 
@@ -1550,19 +1951,20 @@ function addCarton(x,y,z,l,w,h){
   carton.position.set(x,y,z);
   cCargoGroup.add(carton);
 
-  // top sealing tape: one clear long strip from left to right, matching the approved single-carton look
-  const tape=cBox(cartonL*.94,Math.max(1.2,cartonH*.02),Math.max(1.6,cartonW*.075),0xe4c894,.98);
-  tape.position.set(x,y+cartonH/2-.12,z);
-  tape.castShadow=false; tape.receiveShadow=false;
-  cCargoGroup.add(tape);
+  // sealing tape always follows the longer top edge
+  const alongX=cartonL>=cartonW;
+  const tape=cBox(alongX?cartonL*.94:Math.max(1.6,cartonL*.075),Math.max(1.2,cartonH*.02),alongX?Math.max(1.6,cartonW*.075):cartonW*.94,0xe4c894,.98);
+  tape.position.set(x,y+cartonH/2-.12,z);tape.castShadow=false;tape.receiveShadow=false;cCargoGroup.add(tape);
 
-  // one oval handle slot on a narrow side only, to avoid strange shadow artifacts on the front face
-  const slotW=Math.max(2.4,cartonW*.34), slotH=Math.max(4.6,cartonH*.13), slotT=.55;
-  const slotColor=0x3a2817;
-  const slot=cBox(slotT,slotH,slotW,slotColor,.98);
-  slot.position.set(x-cartonL/2+.22,y,z-cartonW*.02);
-  slot.castShadow=false; slot.receiveShadow=false;
-  cCargoGroup.add(slot);
+  // two small round handle marks on the narrow side
+  const holeR=Math.max(.7,Math.min(cartonL,cartonW)*.055),holeGap=Math.max(holeR*2.2,Math.min(cartonL,cartonW)*.2);
+  const holeMat=new THREE.MeshBasicMaterial({color:0x21160e,side:THREE.DoubleSide,depthWrite:false});
+  [-1,1].forEach(k=>{
+    const hole=new THREE.Mesh(new THREE.CircleGeometry(holeR,20),holeMat);
+    if(cartonL>=cartonW){hole.rotation.y=-Math.PI/2;hole.position.set(x+cartonL/2+.04,y+cartonH*.18,z+k*holeGap)}
+    else{hole.rotation.x=-Math.PI/2;hole.position.set(x+k*holeGap,y+cartonH*.18,z+cartonW/2+.04)}
+    cCargoGroup.add(hole);
+  });
 }
 
 function addPalletStack(x,z,pL,pW,stackH,units){
@@ -1589,7 +1991,7 @@ function addPalletStack(x,z,pL,pW,stackH,units){
 }
 
 function buildContainerCargo(p,qty,L,W,H){
-  clearGroup(cCargoGroup); const firstQty=Math.min(qty,p.capacity);
+  clearGroup(cCargoGroup); const firstQty=Math.max(0,qty);
   if(p.method==='floor'){
     let placed=0; const startX=-L/2+p.boxL/2, startZ=-W/2+p.boxW/2;
     for(let k=0;k<p.nz;k++) for(let j=0;j<p.ny;j++) for(let i=0;i<p.nx;i++){
@@ -1614,26 +2016,153 @@ function refreshContainer3D(){
   const bL=cnum('cBoxL',1),bW=cnum('cBoxW',1),bH=cnum('cBoxH',1);
   const p=containerLoadMethod==='pallet'?palletContainerPlan(L,W,H,qty):floorContainerPlan(L,W,H,qty,bL,bW,bH);
   if(p.error)return;
-  buildContainerShell(L,W,H); buildContainerCargo(p,qty,L,W,H);
-  $('container3DNote').textContent=containerLoadMethod==='pallet'?`第 1 櫃預覽｜棧板裝櫃｜最多 ${p.capacity} 台／櫃`:`第 1 櫃預覽｜散裝｜最多 ${p.capacity} 台／櫃`;
+  const dist=containerDistribution(p,qty);selectedContainer=Math.min(selectedContainer,Math.max(0,dist.length-1));const cur=dist[selectedContainer]||{q:0};
+  buildContainerShell(L,W,H); buildContainerCargo(p,cur.q,L,W,H);
+  $('container3DNote').textContent=`第 ${selectedContainer+1} 櫃預覽｜${containerLoadMethod==='pallet'?'棧板裝櫃':'散裝'}｜本櫃 ${cur.q} 台`;
 }
 
 function setContainerCamera(mode){
   if(!cCamera)return;
-  const L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1),s=Math.max(L,W,H),target=new THREE.Vector3(0,H*.35,0);
-  if(mode==='front')cCamera.position.set(L*.72,H*.42,0);
-  else if(mode==='top')cCamera.position.set(0,H+s*.72,.01);
-  else if(mode==='side')cCamera.position.set(0,H*.42,W+s*.72);
-  else cCamera.position.set(L*.72,H*.68,W*.72);
-  if(cControls){cControls.target.copy(target);cControls.update();}else cCamera.lookAt(target);
+  const L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1);
+  const s=Math.max(L,W,H);
+  const target=new THREE.Vector3(0,H*.42,0);
+  if(mode==='front') cCamera.position.set(L*.92,H*.48,0);
+  else if(mode==='top') cCamera.position.set(0,H+s*.92,.01);
+  else if(mode==='side') cCamera.position.set(0,H*.48,W+s*.92);
+  else cCamera.position.set(L*1.02,H*.92,W*1.38);
+  if(cControls){
+    cControls.target.copy(target);
+    cControls.update();
+  }else cCamera.lookAt(target);
 }
 
 function animateContainer3D(){ if(!c3DReady)return; requestAnimationFrame(animateContainer3D); if(cControls)cControls.update(); cRenderer.render(cScene,cCamera); }
 function setShellMode(mode){ cShellMode=(mode==='solid'?'solid':'semi'); ['shellSemi','shellSolid'].forEach(id=>$(id).classList.remove('active')); $(cShellMode==='solid'?'shellSolid':'shellSemi').classList.add('active'); refreshContainer3D(); }
 $('shellSemi').onclick=()=>setShellMode('semi'); $('shellSolid').onclick=()=>setShellMode('solid');
-$('cViewFront').onclick=()=>setContainerCamera('front'); $('cViewTop').onclick=()=>setContainerCamera('top'); $('cViewSide').onclick=()=>setContainerCamera('side'); $('cViewAngle').onclick=()=>setContainerCamera('angle'); $('cViewReset').onclick=()=>setContainerCamera('angle');
+function setContainerView(mode){
+  const map={front:'cViewFront',top:'cViewTop',side:'cViewSide',angle:'cViewAngle'};
+  ['cViewFront','cViewTop','cViewSide','cViewAngle'].forEach(id=>$(id).classList.remove('active'));
+  if(map[mode]) $(map[mode]).classList.add('active');
+  setContainerCamera(mode);
+}
+$('cViewFront').onclick=()=>setContainerView('front');
+$('cViewTop').onclick=()=>setContainerView('top');
+$('cViewSide').onclick=()=>setContainerView('side');
+$('cViewAngle').onclick=()=>setContainerView('angle');
+
+
+$('cProductEdit').onclick=()=>openSidebarModal('productModal');
+$('cContainerEdit').onclick=()=>openSidebarModal('containerSpecModal');
+['containerSpecModal'].forEach(id=>{const m=$(id);if(m)m.addEventListener('click',e=>{if(e.target===m)closeSidebarModal(id)})});
+document.querySelectorAll('[data-close-modal="containerSpecModal"]').forEach(btn=>btn.onclick=()=>{closeSidebarModal('containerSpecModal');updateContainerMode()});
+['productName','boxW','boxH','boxD','unitWeight','productTemplate'].forEach(id=>{if($(id))$(id).addEventListener('change',()=>{syncContainerProductFromPallet();if($('containerModePanel').classList.contains('active'))updateContainerMode()})});
+
+function getContainerImageDataUrl(){if(!cRenderer)return'';cRenderer.render(cScene,cCamera);const source=cRenderer.domElement,out=document.createElement('canvas');out.width=source.width;out.height=source.height;const ctx=out.getContext('2d');ctx.fillStyle='#f5f7f9';ctx.fillRect(0,0,out.width,out.height);ctx.drawImage(source,0,0);return out.toDataURL('image/png')}
+$('cDownloadImage').onclick=()=>{try{const dataUrl=getContainerImageDataUrl();$('imagePreview').src=dataUrl;$('imageModal').classList.add('open');$('imageModal').setAttribute('aria-hidden','false');showContainerStatus('圖片已產生，請在圖片上按右鍵另存新檔。')}catch(err){console.error(err);showContainerStatus('圖片建立失敗。',true)}};
+
+function buildContainerReport(){
+  const p=currentContainerPlan;if(!p||p.error)return false;const zh=$('cReportLanguage').value==='zh';const qty=Math.floor(cnum('cQty'));const L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1);const dist=currentContainerDist;const cur=dist[selectedContainer]||{q:0,pallets:0};const img=getContainerImageDataUrl();const totalWeight=qty*cnum('cUnitWeight');
+  const cards=dist.map((d,i)=>`<div style="border:1px solid #dbe4ee;border-radius:12px;padding:10px;background:#fff"><div style="font-weight:800;color:#0f4c81">${zh?'第 '+(i+1)+' 櫃':'Container '+(i+1)}</div><div style="margin-top:5px;font-size:12px;line-height:1.6">${zh?'數量':'Quantity'}：${d.q}<br>${p.method==='pallet'?(zh?'棧板':'Pallets')+'：'+d.pallets+'<br>':''}${zh?'重量':'Weight'}：${(d.q*cnum('cUnitWeight')).toFixed(2)} kg</div></div>`).join('');
+  $('cShippingSheetContent').innerHTML=`<div style="font-family:Arial,'Microsoft JhengHei',sans-serif;color:#0f172a"><div style="font-size:12px;font-weight:800;color:#0f4c81">WEI CHUNG FUNG TRADING CO., LTD.</div><div style="font-size:22px;font-weight:900;margin:4px 0 10px">${zh?'貨櫃裝載資料單':'Container Loading Sheet'}</div><div style="height:2px;background:#0f4c81;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">${[[zh?'總數量':'Quantity',qty],[zh?'貨櫃數':'Containers',dist.length],[zh?'總重量':'Total Weight',totalWeight.toFixed(2)+' kg'],[zh?'裝櫃方式':'Method',p.method==='pallet'?(zh?'棧板':'Palletized'):(zh?'散裝':'Floor Loading')]].map(([k,v])=>`<div style="background:#f8fafc;border:1px solid #dbe4ee;border-radius:10px;padding:8px;text-align:center"><div style="font-size:10px;color:#64748b">${k}</div><div style="font-weight:900;margin-top:3px">${v}</div></div>`).join('')}</div><div style="border:1px solid #dbe4ee;border-radius:10px;padding:8px 10px;margin-bottom:12px;font-size:12px"><b>${zh?'品名':'Commodity'}：</b>${$('cProductName').value}<br><b>${zh?'貨櫃規格':'Container'}：</b>${containerPresetLabel()} / ${L} × ${W} × ${H} cm</div><div style="display:grid;grid-template-columns:1.1fr .9fr;gap:12px"><div style="border:1px solid #dbe4ee;border-radius:12px;padding:8px"><img src="${img}" style="width:100%;display:block;border-radius:8px;background:#f5f7f9"><div style="font-size:11px;color:#64748b;margin-top:5px">${zh?'目前預覽：第 '+(selectedContainer+1)+' 櫃':'Preview: Container '+(selectedContainer+1)}</div></div><div style="display:grid;gap:8px;align-content:start">${cards}</div></div></div>`;
+  $('containerReportPage').classList.add('show');$('containerReportWrap').scrollIntoView({behavior:'smooth',block:'start'});showContainerStatus(zh?'出貨單已產生。':'Shipping sheet generated.');return true;
+}
+$('cBuildReport').onclick=()=>buildContainerReport();$('cReportLanguage').onchange=()=>{if($('containerReportPage').classList.contains('show'))buildContainerReport()};
+
+async function downloadElementPdf(el,filename){if(!window.html2canvas||!window.jspdf)throw new Error('PDF libs missing');const canvas=await html2canvas(el,{scale:2.2,useCORS:true,backgroundColor:'#fff',logging:false});const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});const pageW=210,pageH=297,mx=10,mt=12,mb=10,uw=pageW-mx*2,uh=pageH-mt-mb;let iw=uw,ih=canvas.height*iw/canvas.width;if(ih>uh){ih=uh;iw=canvas.width*ih/canvas.height}pdf.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',(pageW-iw)/2,mt,iw,ih,undefined,'FAST');pdf.save(filename)}
+$('cGeneratePdf').onclick=async()=>{if(!buildContainerReport())return;const a=$('containerReportPage').querySelector('.container-report-actions');a.style.display='none';try{await downloadElementPdf($('containerReportPage'),`${Math.floor(cnum('cQty'))}台-貨櫃裝載資料單.pdf`)}catch(e){console.error(e);showContainerStatus('PDF 產生失敗。',true)}finally{a.style.display='flex'}};
+$('cDownloadWord').onclick=async()=>{if(!buildContainerReport())return;if(!window.html2canvas||!window.JSZip){showContainerStatus('Word 元件載入失敗。',true);return}const actions=$('containerReportPage').querySelector('.container-report-actions');actions.style.display='none';try{const canvas=await html2canvas($('containerReportPage'),{scale:2.1,useCORS:true,backgroundColor:'#fff',logging:false});const png=canvas.toDataURL('image/png'),zip=new JSZip();zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');zip.folder('_rels').file('.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');const word=zip.folder('word');word.folder('media').file('container-sheet.png',dataUrlToUint8Array(png));word.folder('_rels').file('document.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/container-sheet.png"/></Relationships>');const maxW=7.25,maxH=10.15,ratio=canvas.height/canvas.width;let wi=maxW,hi=wi*ratio;if(hi>maxH){hi=maxH;wi=hi/ratio}const cx=Math.round(wi*914400),cy=Math.round(hi*914400);word.file('document.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:drawing><wp:inline><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="1" name="Container Loading Sheet"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="container-sheet.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p><w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="680" w:right="720" w:bottom="720" w:left="720"/></w:sectPr></w:body></w:document>`);const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${Math.floor(cnum('cQty'))}台-貨櫃裝載資料單.docx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}catch(e){console.error(e);showContainerStatus('Word 產生失敗。',true)}finally{actions.style.display='flex'}};
 
 updateContainerMode();
+
+
+// ---------------- Smart Pallet Workflow ----------------
+let smartEntries=[[110,130,1],[110,100,1]];
+function renderSmartEntries(){
+  const host=$('palletEntryList');
+  host.innerHTML=smartEntries.map((p,i)=>`<div class="pallet-entry"><label>長 cm<input type="number" min="1" data-smart-l="${i}" value="${p[0]}"></label><label>寬 cm<input type="number" min="1" data-smart-w="${i}" value="${p[1]}"></label><label class="qty-col">現有板數<input type="number" min="0" step="1" data-smart-count="${i}" value="${p[2]}"></label><button type="button" class="remove-entry" data-remove-smart="${i}">刪除</button></div>`).join('');
+  host.querySelectorAll('[data-remove-smart]').forEach(b=>b.onclick=()=>{smartEntries.splice(Number(b.dataset.removeSmart),1);renderSmartEntries()});
+  host.querySelectorAll('[data-smart-l]').forEach(el=>el.oninput=()=>smartEntries[Number(el.dataset.smartL)][0]=Math.max(1,Number(el.value)||1));
+  host.querySelectorAll('[data-smart-w]').forEach(el=>el.oninput=()=>smartEntries[Number(el.dataset.smartW)][1]=Math.max(1,Number(el.value)||1));
+  host.querySelectorAll('[data-smart-count]').forEach(el=>el.oninput=()=>smartEntries[Number(el.dataset.smartCount)][2]=Math.max(0,Math.floor(Number(el.value)||0)));
+}
+function rectOverlap(a,b){return a.x<b.x+b.w-1e-7&&a.x+a.w>b.x+1e-7&&a.y<b.y+b.h-1e-7&&a.y+a.h>b.y+1e-7}
+function makeGridRects(regionX,regionY,regionL,regionW,rw,rh,anchor='center'){
+  const cols=Math.floor(regionL/rw),rows=Math.floor(regionW/rh);if(cols<1||rows<1)return[];
+  const usedL=cols*rw,usedW=rows*rh;
+  let sx=regionX,sy=regionY;
+  if(anchor==='center'){sx=regionX+(regionL-usedL)/2;sy=regionY+(regionW-usedW)/2}
+  if(anchor==='right')sx=regionX+regionL-usedL;
+  if(anchor==='bottom')sy=regionY+regionW-usedW;
+  const out=[];for(let y=0;y<rows;y++)for(let x=0;x<cols;x++)out.push({x:sx+x*rw,y:sy+y*rh,w:rw,h:rh});return out;
+}
+function practicalMetrics(rects,L,W,a,b){
+  if(!rects.length)return{count:0,fill:0,touch:0,edge:0,bbox:Infinity};
+  const minX=Math.min(...rects.map(r=>r.x)),maxX=Math.max(...rects.map(r=>r.x+r.w));
+  const minY=Math.min(...rects.map(r=>r.y)),maxY=Math.max(...rects.map(r=>r.y+r.h));
+  let touch=0,edge=0;
+  for(let i=0;i<rects.length;i++){
+    const r=rects[i];edge+=(Math.abs(r.x)<.01)+(Math.abs(r.y)<.01)+(Math.abs(r.x+r.w-L)<.01)+(Math.abs(r.y+r.h-W)<.01);
+    for(let j=i+1;j<rects.length;j++){
+      const q=rects[j];
+      const side=((Math.abs(r.x+r.w-q.x)<.01||Math.abs(q.x+q.w-r.x)<.01)&&Math.max(r.y,q.y)<Math.min(r.y+r.h,q.y+q.h)-.01);
+      const top=((Math.abs(r.y+r.h-q.y)<.01||Math.abs(q.y+q.h-r.y)<.01)&&Math.max(r.x,q.x)<Math.min(r.x+r.w,q.x+q.w)-.01);
+      if(side||top)touch++;
+    }
+  }
+  const bbox=(maxX-minX)*(maxY-minY),fill=rects.length*a*b/Math.max(1,bbox);
+  return{count:rects.length,fill,touch,edge,bbox};
+}
+function normalizePracticalRects(rects,L,W){
+  if(!rects.length)return rects;
+  const minX=Math.min(...rects.map(r=>r.x)),maxX=Math.max(...rects.map(r=>r.x+r.w));
+  const minY=Math.min(...rects.map(r=>r.y)),maxY=Math.max(...rects.map(r=>r.y+r.h));
+  const dx=(L-(maxX-minX))/2-minX,dy=(W-(maxY-minY))/2-minY;
+  return rects.map(r=>({...r,x:r.x+dx,y:r.y+dy}));
+}
+function searchMixedLayout(L,W,a,b){
+  L=Math.floor(L);W=Math.floor(W);a=Math.floor(a);b=Math.floor(b);
+  const candidates=[];
+  const add=rects=>{if(!rects.length)return;const key=rects.map(r=>`${Math.round(r.x*10)},${Math.round(r.y*10)},${r.w},${r.h}`).sort().join('|');if(candidates.some(c=>c.key===key))return;const rs=normalizePracticalRects(rects,L,W);candidates.push({key,rects:rs,m:practicalMetrics(rs,L,W,a,b)})};
+  // 1) Standard compact rectangular blocks — always preferred when capacity is equal.
+  add(makeGridRects(0,0,L,W,a,b,'center'));
+  if(a!==b)add(makeGridRects(0,0,L,W,b,a,'center'));
+  // 2) Two compact rectangular blocks separated by one straight split. This permits useful mixed orientation without U-shapes or isolated cartons.
+  const cutsX=new Set([a,b,L-a,L-b]);for(let n=1;n<=Math.floor(L/Math.min(a,b));n++){cutsX.add(n*a);cutsX.add(n*b)}
+  for(const cut0 of cutsX){const cut=Math.round(cut0);if(cut<=0||cut>=L)continue;
+    for(const [lw,lh] of [[a,b],[b,a]])for(const [rw,rh] of [[a,b],[b,a]]){
+      const left=makeGridRects(0,0,cut,W,lw,lh,'right');const right=makeGridRects(cut,0,L-cut,W,rw,rh,'left');add(left.concat(right));
+    }
+  }
+  const cutsY=new Set([a,b,W-a,W-b]);for(let n=1;n<=Math.floor(W/Math.min(a,b));n++){cutsY.add(n*a);cutsY.add(n*b)}
+  for(const cut0 of cutsY){const cut=Math.round(cut0);if(cut<=0||cut>=W)continue;
+    for(const [tw,th] of [[a,b],[b,a]])for(const [bw,bh] of [[a,b],[b,a]]){
+      const top=makeGridRects(0,0,L,cut,tw,th,'bottom');const bottom=makeGridRects(0,cut,L,W-cut,bw,bh,'top');add(top.concat(bottom));
+    }
+  }
+  candidates.sort((A,B)=>B.m.count-A.m.count||B.m.fill-A.m.fill||B.m.touch-A.m.touch||A.m.bbox-B.m.bbox||B.m.edge-A.m.edge);
+  return candidates.length?candidates[0].rects:[];
+}
+function smartPreview(host,L,W,rects){host.innerHTML='';rects.forEach(r=>{const d=document.createElement('div');d.className='smart-mini-box';d.style.left=(r.x/L*100)+'%';d.style.top=(r.y/W*100)+'%';d.style.width=(r.w/L*100)+'%';d.style.height=(r.h/W*100)+'%';host.appendChild(d)})}
+function syncSmartLimits(fromRecommend=false){const layers=Math.max(1,Math.floor(Number($(fromRecommend?'smartRecommendMaxLayers':'smartMaxLayers').value)||3)),height=Math.max(1,Number($(fromRecommend?'smartRecommendMaxHeight':'smartMaxHeight').value)||220);$('maxLayers').value=layers;$('maxHeight').value=height;return{layers,height}}
+function evaluatePallets(list){const c=cfg(),qty=c.qty;return list.map(item=>{const L=Number(item[0]),W=Number(item[1]),o=palletOptionFor(c,L,W),perPallet=o.cap,palletCount=perPallet?Math.ceil(qty/perPallet):9999,totalArea=palletCount*L*W;return{...o,perPallet,palletCount,totalArea}}).filter(r=>r.perLayer>0&&r.perPallet>0).sort((A,B)=>A.palletCount-B.palletCount||A.totalArea-B.totalArea||B.perPallet-A.perPallet)}
+function renderSmartResults(results){const host=$('smartResultsV2');if(!results.length){host.innerHTML='<div class="recommended-note">目前沒有找到可行方案。</div>';return}host.innerHTML=results.slice(0,6).map((r,i)=>`<div class="smart-result-v2 ${i===0?'best':''}"><h4>${r.L} × ${r.W} cm ${i===0?'｜推薦':''}</h4><div class="meta">每層 <b>${r.perLayer} 台</b>｜${r.layers} 層／板<br>每板最多 <b>${r.perPallet} 台</b><br>目前數量需要 <b>${r.palletCount} 板</b></div><div class="smart-mini-preview" id="smartPv${i}"></div><button type="button" class="apply-smart" data-apply-result="${i}">使用這個方案</button></div>`).join('');results.slice(0,6).forEach((r,i)=>smartPreview($(`smartPv${i}`),r.L,r.W,r.rects));host._results=results;host.querySelectorAll('[data-apply-result]').forEach(btn=>btn.onclick=()=>{const r=host._results[Number(btn.dataset.applyResult)];smartShipmentConfig=null;smartAppliedPlan={palletL:r.L,palletW:r.W,boxW:cfg().boxW,boxD:cfg().boxD,rects:r.rects,label:'實務最佳排列'};$('palletTemplate').value='custom';$('palletL').value=r.L;$('palletW').value=r.W;$('layoutMode').value='auto';selectedPallet=0;updateUI();$('smartModal').classList.remove('open');$('smartModal').setAttribute('aria-hidden','true')})}
+function planExistingForModal(){
+  syncSmartLimits(false);const c=cfg();
+  const valid=smartEntries.filter(e=>Number(e[2])>0&&Number(e[0])>0&&Number(e[1])>0);if(!valid.length){$('smartResultsV2').innerHTML='<div class="recommended-note">請至少輸入一種棧板尺寸與現有板數。</div>';return}
+  const preview=buildMixedShipmentPlan(c,{entries:valid});if(preview.error){$('smartResultsV2').innerHTML=`<div class="recommended-note">${preview.error}</div>`;return}
+  const usedMap=new Map();preview.pallets.filter(p=>p.source==='existing').forEach(p=>{const k=`${p.palletL}×${p.palletW}`;if(!usedMap.has(k))usedMap.set(k,{count:0,units:0,p});const x=usedMap.get(k);x.count++;x.units+=p.q});
+  const lines=[...usedMap.entries()].map(([k,v])=>`<div class="smart-stock-line"><b>${k} cm</b><span>使用 ${v.count} 板</span><span>${v.p.perLayer} 台／層</span><span>${v.units} 台</span></div>`).join('');
+  const supplement=preview.supplementUsed?`<div class="smart-supplement"><b>還需要補 ${preview.supplementUsed} 板</b><br>建議尺寸：${preview.supplement.L} × ${preview.supplement.W} cm｜每層 ${preview.supplement.perLayer} 台｜每板最多 ${preview.supplement.cap} 台</div>`:`<div class="smart-supplement"><b>現有棧板足夠</b><br>不需要另外補棧板。</div>`;
+  $('smartResultsV2').innerHTML=`<div class="smart-stock-summary"><h4>${c.qty} 台規劃結果</h4><div class="big">共 ${preview.pallets.length} 板</div><div class="smart-stock-lines">${lines}</div>${supplement}<button type="button" id="applyExistingPlan" class="apply-smart" style="margin-top:10px">使用這個出貨方案</button></div>`;
+  $('applyExistingPlan').onclick=()=>{smartAppliedPlan=null;smartShipmentConfig={entries:valid.map(e=>[Number(e[0]),Number(e[1]),Math.floor(Number(e[2]))])};selectedPallet=0;updateUI();$('smartModal').classList.remove('open');$('smartModal').setAttribute('aria-hidden','true')};
+}
+$('openSmartSelector').onclick=()=>{$('smartModalQty').textContent=`${cfg().qty} 台`;$('smartModalBox').textContent=`${cfg().boxW} × ${cfg().boxD} cm`;$('smartMaxLayers').value=cfg().productMaxLayers;$('smartMaxHeight').value=cfg().maxHeight;$('smartRecommendMaxLayers').value=cfg().productMaxLayers;$('smartRecommendMaxHeight').value=cfg().maxHeight;$('smartResultsV2').innerHTML='';renderSmartEntries();$('smartModal').classList.add('open');$('smartModal').setAttribute('aria-hidden','false')};
+$('closeSmartModal').onclick=()=>{$('smartModal').classList.remove('open');$('smartModal').setAttribute('aria-hidden','true')};$('smartModal').onclick=e=>{if(e.target===$('smartModal'))$('closeSmartModal').click()};
+$('smartModeExisting').onclick=()=>{$('smartModeExisting').classList.add('active');$('smartModeRecommend').classList.remove('active');$('smartPaneExisting').classList.add('active');$('smartPaneRecommend').classList.remove('active');$('smartResultsV2').innerHTML=''};
+$('smartModeRecommend').onclick=()=>{$('smartModeRecommend').classList.add('active');$('smartModeExisting').classList.remove('active');$('smartPaneRecommend').classList.add('active');$('smartPaneExisting').classList.remove('active');$('smartResultsV2').innerHTML=''};
+$('addPalletEntry').onclick=()=>{smartEntries.push([100,100,1]);renderSmartEntries()};
+$('runExistingSearch').onclick=planExistingForModal;
+$('runRecommendSearch').onclick=()=>{syncSmartLimits(true);const common=[[100,100],[110,100],[110,110],[120,100],[120,110],[130,100],[130,110]];renderSmartResults(evaluatePallets(common))};
 
 const themeToggle=$('themeToggle');
 const savedTheme=localStorage.getItem('palletPlannerTheme');
@@ -1646,6 +2175,7 @@ themeToggle.onclick=()=>{
   themeToggle.textContent=dark?'☀️ 淺色模式':'🌙 深色模式';
   localStorage.setItem('palletPlannerTheme',dark?'dark':'light');
 };
+
 
 </script>
 
