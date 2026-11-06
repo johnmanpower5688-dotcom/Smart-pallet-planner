@@ -622,7 +622,7 @@ body.dark .smart-supplement{background:#1e3a5f;border-color:#315784;color:#dbeaf
 #settingsPanel .workflow-card{padding:10px!important}
 .workflow-card h3{font-size:14px!important}.workflow-card p{margin:3px 0 7px!important;line-height:1.4!important}
 .smart-launch{padding:9px!important;font-size:13px!important}
-.applied-plan{padding:8px 9px!important;margin-top:7px!important}
+.applied-plan{padding:8px 9px!important;margin-top:7px!important;min-height:44px;box-sizing:border-box}
 .sidebar-action-row{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:7px}
 .sidebar-action-row .mini-action{border:0;background:transparent;color:#0f4c81;font-weight:800;font-size:11px;cursor:pointer;padding:3px 0}
 .qty-inline{display:grid;grid-template-columns:48px 48px minmax(78px,1fr) 48px 48px;gap:5px;align-items:stretch}
@@ -810,6 +810,9 @@ body.dark .container-method-tabs button,.body.dark .container-tab{background:#31
 body.dark .container-method-tabs button.active,body.dark .container-tab.active{background:#2563a6;color:#fff;border-color:#60a5fa}
 @media(max-width:1050px){.container-shell{grid-template-columns:1fr!important}.container-current-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
+
+/* v14 large shipment UX */
+.compact-nav{display:flex;align-items:center;justify-content:flex-end;gap:6px;flex-wrap:nowrap}.compact-nav button,.compact-nav select{height:32px;border:1px solid #cbd5e1;border-radius:999px;background:#fff;color:#334155;font-size:11px;font-weight:800;margin:0!important;padding:5px 10px}.compact-nav button{min-width:68px;cursor:pointer}.compact-nav button:disabled{opacity:.38;cursor:default}.compact-nav select{min-width:118px;text-align:center;text-align-last:center}.group-summary-note{font-size:11px;color:#64748b;margin:7px 0 0}.pallet-detail-toggle{margin-top:9px;border:1px solid #dbe4ee;border-radius:11px;background:#f8fafc;overflow:hidden}.pallet-detail-toggle>summary{cursor:pointer;padding:9px 11px;font-size:12px;font-weight:800;color:#334155;list-style:none}.pallet-detail-toggle>summary::-webkit-details-marker{display:none}.pallet-detail-toggle>summary:after{content:' ▾';color:#64748b}.pallet-detail-toggle[open]>summary:after{content:' ▴'}.pallet-detail-toggle .detail-table-wrap{padding:0 10px 10px;overflow:auto;max-height:420px}.pallet-detail-toggle table{min-width:680px!important}.grouped-row td:first-child{font-weight:800;color:#0f4c81}.total-row td{font-weight:900;background:#edf4f8;color:#0f4c81}.container-current-head .compact-nav{margin-left:auto}.container-report-container-card{border:1px solid #dbe4ee;border-radius:12px;padding:9px;background:#fff;break-inside:avoid}.container-report-container-card img{width:100%;display:block;border-radius:8px;background:#f5f7f9}.container-report-container-meta{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin-top:7px;font-size:10.5px}.container-report-container-meta>div{background:#f8fafc;border:1px solid #e5e7eb;border-radius:7px;padding:5px 6px}body.dark .compact-nav button,body.dark .compact-nav select{background:#314158;color:#f3f4f6;border-color:#556275}body.dark .pallet-detail-toggle{background:#273449;border-color:#475569}body.dark .pallet-detail-toggle>summary{color:#e5e7eb}body.dark .total-row td{background:#24364b;color:#fff}@media(max-width:720px){.compact-nav button{min-width:54px;padding:5px 7px}.compact-nav select{min-width:102px}.container-report-container-meta{grid-template-columns:1fr}}
 </style>
 
 <style>
@@ -817,6 +820,342 @@ body.dark .container-method-tabs button.active,body.dark .container-tab.active{b
 .report-actions.is-capturing{display:none!important}
 .total-row td{font-weight:900;background:#eef5fa;border-top:2px solid #b8cddd}
 body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f96}
+</style>
+<style>
+/* v15 refined dark palette + report typography */
+body.dark{
+  background:#0d1726!important;
+  color:#edf4fb!important;
+}
+body.dark .card,
+body.dark .metric,
+body.dark .currentpanel,
+body.dark .resultcard,
+body.dark .container-current-card,
+body.dark .container-summary-card,
+body.dark .workflow-card,
+body.dark .compact-summary,
+body.dark .compact-details,
+body.dark .collapse-tools,
+body.dark details{
+  background:#18283a!important;
+  color:#edf4fb!important;
+  border-color:#2d435a!important;
+  box-shadow:0 6px 20px rgba(0,0,0,.14)!important;
+}
+body.dark .currentitem,
+body.dark .container-current-item{
+  background:#21354a!important;
+  border-color:#36516b!important;
+  color:#f7fbff!important;
+  box-shadow:none!important;
+}
+body.dark h1,body.dark h2,body.dark h3,
+body.dark .metric .v,body.dark .currentitem .v,
+body.dark .container-current-item .v,
+body.dark .compact-summary .main,
+body.dark .workflow-card h3{color:#f8fbff!important}
+body.dark label,body.dark .hint,body.dark .muted,
+body.dark .k,body.dark .metric .k,body.dark .currentitem .k,
+body.dark .container-current-item .k,
+body.dark .container-summary-card .sub,
+body.dark .container-method-note,
+body.dark .group-summary-note,
+body.dark .container-output-lang,
+body.dark .compact-summary .sub,
+body.dark .workflow-card p,
+body.dark .transport-compact{color:#aebfd0!important}
+body.dark input,body.dark select,body.dark textarea,
+body.dark .container-qty-inline input,
+body.dark .container-qty-inline button,
+body.dark .compact-nav button,body.dark .compact-nav select{
+  background:#101d2d!important;
+  color:#f6f9fc!important;
+  border-color:#405a73!important;
+}
+body.dark input:focus,body.dark select:focus,body.dark textarea:focus{
+  outline:2px solid rgba(72,149,215,.22)!important;
+  border-color:#5b94c5!important;
+}
+body.dark .primary,
+body.dark .counter button.primary,
+body.dark .container-qty-inline button.plus,
+body.dark .mode-switch button.active,
+body.dark .container-method-tabs button.active,
+body.dark .load-method-tabs button.active,
+body.dark .container-tab.active,
+body.dark .pallettab.active{
+  background:#1e6ea9!important;
+  color:#fff!important;
+  border-color:#3b8cc5!important;
+  box-shadow:0 4px 12px rgba(18,82,128,.28)!important;
+}
+body.dark .btnsecondary,
+body.dark .pallettab,
+body.dark .mode-switch button,
+body.dark .container-method-tabs button,
+body.dark .load-method-tabs button,
+body.dark .container-tab,
+body.dark .viewer-tools .btn,
+body.dark .container-3d-toolbar button{
+  background:#203247!important;
+  color:#dce7f1!important;
+  border-color:#3a536b!important;
+}
+body.dark .btnsecondary:hover,
+body.dark .viewer-tools .btn:hover,
+body.dark .container-3d-toolbar button:hover{
+  background:#293f57!important;
+  color:#fff!important;
+}
+body.dark .ok,
+body.dark #fitMessage.ok{
+  background:#16382f!important;
+  border-color:#2e6858!important;
+  color:#d8f4e7!important;
+}
+body.dark .notice:not(.warning):not(.ok),
+body.dark .container-alert{
+  background:#152e47!important;
+  border-color:#315574!important;
+  color:#d8eaff!important;
+}
+body.dark .warning,
+body.dark .transportnote{
+  background:#3b301d!important;
+  border-color:#765b24!important;
+  color:#ffe3a1!important;
+}
+body.dark .errbox{
+  background:#3b2028!important;
+  border-color:#75404c!important;
+  color:#ffd7df!important;
+}
+body.dark .layoutinfo,
+body.dark .pallet-detail-toggle,
+body.dark .smart-stock-summary,
+body.dark .smart-stock-line,
+body.dark .pallet-entry,
+body.dark .smart-result-v2,
+body.dark .recommended-note{
+  background:#1d3044!important;
+  border-color:#354e66!important;
+  color:#eaf2f9!important;
+}
+body.dark .smart-result-v2.best{
+  background:#203a52!important;
+  border-color:#4f91c3!important;
+}
+body.dark .smart-stock-summary .big,
+body.dark .grouped-row td:first-child,
+body.dark .container-linkbtn{color:#8fc8f4!important}
+body.dark table th{
+  background:#1b2c3f!important;
+  color:#eaf2f9!important;
+  border-color:#334a60!important;
+}
+body.dark table td{
+  color:#e6edf5!important;
+  border-color:#2e4358!important;
+}
+body.dark .total-row td{
+  background:#29445f!important;
+  color:#fff!important;
+  border-top-color:#6686a4!important;
+}
+body.dark .pallet-detail-toggle>summary{color:#edf4fb!important}
+body.dark .theme-toggle{
+  background:#1a2c40!important;
+  color:#f5f9fd!important;
+  border-color:#3c566f!important;
+}
+body.dark .badge{
+  background:#17362e!important;
+  color:#c9f1df!important;
+}
+body.dark .intro{color:#9fb0c1!important}
+/* Keep 3D work areas light for product readability even in dark UI */
+body.dark #viewer{
+  background:#eef2f6!important;
+  border-color:#40556a!important;
+}
+body.dark #container3D{
+  background:linear-gradient(180deg,#eef4f8 0%,#f8fafc 100%)!important;
+  border-color:#40556a!important;
+}
+/* Reports always stay white and use the same typography in either theme */
+body.dark #reportPage,
+body.dark #containerReportPage{
+  background:#fff!important;
+  color:#0f172a!important;
+  border-color:#d1d5db!important;
+}
+body.dark #reportPage *,body.dark #containerReportPage *{color:inherit}
+body.dark #reportPage .report-title{color:#0f4c81!important}
+#containerReportPage,#containerReportPage *{
+  font-family:'Noto Sans TC','Microsoft JhengHei','Segoe UI',Arial,sans-serif;
+}
+.container-report-container-card{
+  border-color:#dbe4ee!important;
+  box-shadow:none!important;
+}
+.container-report-container-meta>div{
+  line-height:1.45;
+}
+</style>
+
+<style>
+/* v16 - charcoal dark theme + cleaner container UI */
+.container-calculation-helper{display:none!important}
+body.dark{
+  background:#101318!important;
+  color:#f1f5f9!important;
+}
+body.dark .wrap{color:#f1f5f9}
+body.dark .card,
+body.dark .metric,
+body.dark .currentpanel,
+body.dark .resultcard,
+body.dark .container-current-card,
+body.dark .container-summary-card,
+body.dark .workflow-card,
+body.dark .compact-summary,
+body.dark .sidebar-export-block,
+body.dark .container-3d-card,
+body.dark .ortho-card{
+  background:#1a2029!important;
+  border-color:#313a47!important;
+  color:#f1f5f9!important;
+  box-shadow:0 8px 24px rgba(0,0,0,.18)!important;
+}
+body.dark .currentitem,
+body.dark .container-current-item,
+body.dark .shipping-overview-item,
+body.dark .shipping-pallet-card{
+  background:#222a35!important;
+  border-color:#374252!important;
+  color:#f8fafc!important;
+}
+body.dark h1,body.dark h2,body.dark h3,
+body.dark .step-heading,body.dark .sidebar-export-title,
+body.dark .container-side-title,body.dark .metric .v,
+body.dark .currentitem .v,body.dark .container-current-item .v{
+  color:#f8fafc!important;
+}
+body.dark label,body.dark .hint,body.dark .muted,body.dark .intro,
+body.dark .k,body.dark .metric .k,body.dark .currentitem .k,
+body.dark .container-current-item .k,body.dark .container-summary-card .sub,
+body.dark .container-method-note,body.dark .group-summary-note,
+body.dark .container-output-lang,body.dark .shipping-overview-item .k,
+body.dark .shipping-pallet-card .line,body.dark .shipping-total .k{
+  color:#9eabb9!important;
+}
+body.dark input,body.dark select,body.dark textarea,
+body.dark .container-qty-inline input,body.dark .container-qty-inline button,
+body.dark .compact-nav button,body.dark .compact-nav select{
+  background:#141a22!important;
+  color:#f3f6fa!important;
+  border-color:#3b4655!important;
+  box-shadow:none!important;
+}
+body.dark input:hover,body.dark select:hover,body.dark textarea:hover{border-color:#536273!important}
+body.dark input:focus,body.dark select:focus,body.dark textarea:focus{
+  outline:2px solid rgba(54,139,210,.18)!important;
+  border-color:#4a8fc7!important;
+}
+body.dark .primary,
+body.dark .counter button.primary,
+body.dark .container-qty-inline button.plus,
+body.dark .mode-switch button.active,
+body.dark .container-method-tabs button.active,
+body.dark .load-method-tabs button.active,
+body.dark .container-tab.active,
+body.dark .pallettab.active{
+  background:#246fa8!important;
+  color:#fff!important;
+  border-color:#3182bd!important;
+  box-shadow:0 5px 15px rgba(17,89,142,.26)!important;
+}
+body.dark .btnsecondary,body.dark .pallettab,body.dark .mode-switch button,
+body.dark .container-method-tabs button,body.dark .load-method-tabs button,
+body.dark .container-tab,body.dark .viewer-tools .btn,body.dark .container-3d-toolbar button,
+body.dark .view-dropdown>summary{
+  background:#202833!important;
+  color:#d7e0e9!important;
+  border-color:#394657!important;
+}
+body.dark .btnsecondary:hover,body.dark .pallettab:hover,body.dark .mode-switch button:hover,
+body.dark .viewer-tools .btn:hover,body.dark .container-3d-toolbar button:hover,
+body.dark .view-dropdown>summary:hover{
+  background:#283342!important;
+  color:#fff!important;
+  border-color:#4a5a6c!important;
+}
+body.dark .view-menu{
+  background:#1a2029!important;
+  border-color:#313a47!important;
+  box-shadow:0 18px 45px rgba(0,0,0,.36)!important;
+}
+body.dark .ok,body.dark #fitMessage.ok,body.dark .recommended-note{
+  background:#172b27!important;
+  border-color:#2d5249!important;
+  color:#bfe8dc!important;
+}
+body.dark .notice:not(.warning):not(.ok),body.dark .container-alert{
+  background:#172431!important;
+  border-color:#2e4b64!important;
+  color:#c9e0f2!important;
+}
+body.dark .warning,body.dark .transportnote{
+  background:#30291c!important;
+  border-color:#5e4d2a!important;
+  color:#efd59a!important;
+}
+body.dark .errbox{background:#301d22!important;border-color:#633841!important;color:#f2c5cd!important}
+body.dark .layoutinfo,body.dark .pallet-detail-toggle,body.dark .smart-stock-summary,
+body.dark .smart-stock-line,body.dark .pallet-entry,body.dark .smart-result-v2{
+  background:#1f2732!important;
+  border-color:#343f4e!important;
+  color:#e8edf3!important;
+}
+body.dark .smart-result-v2.best{background:#202f3d!important;border-color:#377fb2!important}
+body.dark .smart-stock-summary .big,body.dark .grouped-row td:first-child,
+body.dark .container-linkbtn,body.dark .shipping-pallet-card .title{color:#73b7e7!important}
+body.dark table th{
+  background:#1b222c!important;
+  color:#cfd8e3!important;
+  border-color:#343e4b!important;
+}
+body.dark table td{color:#e9eef4!important;border-color:#2d3743!important}
+body.dark .total-row td{background:#263443!important;color:#f8fafc!important;border-top-color:#52677c!important}
+body.dark .pallet-detail-toggle>summary{color:#e9eef4!important}
+body.dark .theme-toggle{background:#1d252f!important;color:#e8eef5!important;border-color:#3a4655!important}
+body.dark .badge{background:#1d312a!important;color:#b9e2d3!important}
+body.dark .step-heading::before,body.dark .sidebar-export-title::before{background:#718297!important}
+body.dark .shipping-total{background:#202b36!important;border-color:#354454!important}
+body.dark .shipping-total .v{color:#eef5fb!important}
+/* keep 3D canvases light but less stark than white */
+body.dark #viewer{background:#e8edf2!important;border-color:#384655!important}
+body.dark #container3D{background:linear-gradient(180deg,#e7edf2 0%,#f3f6f8 100%)!important;border-color:#384655!important}
+/* generated reports are always formal white documents */
+body.dark #reportPage,body.dark #containerReportPage{background:#fff!important;color:#0f172a!important;border-color:#d1d5db!important}
+body.dark #reportPage *,body.dark #containerReportPage *{color:inherit}
+body.dark #reportPage .report-title{color:#0f4c81!important}
+</style>
+
+<style>
+
+
+.placement-control{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px;padding:9px 10px;border:1px solid #d7e2ec;border-radius:11px;background:#f8fafc}.placement-control .label{font-size:11px;color:#64748b}.placement-control select{width:auto;min-width:145px;padding:6px 8px;font-size:11px}.placement-control .placement-note{font-size:10.5px;color:#64748b;margin-top:3px;line-height:1.35}.placement-control .left{min-width:0}.custom-product-note{font-size:10.5px;line-height:1.45;color:#64748b;margin-top:7px;padding:8px 9px;border-radius:9px;background:#f8fafc;border:1px solid #e2e8f0}body.dark .placement-control,body.dark .custom-product-note{background:#202833;border-color:#465464}body.dark .placement-control .label,body.dark .placement-control .placement-note,body.dark .custom-product-note{color:#aebac7}
+.special-top-option{display:flex;align-items:flex-start;gap:9px;margin-top:9px;padding:10px 11px;border:1px solid #d7e2ec;border-radius:11px;background:#f8fafc;cursor:pointer}.special-top-option input{width:16px;height:16px;margin-top:2px;accent-color:#0f4c81}.special-top-option span{display:block;min-width:0}.special-top-option b{display:block;font-size:12px;color:#334155}.special-top-option small{display:block;margin-top:2px;font-size:10.5px;line-height:1.45;color:#64748b}.special-top-option:has(input:checked){background:#eef7ff;border-color:#7cb7df}.special-top-option:has(input:checked) b{color:#0f4c81}body.dark .special-top-option{background:#202833;border-color:#465464}body.dark .special-top-option b{color:#edf4fb}body.dark .special-top-option small{color:#aebac7}body.dark .special-top-option:has(input:checked){background:#18334a;border-color:#4b9bd1}body.dark .special-top-option:has(input:checked) b{color:#8dccf4}
+/* v20 container alignment + visible pallet footprint */
+@media(min-width:1051px){
+  .container-shell{align-items:stretch!important;}
+  .container-settings{height:100%!important;box-sizing:border-box;display:flex!important;flex-direction:column!important;}
+  .container-settings>.container-side-section:last-of-type{margin-top:auto!important;}
+}
+.container-method-note .current-pallet-spec{display:block;margin-top:3px;font-weight:800;color:#0f4c81}
+body.dark .container-method-note .current-pallet-spec{color:#7fc3f0!important}
 </style>
 </head>
 <body>
@@ -847,6 +1186,10 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
       
       <button type="button" id="openSmartSelector" class="smart-launch">開始規劃</button>
       <div id="appliedPlan" class="applied-plan"><strong>目前方案：130 × 110 cm</strong><br>W-888 固定排法｜10 台／層｜最多 30 台／板</div>
+      <div class="pallet-compact-actions">
+        <button type="button" class="compact-setting-btn" id="openPlacementEdit"><span>擺放方式</span><small id="placementNote">W-888 固定直立</small></button>
+        <label class="compact-setting-btn compact-toggle-btn" id="specialTopWrap"><input type="checkbox" id="allowTopFlat"><span><b>特殊頂層加放</b><small>關閉</small></span></label>
+      </div>
       <div class="sidebar-action-row"><span class="muted" style="margin:0">需要指定尺寸時</span><button type="button" id="openPalletEdit" class="mini-action">手動修改尺寸</button></div>
     </div>
   </div>
@@ -865,14 +1208,12 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
   <div id="warningMessage" class="notice warning" style="margin-top:7px;display:none"></div>
 
   <div class="sidebar-export-block">
-    <div class="sidebar-export-title">輸出</div>
-    <div class="sidebar-export-actions">
-      <button type="button" id="downloadImage" class="btn btnsecondary">產生 3D 圖片</button>
-      <button type="button" id="buildReport" class="btn btnsecondary">產生出貨單</button>
+    <div class="sidebar-export-headrow">
+      <div class="sidebar-export-title export-title-inline"><span>輸出</span><small>語言</small></div>
+      <select id="reportLanguage" class="inline-language-select"><option value="zh">中文</option><option value="en">English</option></select>
     </div>
-    <div class="sidebar-export-language">
-      <span>出貨單語言</span>
-      <select id="reportLanguage"><option value="zh">中文</option><option value="en">English</option></select>
+    <div class="sidebar-export-actions">
+      <button type="button" id="buildReport" class="btn btnsecondary export-single">產生出貨單</button>
     </div>
     <div id="actionStatus" class="hint" style="text-align:left;min-height:18px;margin-top:5px"></div>
   </div>
@@ -887,7 +1228,7 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
   </div>
 
   <section class="currentpanel">
-    <div class="current-head-row"><h3 id="currentTitle">目前查看：第 1 板</h3><div id="palletTabs" class="pallettabs"></div></div>
+    <div class="current-head-row"><h3 id="currentTitle">目前查看：第 1 板</h3><div id="palletTabs" class="compact-nav"><button type="button" id="palletPrev">上一板</button><select id="palletJump" aria-label="切換棧板"></select><button type="button" id="palletNext">下一板</button></div></div>
     <div class="currentgrid">
       <div class="currentitem"><div class="k">紙箱數量</div><div id="currentQty" class="v">—</div></div>
       <div class="currentitem"><div class="k">層數</div><div id="currentLayers" class="v">—</div></div>
@@ -919,6 +1260,8 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
         <thead><tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>完成尺寸 cm</th><th>毛重 kg</th><th>運輸 CBM</th></tr></thead>
         <tbody id="resultBody"></tbody>
       </table>
+      <div id="groupSummaryNote" class="group-summary-note"></div>
+      <details id="palletDetailToggle" class="pallet-detail-toggle"><summary>查看逐板明細</summary><div class="detail-table-wrap"><table><thead><tr><th>棧板</th><th>紙箱數量</th><th>層數</th><th>完成尺寸 cm</th><th>毛重 kg</th><th>運輸 CBM</th></tr></thead><tbody id="resultDetailBody"></tbody></table></div></details>
     </section>
     <section class="resultcard"><h3>貨運公司資料</h3><pre id="shippingText"></pre><button type="button" id="copyShipping" class="btn full">複製英文資料</button></section>
   </div>
@@ -983,12 +1326,13 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
       </div>
 
       <div class="container-side-section" style="margin-bottom:0">
-        <div class="container-side-title">輸出</div>
-        <div class="container-output-row">
-          <button type="button" id="cDownloadImage" class="btn btnsecondary">產生 3D 圖片</button>
-          <button type="button" id="cBuildReport" class="btn btnsecondary">產生出貨單</button>
+        <div class="container-export-headrow">
+          <div class="container-side-title">輸出 <small>語言</small></div>
+          <select id="cReportLanguage" class="inline-language-select"><option value="zh">中文</option><option value="en">English</option></select>
         </div>
-        <div class="container-output-lang"><span>出貨單語言</span><select id="cReportLanguage"><option value="zh">中文</option><option value="en">English</option></select></div>
+        <div class="container-output-row">
+          <button type="button" id="cBuildReport" class="btn btnsecondary export-single">產生出貨單</button>
+        </div>
         <div id="cActionStatus" class="hint" style="text-align:left;min-height:18px;margin-top:6px"></div>
       </div>
 
@@ -1010,7 +1354,7 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
       <section class="container-current-card">
         <div class="container-current-head">
           <h3 id="cCurrentTitle">目前查看：第 1 櫃</h3>
-          <div id="cContainerTabs" class="container-tabs"></div>
+          <div id="cContainerTabs" class="compact-nav"><button type="button" id="containerPrev">上一櫃</button><select id="containerJump" aria-label="切換貨櫃"></select><button type="button" id="containerNext">下一櫃</button></div>
         </div>
         <div class="container-current-grid">
           <div class="container-current-item"><div class="k">本櫃產品</div><div id="cCurrentQty" class="v">—</div></div>
@@ -1035,20 +1379,14 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
         <div id="container3DNote" class="container-3d-note">目前貨櫃與裝載結果的 3D 預覽。</div>
       </section>
 
-      <section class="container-result-card">
-        <details class="collapse-tools" style="margin:0">
-          <summary>裝櫃明細 ▾</summary>
-          <div class="collapse-body">
-            <div id="cResultKV" class="container-detail-grid"></div>
-            <div style="height:12px"></div>
-            <details class="collapse-tools" style="margin:0"><summary>排列視圖（頂視／正視／側視） ▾</summary><div class="collapse-body"><div class="ortho-grid">
-              <div class="ortho-card"><h4>頂視圖 Top View</h4><div class="ortho-frame"><div id="viewTop" class="pack-grid"></div></div><div id="viewTopNote" class="view-note"></div></div>
-              <div class="ortho-card"><h4>側內正視圖 Front Interior View</h4><div class="ortho-frame"><div id="viewFront" class="pack-grid"></div></div><div id="viewFrontNote" class="view-note"></div></div>
-              <div class="ortho-card"><h4>櫃內側視圖 Side Interior View</h4><div class="ortho-frame"><div id="viewSide" class="pack-grid"></div></div><div id="viewSideNote" class="view-note"></div></div>
-            </div><div id="cFootnote" class="container-footnote"></div></div></details>
-          </div>
-        </details>
-      </section>
+      <!-- Hidden calculation helpers: kept for container calculations, not shown in the UI. -->
+      <div class="container-calculation-helper" aria-hidden="true">
+        <div id="cResultKV"></div>
+        <div id="viewTop"></div><div id="viewTopNote"></div>
+        <div id="viewFront"></div><div id="viewFrontNote"></div>
+        <div id="viewSide"></div><div id="viewSideNote"></div>
+        <div id="cFootnote"></div>
+      </div>
 
       <section id="containerReportWrap">
         <div id="containerReportPage">
@@ -1075,10 +1413,11 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
 <div id="productModal" class="sidebar-modal" aria-hidden="true">
   <div class="sidebar-modal-card">
     <div class="sidebar-modal-head"><div><h2>產品資料</h2><p>平常使用固定資料，只有需要時再修改。</p></div><button type="button" class="sidebar-modal-close" data-close-modal="productModal">關閉</button></div>
-    <label>產品模板<select id="productTemplate"><option value="w888">W-888 一般風扇</option><option value="custom">自訂產品</option></select></label>
+    <label>產品模板<select id="productTemplate"><option value="w888">W-888 一般風扇</option><option value="custom">自訂紙箱</option></select></label>
     <label style="margin-top:8px">產品名稱<input id="productName" value="W-888 Ceiling Fan"></label>
-    <div class="grid3" style="margin-top:8px"><label>正面寬<input id="boxW" type="number" value="62" min="1"></label><label>高度<input id="boxH" type="number" value="62" min="1"></label><label>厚度<input id="boxD" type="number" value="18" min="1"></label></div>
-    <label style="margin-top:8px">單台重量 kg<input id="unitWeight" type="number" value="5.56" min="0" step="0.01"></label>
+    <div class="grid3" style="margin-top:8px"><label>長度 cm<input id="boxW" type="number" value="62" min="1"></label><label>寬度 cm<input id="boxD" type="number" value="18" min="1"></label><label>高度 cm<input id="boxH" type="number" value="62" min="1"></label></div>
+    <div id="productDimNote" class="custom-product-note">W-888 原紙箱規格為 62 × 62 × 18 cm；正常出貨採直立，棧板底面為 62 × 18 cm、高 62 cm。</div>
+    <label style="margin-top:8px">單箱重量 kg<input id="unitWeight" type="number" value="5.56" min="0" step="0.01"></label>
     <div class="modal-actions"><button type="button" class="btn primary" data-close-modal="productModal">完成</button></div>
   </div>
 </div>
@@ -1090,6 +1429,15 @@ body.dark .total-row td{background:#314158;color:#f8fafc;border-top-color:#6b7f9
     <div class="grid3" style="margin-top:8px"><label>長度<input id="palletL" type="number" value="130" min="1"></label><label>寬度<input id="palletW" type="number" value="110" min="1"></label><label>高度<input id="palletH" type="number" value="15" min="0"></label></div>
     <label style="margin-top:8px">棧板重量 kg<input id="palletWeight" type="number" value="0" min="0" step="0.1"></label>
     <div class="modal-actions"><button type="button" class="btn primary" data-close-modal="palletEditModal">完成</button></div>
+  </div>
+</div>
+
+<div id="placementModal" class="sidebar-modal" aria-hidden="true">
+  <div class="sidebar-modal-card">
+    <div class="sidebar-modal-head"><div><h2>擺放方式</h2><p>設定紙箱在棧板上的基本方向。</p></div><button type="button" class="sidebar-modal-close" data-close-modal="placementModal">關閉</button></div>
+    <label>擺放規則<select id="placementRule"><option value="upright">保持直立</option><option value="auto">系統自動最佳方向</option></select></label>
+    <div id="placementModalNote" class="custom-product-note">W-888 固定直立，可在棧板平面旋轉。</div>
+    <div class="modal-actions"><button type="button" class="btn primary" data-close-modal="placementModal">完成</button></div>
   </div>
 </div>
 
@@ -1157,17 +1505,56 @@ scene.add(new THREE.HemisphereLight(0xffffff,0x667085,2.1));const light=new THRE
 const floor=new THREE.Mesh(new THREE.PlaneGeometry(1000,1000),new THREE.MeshStandardMaterial({color:0xe5e7eb,roughness:.9}));floor.rotation.x=-Math.PI/2;floor.position.y=-8;floor.receiveShadow=true;scene.add(floor);const grid=new THREE.GridHelper(800,32,0x9ca3af,0xd1d5db);grid.position.y=-7.8;scene.add(grid);
 
 function num(id,min=0){return Math.max(min,Number($(id).value)||0)}
-function cfg(){return{productName:$('productName').value||'Product',boxW:num('boxW',1),boxH:num('boxH',1),boxD:num('boxD',1),unitWeight:num('unitWeight'),qty:Math.floor(num('qtyInput')),palletL:num('palletL',1),palletW:num('palletW',1),palletH:num('palletH'),palletWeight:num('palletWeight'),layoutMode:$('layoutMode').value,distribution:$('distribution').value,maxHeight:num('maxHeight',1),maxWeight:num('maxWeight',1),productMaxLayers:Math.max(1,Math.floor(num('maxLayers',1))),manualCols:Math.max(1,Math.floor(num('manualCols',1))),manualRows:Math.max(1,Math.floor(num('manualRows',1)))}}
+function productDisplayDims(){return{L:num('boxW',1),W:num('boxD',1),H:num('boxH',1)}}
+function resolvePlacement(c){
+  c.rawBoxW=c.boxW;c.rawBoxD=c.boxD;c.rawBoxH=c.boxH;
+  if(c.productTemplate==='w888'||c.placementRule!=='auto')return{...c,orientationLabel:c.productTemplate==='w888'?'W-888 固定直立':'保持直立'};
+  const dims=[c.rawBoxW,c.rawBoxD,c.rawBoxH];
+  const candidates=[
+    {boxW:dims[0],boxD:dims[1],boxH:dims[2],orientationLabel:`${dims[0]} × ${dims[1]} 底｜高 ${dims[2]} cm`},
+    {boxW:dims[0],boxD:dims[2],boxH:dims[1],orientationLabel:`${dims[0]} × ${dims[2]} 底｜高 ${dims[1]} cm`},
+    {boxW:dims[1],boxD:dims[2],boxH:dims[0],orientationLabel:`${dims[1]} × ${dims[2]} 底｜高 ${dims[0]} cm`}
+  ];
+  const uniq=[];for(const x of candidates)if(!uniq.some(u=>u.boxW===x.boxW&&u.boxD===x.boxD&&u.boxH===x.boxH))uniq.push(x);
+  const weightUnits=Math.max(0,Math.floor((c.maxWeight-c.palletWeight)/Math.max(c.unitWeight,.000001)));
+  const scored=uniq.map(o=>{
+    const rects=searchMixedLayout(c.palletL,c.palletW,Math.round(o.boxW),Math.round(o.boxD));
+    const perLayer=rects.length;
+    const layers=Math.min(c.productMaxLayers,Math.max(0,Math.floor((c.maxHeight-c.palletH)/o.boxH)));
+    const cap=Math.min(perLayer*layers,weightUnits);
+    const b=boundsForRects(rects);
+    return{...o,cap,perLayer,layers,rects,usedArea:b.usedL*b.usedW};
+  }).sort((a,b)=>b.cap-a.cap||b.perLayer-a.perLayer||a.usedArea-b.usedArea||a.boxH-b.boxH);
+  const best=scored[0]||c;
+  return{...c,boxW:best.boxW||c.boxW,boxD:best.boxD||c.boxD,boxH:best.boxH||c.boxH,orientationLabel:best.orientationLabel||'系統自動最佳方向'};
+}
+function cfg(){const base={productName:$('productName').value||'Product',productTemplate:$('productTemplate').value,placementRule:$('placementRule')?$('placementRule').value:'upright',boxW:num('boxW',1),boxH:num('boxH',1),boxD:num('boxD',1),unitWeight:num('unitWeight'),qty:Math.floor(num('qtyInput')),palletL:num('palletL',1),palletW:num('palletW',1),palletH:num('palletH'),palletWeight:num('palletWeight'),layoutMode:$('layoutMode').value,distribution:$('distribution').value,maxHeight:num('maxHeight',1),maxWeight:num('maxWeight',1),productMaxLayers:Math.max(1,Math.floor(num('maxLayers',1))),manualCols:Math.max(1,Math.floor(num('manualCols',1))),manualRows:Math.max(1,Math.floor(num('manualRows',1))),allowTopFlat:!!($('allowTopFlat')&&$('allowTopFlat').checked)&&$('productTemplate').value==='w888'};return resolvePlacement(base)}
 function chooseLayout(c){
   if(smartAppliedPlan && Math.abs(smartAppliedPlan.palletL-c.palletL)<.01 && Math.abs(smartAppliedPlan.palletW-c.palletW)<.01 && Math.abs(smartAppliedPlan.boxW-c.boxW)<.01 && Math.abs(smartAppliedPlan.boxD-c.boxD)<.01){
     return{customRects:smartAppliedPlan.rects,label:smartAppliedPlan.label||'智慧混合排列',rotated:false};
   }
-  if(c.layoutMode==='template')return{cols:2,rows:5,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'W-888 固定排法'};
+  if(c.layoutMode==='template'&&c.productTemplate==='w888')return{cols:2,rows:5,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'W-888 固定排法'};
   if(c.layoutMode==='manual')return{cols:c.manualCols,rows:c.manualRows,dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'手動指定排法'};
+  if(c.layoutMode==='auto'&&c.productTemplate==='custom'){
+    const rects=searchMixedLayout(c.palletL,c.palletW,Math.round(c.boxW),Math.round(c.boxD));
+    return{customRects:rects,label:'系統自動最佳排法',rotated:false};
+  }
   const a={cols:Math.floor(c.palletL/c.boxW),rows:Math.floor(c.palletW/c.boxD),dimX:c.boxW,dimZ:c.boxD,rotated:false,label:'原方向'};
   const b={cols:Math.floor(c.palletL/c.boxD),rows:Math.floor(c.palletW/c.boxW),dimX:c.boxD,dimZ:c.boxW,rotated:true,label:'旋轉 90°'};
   a.count=a.cols*a.rows;b.count=b.cols*b.rows;return b.count>a.count?b:a
 }
+function topFlatInfo(c,baseHeight,weightUnits,baseCap){
+  const a={cols:Math.floor(c.palletL/c.boxW),rows:Math.floor(c.palletW/c.boxH),flatL:c.boxW,flatW:c.boxH};
+  const b={cols:Math.floor(c.palletL/c.boxH),rows:Math.floor(c.palletW/c.boxW),flatL:c.boxH,flatW:c.boxW};
+  const best=(b.cols*b.rows>a.cols*a.rows)?b:a;
+  const physical=Math.max(0,best.cols*best.rows);
+  const heightOK=baseHeight+c.boxD<=c.maxHeight+.01;
+  const weightRoom=Math.max(0,weightUnits-baseCap);
+  const extra=c.allowTopFlat&&heightOK?Math.min(physical,weightRoom):0;
+  return{...best,physical,heightOK,extra,extraHeight:c.boxD};
+}
+function palletLayerText(p){return p.topFlat?`${p.layers} 層＋頂部 ${p.topFlat} 箱`:`${p.layers} 層`}
+
 function plan(c){
   const layout=chooseLayout(c);
   const perLayer=layout.customRects?layout.customRects.length:Math.max(0,layout.cols*layout.rows);
@@ -1178,13 +1565,16 @@ function plan(c){
   const heightLayers=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));
   const weightUnits=Math.max(0,Math.floor((c.maxWeight-c.palletWeight)/Math.max(c.unitWeight,.000001)));
   const allowedLayers=Math.min(c.productMaxLayers,heightLayers);
-  const cap=Math.min(perLayer*allowedLayers,weightUnits);
+  const baseCap=Math.min(perLayer*allowedLayers,weightUnits);
+  const baseFullHeight=c.palletH+allowedLayers*c.boxH;
+  const topFlat=topFlatInfo(c,baseFullHeight,weightUnits,baseCap);
+  const cap=baseCap+topFlat.extra;
   if(cap<=0)return{error:'高度或重量限制使每板無法放入產品。'};
   const count=Math.max(1,Math.ceil(c.qty/cap));let alloc=[];
   if(c.qty===0)alloc=[];else if(c.distribution==='balanced'){const base=Math.floor(c.qty/count),extra=c.qty%count;alloc=Array.from({length:count},(_,i)=>base+(i<extra?1:0))}else{let r=c.qty;while(r>0){const t=Math.min(cap,r);alloc.push(t);r-=t}}
-  const pallets=alloc.map((q,i)=>{const layers=Math.ceil(q/perLayer),height=c.palletH+layers*c.boxH,cargoWeight=q*c.unitWeight,gross=cargoWeight+c.palletWeight,stackCBM=(usedL*usedW*height)/1e6,transportCBM=(c.palletL*c.palletW*height)/1e6;return{index:i,q,layers,height,cargoWeight,gross,stackCBM,transportCBM}});
+  const pallets=alloc.map((q,i)=>{const flat=Math.max(0,q-baseCap),upright=q-flat,layers=upright?Math.ceil(upright/perLayer):0,height=c.palletH+layers*c.boxH+(flat?c.boxD:0),cargoWeight=q*c.unitWeight,gross=cargoWeight+c.palletWeight,stackCBM=(usedL*usedW*height)/1e6,transportCBM=(c.palletL*c.palletW*height)/1e6;return{index:i,q,layers,height,cargoWeight,gross,stackCBM,transportCBM,topFlat:flat,uprightQty:upright}});
   const productCBM=c.qty*c.boxW*c.boxH*c.boxD/1e6,totalGross=pallets.reduce((s,p)=>s+p.gross,0),totalTransport=pallets.reduce((s,p)=>s+p.transportCBM,0),usage=Math.min(999,(usedL*usedW/(c.palletL*c.palletW))*100);
-  return{c,layout,perLayer,usedL,usedW,cap,pallets,productCBM,totalGross,totalTransport,usage}
+  return{c,layout,perLayer,usedL,usedW,cap,baseCap,topFlat,pallets,productCBM,totalGross,totalTransport,usage}
 }
 function boundsForRects(rects){
   if(!rects||!rects.length)return{usedL:0,usedW:0};
@@ -1203,9 +1593,12 @@ function palletOptionFor(c,L,W){
   const heightLayers=Math.max(0,Math.floor((c.maxHeight-c.palletH)/c.boxH));
   const layers=Math.min(c.productMaxLayers,heightLayers);
   const weightUnits=Math.max(0,Math.floor((c.maxWeight-c.palletWeight)/Math.max(c.unitWeight,.000001)));
-  const cap=Math.min(perLayer*layers,weightUnits);
+  const baseCap=Math.min(perLayer*layers,weightUnits);
+  const tc={...c,palletL:L,palletW:W};
+  const topFlat=topFlatInfo(tc,c.palletH+layers*c.boxH,weightUnits,baseCap);
+  const cap=baseCap+topFlat.extra;
   const b=boundsForRects(rects);
-  return{L,W,rects,perLayer,layers,cap,usedL:b.usedL,usedW:b.usedW,area:L*W};
+  return{L,W,rects,perLayer,layers,cap,baseCap,topFlat,usedL:b.usedL,usedW:b.usedW,area:L*W};
 }
 function chooseSupplementOption(c,remaining){
   const common=[[100,100],[110,100],[110,110],[120,100],[120,110],[130,100],[130,110]];
@@ -1217,13 +1610,14 @@ function buildMixedShipmentPlan(c,config){
   types.sort((a,b)=>b.cap-a.cap||a.area-b.area);
   const pallets=[];let existingUsed=0;
   const addPallet=(opt,q,source)=>{
-    const layers=Math.max(1,Math.ceil(q/opt.perLayer));
-    const height=c.palletH+layers*c.boxH;
+    const flat=Math.max(0,q-(opt.baseCap||opt.cap)),upright=q-flat;
+    const layers=Math.max(1,Math.ceil(upright/opt.perLayer));
+    const height=c.palletH+layers*c.boxH+(flat?c.boxD:0);
     const cargoWeight=q*c.unitWeight,gross=cargoWeight+c.palletWeight;
     const transportCBM=opt.L*opt.W*height/1e6;
     const stackCBM=opt.usedL*opt.usedW*height/1e6;
     const pc={...c,palletL:opt.L,palletW:opt.W};
-    pallets.push({index:pallets.length,q,layers,height,cargoWeight,gross,transportCBM,stackCBM,palletL:opt.L,palletW:opt.W,usedL:opt.usedL,usedW:opt.usedW,perLayer:opt.perLayer,layout:{customRects:opt.rects,label:'實務混合排列'},c:pc,source});
+    pallets.push({index:pallets.length,q,layers,height,cargoWeight,gross,transportCBM,stackCBM,palletL:opt.L,palletW:opt.W,usedL:opt.usedL,usedW:opt.usedW,perLayer:opt.perLayer,layout:{customRects:opt.rects,label:'實務混合排列'},c:pc,source,topFlat:flat,uprightQty:upright});
   };
   for(const opt of types){
     for(let i=0;i<opt.count&&remaining>0;i++){const q=Math.min(opt.cap,remaining);addPallet(opt,q,'existing');remaining-=q;existingUsed++;}
@@ -1258,30 +1652,53 @@ function addDetails(box,c,boxL,boxD){
     box.add(h);
   });
 }
+function addFlatDetails(box,c,boxL,boxW){
+  const edges=new THREE.LineSegments(new THREE.EdgesGeometry(box.geometry),new THREE.LineBasicMaterial({color:0x6e4b31,transparent:true,opacity:.45}));box.add(edges);
+  const tape=new THREE.Mesh(new THREE.BoxGeometry(boxL*.98,Math.max(2.8,c.boxD*.16),.3),new THREE.MeshStandardMaterial({color:0xd8c49a,roughness:.72,transparent:true,opacity:.94}));
+  tape.position.set(0,0,boxW/2+.18);box.add(tape);
+}
 function createProducts(p){
   productGroup=new THREE.Group();
   const c=p.c||result.c,layout=p.layout||result.layout,perLayer=p.perLayer||result.perLayer,mat=new THREE.MeshStandardMaterial({color:0xb68a5a,roughness:.9});
-  const topY=7.75;
-  for(let i=0;i<p.q;i++){
+  const topY=7.75,flatCount=p.topFlat||0,uprightCount=p.q-flatCount;
+  for(let i=0;i<uprightCount;i++){
     const layer=Math.floor(i/perLayer),idx=i%perLayer;
-    let bx,bz,bw,bd,rot=false;
+    let bx,bz,bw,bd;
     if(layout.customRects){
-      const r=layout.customRects[idx];bw=r.w;bd=r.h;bx=-c.palletL/2+r.x+r.w/2;bz=-c.palletW/2+r.y+r.h/2;rot=Math.abs(r.w-c.boxD)<.01;
+      const r=layout.customRects[idx];bw=r.w;bd=r.h;bx=-c.palletL/2+r.x+r.w/2;bz=-c.palletW/2+r.y+r.h/2;
     }else{
       const row=Math.floor(idx/layout.cols),col=idx%layout.cols;
       const usedL=p.usedL||result.usedL,usedW=p.usedW||result.usedW;
       const startX=-usedL/2+layout.dimX/2,startZ=-usedW/2+layout.dimZ/2;
-      bw=layout.dimX;bd=layout.dimZ;bx=startX+col*layout.dimX;bz=startZ+row*layout.dimZ;rot=layout.rotated;
+      bw=layout.dimX;bd=layout.dimZ;bx=startX+col*layout.dimX;bz=startZ+row*layout.dimZ;
     }
     const box=new THREE.Mesh(new THREE.BoxGeometry(bw,c.boxH,bd),mat.clone());
     box.position.set(bx,topY+c.boxH/2+layer*c.boxH,bz);box.castShadow=box.receiveShadow=true;addDetails(box,c,bw,bd);productGroup.add(box);
   }
+  if(flatCount){
+    const info=topFlatInfo(c,c.palletH+p.layers*c.boxH,999999,0);
+    const cols=Math.max(1,info.cols),rows=Math.max(1,info.rows),flatL=info.flatL,flatW=info.flatW;
+    const usedL=Math.min(cols,flatCount)*flatL;
+    const usedRows=Math.ceil(flatCount/cols),usedW=usedRows*flatW;
+    let n=0;
+    for(let r=0;r<usedRows;r++)for(let col=0;col<cols;col++){
+      if(n>=flatCount)break;
+      const bx=-usedL/2+flatL/2+col*flatL,bz=-usedW/2+flatW/2+r*flatW;
+      const box=new THREE.Mesh(new THREE.BoxGeometry(flatL,c.boxD,flatW),mat.clone());
+      box.position.set(bx,topY+p.layers*c.boxH+c.boxD/2,bz);box.castShadow=box.receiveShadow=true;addFlatDetails(box,c,flatL,flatW);productGroup.add(box);n++;
+    }
+  }
   scene.add(productGroup);
 }
+
 function render3D(){
   if(!result||result.error)return;dispose(palletGroup);dispose(productGroup);
   const p=result.pallets[selectedPallet];const pc=p&&p.c?p.c:result.c;createPallet(pc);if(p)createProducts(p);const h=p?p.height:pc.palletH;controls.target.set(0,Math.min(h*.42,145),0);
 }
+function palletSizeText(p){return result&&result.mixed?`${p.palletL} × ${p.palletW} × ${p.height}`:`${result.usedL} × ${result.usedW} × ${p.height}`}
+function groupedPallets(pallets){const groups=[];pallets.forEach((p,i)=>{const key=[p.q,p.layers,p.topFlat||0,palletSizeText(p),p.gross.toFixed(2),p.transportCBM.toFixed(2)].join('|'),last=groups[groups.length-1];if(last&&last.key===key){last.end=i;last.count++}else groups.push({key,start:i,end:i,count:1,p})});return groups}
+function renderPalletNavigator(){if(!result||result.error)return;const total=result.pallets.length;$('palletJump').innerHTML=result.pallets.map((p,i)=>`<option value="${i}" ${i===selectedPallet?'selected':''}>第 ${i+1} / ${total} 板</option>`).join('');$('palletPrev').disabled=selectedPallet<=0;$('palletNext').disabled=selectedPallet>=total-1}
+function renderPalletTables(){const groups=groupedPallets(result.pallets);$('resultBody').innerHTML=groups.map(g=>{const p=g.p,label=g.count===1?`第 ${g.start+1} 板`:`第 ${g.start+1}–${g.end+1} 板（${g.count} 板相同）`;return `<tr class="grouped-row"><td>${label}</td><td>${p.q}${g.count>1?'／板':''}</td><td>${palletLayerText(p)}</td><td>${palletSizeText(p)}</td><td>${p.gross.toFixed(2)}${g.count>1?'／板':''}</td><td>${p.transportCBM.toFixed(2)}${g.count>1?'／板':''}</td></tr>`}).join('')+`<tr class="total-row"><td>總計 ${result.pallets.length} 板</td><td>${result.c.qty}</td><td>—</td><td>—</td><td>${result.totalGross.toFixed(2)}</td><td>${result.totalTransport.toFixed(2)}</td></tr>`;$('resultDetailBody').innerHTML=result.pallets.map(p=>`<tr><td>第 ${p.index+1} 板</td><td>${p.q}</td><td>${palletLayerText(p)}</td><td>${palletSizeText(p)}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('')+`<tr class="total-row"><td>總計 ${result.pallets.length} 板</td><td>${result.c.qty}</td><td>—</td><td>—</td><td>${result.totalGross.toFixed(2)}</td><td>${result.totalTransport.toFixed(2)}</td></tr>`;$('groupSummaryNote').textContent=groups.length<result.pallets.length?`已將相同且連續的棧板合併顯示，共 ${groups.length} 組。`:'目前各板資料皆不同。'}
 function updateUI(){
   const c=cfg();
   $('errorBox').classList.add('hidden');$('errorBox').textContent='';
@@ -1290,18 +1707,20 @@ function updateUI(){
   const completedHeight=c.palletH+finalLayers*c.boxH;
   const remainingHeight=Math.max(0,c.maxHeight-completedHeight);
   const transportName=$('transportMode').value==='sea'?'海運':$('transportMode').value==='air'?'空運':'自訂';
-  $('transportHint').innerHTML=`<b>${transportName}</b>｜整板最高 ${c.maxHeight} cm<br>高度最多 ${byHeight} 層；設定上限 ${c.productMaxLayers} 層；<b>實際最多 ${finalLayers} 層</b><br>滿層完成高度 ${completedHeight} cm，剩餘 ${remainingHeight} cm。`;
+  const specialHeight=completedHeight+c.boxD;const specialPossible=c.allowTopFlat&&specialHeight<=c.maxHeight+.01;
+  $('transportHint').innerHTML=`<b>${transportName}</b>｜整板最高 ${c.maxHeight} cm<br>高度最多 ${byHeight} 層；設定上限 ${c.productMaxLayers} 層；<b>實際最多 ${finalLayers} 層</b><br>滿層完成高度 ${completedHeight} cm，剩餘 ${remainingHeight} cm。${c.allowTopFlat?`<br><b>特殊頂層：</b>${specialPossible?`可評估平放，完成高度約 ${specialHeight} cm`:'目前高度限制不足以再平放一層。'}`:''}`;
   $('manualLayout').classList.toggle('hidden',c.layoutMode!=='manual');$('qtyCounter').textContent=c.qty;$('mQty').textContent=c.qty;
   result=smartShipmentConfig?buildMixedShipmentPlan(c,smartShipmentConfig):plan(c);
-  if(result.error){$('fitMessage').className='notice warning';$('fitMessage').textContent=result.error;$('palletTabs').innerHTML='';$('resultBody').innerHTML='';$('shippingText').textContent=result.error;dispose(palletGroup);dispose(productGroup);createPallet(c);return}
+  if(result.error){$('fitMessage').className='notice warning';$('fitMessage').style.display='block';$('fitMessage').textContent=result.error;$('palletJump').innerHTML='';$('resultBody').innerHTML='';$('resultDetailBody').innerHTML='';$('shippingText').textContent=result.error;dispose(palletGroup);dispose(productGroup);createPallet(c);return}
   selectedPallet=Math.min(selectedPallet,Math.max(0,result.pallets.length-1));
   $('mPallets').textContent=result.pallets.length;$('mWeight').textContent=result.totalGross.toFixed(1)+' kg';$('mCBM').textContent=result.totalTransport.toFixed(2);
   $('productSummaryName').textContent=c.productName==='W-888 Ceiling Fan'?'W-888 一般風扇':c.productName;
-  $('productSummarySpec').textContent=`${c.boxW} × ${c.boxH} × ${c.boxD} cm｜${c.unitWeight} kg`;
+  if($('placementRule')){const isW=c.productTemplate==='w888';$('placementRule').disabled=isW;if(isW)$('placementRule').value='upright';const shortNote=isW?'W-888 固定直立':(c.placementRule==='auto'?`自動最佳｜${c.orientationLabel}`:'保持直立');$('placementNote').textContent=shortNote;if($('placementModalNote'))$('placementModalNote').textContent=isW?'W-888 固定直立，可在棧板平面旋轉。':(c.placementRule==='auto'?`系統會比較不同朝向並套用實務可行的最佳排列。目前：${c.orientationLabel}`:'以產品高度欄為垂直方向，僅在棧板平面旋轉。');$('specialTopWrap').style.display=isW?'flex':'none';}
+  const pd=productDisplayDims();$('productSummarySpec').textContent=c.productTemplate==='w888'?`62 × 62 × 18 cm｜${c.unitWeight} kg`:`${pd.L} × ${pd.W} × ${pd.H} cm｜${c.unitWeight} kg`;
   $('transportCompactSummary').querySelector('.main').textContent=`${transportName}｜最高 ${c.productMaxLayers} 層 / ${c.maxHeight} cm`;
   if(result.mixed){
     $('layoutInfo').innerHTML=`<b>智慧混合配置已套用</b><br>現有棧板使用 ${result.existingUsed} 板${result.supplementUsed?`，另補 ${result.supplementUsed} 板`:''}。<br>可切換各板查看實際尺寸與排列。`;
-    $('fitMessage').className='notice ok';$('fitMessage').textContent=result.supplementUsed?`現有棧板先使用 ${result.existingUsed} 板，仍需補 ${result.supplementUsed} 板（建議 ${result.supplement.L} × ${result.supplement.W} cm）。`:`現有棧板足夠，共使用 ${result.existingUsed} 板。`;
+    $('fitMessage').className='notice ok';$('fitMessage').textContent='';$('fitMessage').style.display='none';
     $('appliedPlan').innerHTML=`<strong>目前方案：智慧混合配置</strong><br>現有 ${result.existingUsed} 板${result.supplementUsed?`＋補 ${result.supplementUsed} 板`:''}｜最高 ${c.productMaxLayers} 層`;
   }else{
     const previewLayout=chooseLayout(c),previewCount=previewLayout.customRects?previewLayout.customRects.length:previewLayout.cols*previewLayout.rows;
@@ -1309,39 +1728,43 @@ function updateUI(){
     const previewUsedW=previewLayout.customRects?boundsForRects(previewLayout.customRects).usedW:previewLayout.rows*previewLayout.dimZ;
     const remainL=c.palletL-previewUsedL,remainW=c.palletW-previewUsedW,diagram=previewLayout.customRects?'智慧混合排列已套用':Array.from({length:Math.min(previewLayout.rows,8)},()=>Array.from({length:Math.min(previewLayout.cols,10)},()=> '□').join(' ')).join('\n');
     $('layoutInfo').innerHTML=`<b>目前排法：${previewLayout.label}</b><br>每層 <b>${previewCount}</b> 箱<br>占地：約 ${previewUsedL} × ${previewUsedW} cm<br>棧板剩餘：長邊 ${remainL} cm、寬邊 ${remainW} cm<div class="layoutdiagram">${diagram}</div>`;
-    $('fitMessage').className='notice ok';$('fitMessage').textContent=`採用${result.layout.label}：每層 ${result.perLayer} 台，占用 ${result.usedL} × ${result.usedW} cm。`;
-    $('appliedPlan').innerHTML=`<strong>目前方案：${c.palletL} × ${c.palletW} cm</strong><br>${result.layout.label}｜${result.perLayer} 台／層｜最多 ${result.cap} 台／板`;
+    $('fitMessage').className='notice ok';$('fitMessage').textContent='';$('fitMessage').style.display='none';
+    $('appliedPlan').innerHTML=`<strong>目前方案：${c.palletL} × ${c.palletW} cm</strong><br>${result.layout.label}｜${result.perLayer} 台／層｜最多 ${result.baseCap||result.cap} 台／板`;
   }
   const errors=[];if(c.qty===0)errors.push('請先輸入產品數量。');if(byHeight<1)errors.push('目前整板高度限制不足以放入一層紙箱。');if(c.maxWeight<=c.palletWeight+c.unitWeight)errors.push('每板重量上限過低，無法放入任何紙箱。');if(errors.length){$('errorBox').textContent=errors.join(' ');$('errorBox').classList.remove('hidden')}
   $('warningMessage').style.display='none';
-  $('palletTabs').innerHTML=result.pallets.map((p,i)=>`<button class="pallettab ${i===selectedPallet?'active':''}" data-i="${i}">第 ${i+1} 板${result.mixed?` · ${p.palletL}×${p.palletW}`:''}</button>`).join('');
-  document.querySelectorAll('.pallettab').forEach(tab=>tab.onclick=()=>{selectedPallet=Number(tab.dataset.i);updateUI()});
+  renderPalletNavigator();
   const current=result.pallets[selectedPallet];
   $('currentTitle').textContent=`目前查看：第 ${selectedPallet+1} 板`;
-  $('currentQty').textContent=`${current.q} 箱`;$('currentLayers').textContent=`${current.layers} 層`;
+  $('currentQty').textContent=`${current.q} 箱`;$('currentLayers').textContent=palletLayerText(current);
   $('currentSize').textContent=result.mixed?`${current.palletL} × ${current.palletW} × ${current.height} cm`:`${result.usedL} × ${result.usedW} × ${current.height} cm`;
   $('currentWeight').textContent=`${current.gross.toFixed(2)} kg`;$('currentCBM').textContent=current.transportCBM.toFixed(2);
-  $('resultBody').innerHTML=result.pallets.map(p=>`<tr><td>第 ${p.index+1} 板</td><td>${p.q}</td><td>${p.layers}</td><td>${result.mixed?`${p.palletL} × ${p.palletW}`:`${result.usedL} × ${result.usedW}`} × ${p.height}</td><td>${p.gross.toFixed(2)}</td><td>${p.transportCBM.toFixed(2)}</td></tr>`).join('')+`<tr class="total-row"><td>總計 ${result.pallets.length} 板</td><td>${result.c.qty}</td><td>—</td><td>—</td><td>${result.totalGross.toFixed(2)}</td><td>${result.totalTransport.toFixed(2)}</td></tr>`;
-  $('shippingText').textContent=`Commodity: ${c.productName}\nQuantity: ${c.qty} Cartons / ${c.qty} Units\nPallets: ${result.pallets.length}\n\n${result.pallets.map(p=>`Pallet ${p.index+1}: ${p.q} cartons / ${(p.palletL||c.palletL)} × ${(p.palletW||c.palletW)} × ${p.height} cm / Gross Weight ${p.gross.toFixed(2)} kg / ${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\nTotal Gross Weight: ${result.totalGross.toFixed(2)} kg\nTotal Transport Volume: ${result.totalTransport.toFixed(2)} CBM`;
+  renderPalletTables();
+  const freightModeEn=$('transportMode').value==='sea'?'Sea Freight':$('transportMode').value==='air'?'Air Freight':'Custom';
+  $('shippingText').textContent=`Commodity: ${c.productName}\nTransport Mode: ${freightModeEn}\nQuantity: ${c.qty} Cartons / ${c.qty} Units\nPallets: ${result.pallets.length}\n\n${result.pallets.map(p=>`Pallet ${p.index+1}: ${p.q} cartons / ${(p.palletL||c.palletL)} × ${(p.palletW||c.palletW)} × ${p.height} cm${p.topFlat?` / Special Top Load: ${p.topFlat} cartons laid flat`:''} / Gross Weight ${p.gross.toFixed(2)} kg / ${p.transportCBM.toFixed(2)} CBM`).join('\n')}\n\nTotal Gross Weight: ${result.totalGross.toFixed(2)} kg\nTotal Transport Volume: ${result.totalTransport.toFixed(2)} CBM`;
   render3D();
 }
-function setQty(v){$('qtyInput').value=Math.max(0,Math.floor(v));updateUI()}
+function markPalletReportStale(){if($('reportPage')&&$('reportPage').classList.contains('show')){$('reportPage').classList.remove('show');showActionStatus('資料已更新，請重新產生出貨單。')}}
+function setQty(v){$('qtyInput').value=Math.max(0,Math.floor(v));markPalletReportStale();updateUI()}
 function openSidebarModal(id){const m=$(id);if(!m)return;m.classList.add('open');m.setAttribute('aria-hidden','false')}
 function closeSidebarModal(id){const m=$(id);if(!m)return;m.classList.remove('open');m.setAttribute('aria-hidden','true');updateUI()}
 $('minus10').onclick=()=>setQty(num('qtyInput')-10);$('minus1').onclick=()=>setQty(num('qtyInput')-1);$('plus1').onclick=()=>setQty(num('qtyInput')+1);$('plus10').onclick=()=>setQty(num('qtyInput')+10);
-$('reset').onclick=()=>{smartAppliedPlan=null;smartShipmentConfig=null;$('productTemplate').value='w888';$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('qtyInput').value=50;$('palletTemplate').value='130x110';$('palletL').value=130;$('palletW').value=110;$('palletH').value=15;$('palletWeight').value=0;$('layoutMode').value='template';$('manualCols').value=2;$('manualRows').value=5;$('distribution').value='minimum';$('transportMode').value='sea';$('seaType').value='standard';$('seaTypeWrap').classList.remove('hidden');$('maxLayers').value=3;$('maxHeight').value=220;$('maxWeight').value=500;selectedPallet=0;updateUI()};
-$('productTemplate').onchange=()=>{smartShipmentConfig=null;smartAppliedPlan=null;if($('productTemplate').value==='w888'){$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('layoutMode').value='template'}updateUI()};
+if($('allowTopFlat'))$('allowTopFlat').addEventListener('change',()=>{markPalletReportStale();updateUI()});
+$('palletPrev').onclick=()=>{if(result&&selectedPallet>0){selectedPallet--;updateUI()}};$('palletNext').onclick=()=>{if(result&&selectedPallet<result.pallets.length-1){selectedPallet++;updateUI()}};$('palletJump').onchange=()=>{selectedPallet=Math.max(0,Number($('palletJump').value)||0);updateUI()};
+$('reset').onclick=()=>{smartAppliedPlan=null;smartShipmentConfig=null;$('productTemplate').value='w888';$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxH').value=62;$('boxD').value=18;$('unitWeight').value=5.56;$('qtyInput').value=50;$('palletTemplate').value='130x110';$('palletL').value=130;$('palletW').value=110;$('palletH').value=15;$('palletWeight').value=0;$('layoutMode').value='template';$('manualCols').value=2;$('manualRows').value=5;$('distribution').value='minimum';$('transportMode').value='sea';$('seaType').value='standard';$('seaTypeWrap').classList.remove('hidden');$('maxLayers').value=3;$('maxHeight').value=220;$('maxWeight').value=500;if($('allowTopFlat'))$('allowTopFlat').checked=false;if($('placementRule'))$('placementRule').value='upright';if($('productDimNote'))$('productDimNote').textContent='W-888 原紙箱規格為 62 × 62 × 18 cm；正常出貨採直立，棧板底面為 62 × 18 cm、高 62 cm。';selectedPallet=0;updateUI()};
+$('productTemplate').onchange=()=>{smartShipmentConfig=null;smartAppliedPlan=null;const isW=$('productTemplate').value==='w888';if(isW){$('productName').value='W-888 Ceiling Fan';$('boxW').value=62;$('boxD').value=18;$('boxH').value=62;$('unitWeight').value=5.56;$('layoutMode').value='template';$('placementRule').value='upright';$('productDimNote').textContent='W-888 原紙箱規格為 62 × 62 × 18 cm；正常出貨採直立，棧板底面為 62 × 18 cm、高 62 cm。'}else{$('productName').value='自訂紙箱';$('layoutMode').value='auto';$('placementRule').value='auto';$('allowTopFlat').checked=false;$('productDimNote').textContent='輸入紙箱長、寬、高與單箱重量；擺放方式請到「棧板規劃」設定。'}updateUI()};
 $('palletTemplate').onchange=()=>{smartAppliedPlan=null;smartShipmentConfig=null;const m={"130x110":[130,110],"120x100":[120,100],"120x80":[120,80],"110x110":[110,110]};if(m[$('palletTemplate').value]){[$('palletL').value,$('palletW').value]=m[$('palletTemplate').value]}updateUI()};
 ids.forEach(id=>{if($(id))$(id).addEventListener('change',updateUI)});$('qtyInput').addEventListener('input',()=>{
   $('qtyCounter').textContent=Math.floor(num('qtyInput'));
-  updateUI();
+  markPalletReportStale();updateUI();
 });
+if($('placementRule'))$('placementRule').onchange=()=>{smartShipmentConfig=null;smartAppliedPlan=null;if($('productTemplate').value==='custom')$('layoutMode').value='auto';selectedPallet=0;updateUI()};
 $('toggleProductEdit').onclick=()=>openSidebarModal('productModal');
-
+if($('openPlacementEdit'))$('openPlacementEdit').onclick=()=>openSidebarModal('placementModal');
 $('openPalletEdit').onclick=()=>openSidebarModal('palletEditModal');
 $('openTransportEdit').onclick=()=>openSidebarModal('transportModal');
 document.querySelectorAll('[data-close-modal]').forEach(btn=>btn.onclick=()=>closeSidebarModal(btn.dataset.closeModal));
-['productModal','palletEditModal','transportModal'].forEach(id=>{const m=$(id);if(m)m.addEventListener('click',e=>{if(e.target===m)closeSidebarModal(id)})});
+['productModal','placementModal','palletEditModal','transportModal'].forEach(id=>{const m=$(id);if(m)m.addEventListener('click',e=>{if(e.target===m)closeSidebarModal(id)})});
 
 ['palletL','palletW','palletH'].forEach(id=>$(id).addEventListener('input',()=>{if(document.activeElement===$(id)){smartAppliedPlan=null;smartShipmentConfig=null;}}));
 
@@ -1382,15 +1805,15 @@ function buildReport(){
   const c=result.c,oldSelected=selectedPallet,oldCam=camera.position.clone(),oldTarget=controls.target.clone();
   const lang=$('reportLanguage')?$('reportLanguage').value:'zh',zh=lang==='zh';
   const groups=[];
-  result.pallets.forEach((p,i)=>{const L=p.palletL||c.palletL,W=p.palletW||c.palletW,key=[L,W,p.q,p.height,p.gross.toFixed(2),p.transportCBM.toFixed(2)].join('|');let g=groups.find(x=>x.key===key);if(!g){g={key,p,indexes:[]};groups.push(g)}g.indexes.push(i)});
+  result.pallets.forEach((p,i)=>{const L=p.palletL||c.palletL,W=p.palletW||c.palletW,key=[L,W,p.q,p.height,p.topFlat||0,p.gross.toFixed(2),p.transportCBM.toFixed(2)].join('|');let g=groups.find(x=>x.key===key);if(!g){g={key,p,indexes:[]};groups.push(g)}g.indexes.push(i)});
   const shown=groups.slice(0,6),imgs=[];
   shown.forEach(g=>{selectedPallet=g.indexes[0];render3D();setReportCamera();renderer.render(scene,camera);imgs.push(getSceneImageDataUrl())});
   selectedPallet=oldSelected;render3D();camera.position.copy(oldCam);controls.target.copy(oldTarget);controls.update();
   const now=new Date(),dateText=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
   const title=zh?'棧板出貨資料單':'PALLET PACKING & SHIPPING SHEET';
-  const cards=shown.map((g,i)=>{const p=g.p,L=p.palletL||c.palletL,W=p.palletW||c.palletW,count=g.indexes.length;const range=count===1?`${zh?'第':'Pallet '}${g.indexes[0]+1}${zh?' 板':''}`:(zh?`第 ${g.indexes[0]+1}–${g.indexes[g.indexes.length-1]+1} 板（${count} 板相同）`:`Pallets ${g.indexes[0]+1}–${g.indexes[g.indexes.length-1]+1} (${count} same)`);return `<div class="shipsheet-pallet"><img src="${imgs[i]}"><h4>${range}</h4><div class="shipsheet-line"><b>${p.q} ${zh?'箱／板':'Cartons / pallet'}</b><br>${zh?'外部尺寸':'Outer Size'}: ${L} × ${W} × ${p.height} cm<br>${zh?'毛重':'Gross Weight'}: ${p.gross.toFixed(2)} kg<br>CBM: ${p.transportCBM.toFixed(2)}</div></div>`}).join('');
+  const cards=shown.map((g,i)=>{const p=g.p,L=p.palletL||c.palletL,W=p.palletW||c.palletW,count=g.indexes.length;const range=count===1?`${zh?'第':'Pallet '}${g.indexes[0]+1}${zh?' 板':''}`:(zh?`第 ${g.indexes[0]+1}–${g.indexes[g.indexes.length-1]+1} 板（${count} 板相同）`:`Pallets ${g.indexes[0]+1}–${g.indexes[g.indexes.length-1]+1} (${count} same)`);return `<div class="shipsheet-pallet"><img src="${imgs[i]}"><h4>${range}</h4><div class="shipsheet-line"><b>${p.q} ${zh?'箱／板':'Cartons / pallet'}</b><br>${zh?'外部尺寸':'Outer Size'}: ${L} × ${W} × ${p.height} cm<br>${zh?'毛重':'Gross Weight'}: ${p.gross.toFixed(2)} kg<br>CBM: ${p.transportCBM.toFixed(2)}${p.topFlat?`<br><b>${zh?'特殊頂層平放':'Special top load'}:</b> ${p.topFlat} ${zh?'箱':'cartons'}`:''}</div></div>`}).join('');
   const labels=zh?{qty:'總數量',pallets:'總板數',weight:'總毛重',cbm:'總 CBM',commodity:'品名',date:'日期'}:{qty:'Quantity',pallets:'Total Pallets',weight:'Gross Weight',cbm:'Total CBM',commodity:'Commodity',date:'Date'};
-  $('shippingSheetContent').innerHTML=`<div class="shipsheet-head"><div><div class="shipsheet-company">WEI CHUNG FUNG TRADING CO., LTD.</div><div class="shipsheet-title">${title}</div></div><div class="shipsheet-date">${labels.date}<br><b>${dateText}</b></div></div><div class="shipsheet-summary"><div class="shipsheet-stat"><div class="k">${labels.qty}</div><div class="v">${c.qty}</div></div><div class="shipsheet-stat"><div class="k">${labels.pallets}</div><div class="v">${result.pallets.length}</div></div><div class="shipsheet-stat"><div class="k">${labels.weight}</div><div class="v">${result.totalGross.toFixed(2)} kg</div></div><div class="shipsheet-stat"><div class="k">${labels.cbm}</div><div class="v">${result.totalTransport.toFixed(2)}</div></div></div><div class="shipsheet-product"><b>${labels.commodity}:</b> ${c.productName}</div><div class="shipsheet-grid">${cards}</div>`;
+  $('shippingSheetContent').innerHTML=`<div class="shipsheet-head"><div><div class="shipsheet-company">WEI CHUNG FUNG TRADING CO., LTD.</div><div class="shipsheet-title">${title}</div></div><div class="shipsheet-date">${labels.date}<br><b>${dateText}</b></div></div><div class="shipsheet-summary"><div class="shipsheet-stat"><div class="k">${labels.qty}</div><div class="v">${c.qty}</div></div><div class="shipsheet-stat"><div class="k">${labels.pallets}</div><div class="v">${result.pallets.length}</div></div><div class="shipsheet-stat"><div class="k">${labels.weight}</div><div class="v">${result.totalGross.toFixed(2)} kg</div></div><div class="shipsheet-stat"><div class="k">${labels.cbm}</div><div class="v">${result.totalTransport.toFixed(2)}</div></div></div><div class="shipsheet-product"><b>${labels.commodity}:</b> ${c.productName}<br><b>${zh?'運輸方式':'Transport Mode'}:</b> ${zh?($('transportMode').value==='sea'?'海運':$('transportMode').value==='air'?'空運':'自訂'):($('transportMode').value==='sea'?'Sea Freight':$('transportMode').value==='air'?'Air Freight':'Custom')}</div><div class="shipsheet-grid">${cards}</div>`;
   $('reportPage').classList.add('show');$('reportWrap').scrollIntoView({behavior:'smooth',block:'start'});showActionStatus(zh?'正式出貨單已產生。':'Shipping sheet generated.');return true
 }
 
@@ -1401,7 +1824,7 @@ function showActionStatus(message,isError=false){
   clearTimeout(showActionStatus.timer);
   showActionStatus.timer=setTimeout(()=>{el.textContent='';el.style.color=''},3500);
 }
-$('downloadImage').onclick=()=>{
+if($('downloadImage')) $('downloadImage').onclick=()=>{
   try{
     const dataUrl=getSceneImageDataUrl();
     $('imagePreview').src=dataUrl;
@@ -1421,7 +1844,7 @@ $('imageModal').onclick=e=>{
   if(e.target===$('imageModal')) $('closeImageModal').click();
 };
 $('buildReport').onclick=()=>{ buildReport(); };
-if($('reportLanguage')) $('reportLanguage').addEventListener('change',()=>{if($('reportPage').classList.contains('show'))buildReport();});
+if($('reportLanguage')) $('reportLanguage').addEventListener('change',()=>{if($('reportPage').classList.contains('show')){$('reportPage').classList.remove('show');showActionStatus('語言已變更，請重新產生出貨單。')}});
 
 $('generatePdf').onclick=async()=>{
   if(!buildReport())return;
@@ -1592,7 +2015,8 @@ function palletContainerPlan(L,W,H,qty){
   const palletCalc=plan({...pc,qty:Math.max(qty,1),maxHeight:Math.min(pc.maxHeight,H)});
   if(palletCalc.error)return{error:palletCalc.error};
   const unitPerPallet=palletCalc.cap;
-  const palletHeight=pc.palletH+Math.min(pc.productMaxLayers,Math.floor((Math.min(pc.maxHeight,H)-pc.palletH)/pc.boxH))*pc.boxH;
+  const fullSample=plan({...pc,qty:palletCalc.cap,maxHeight:Math.min(pc.maxHeight,H)});
+  const palletHeight=fullSample.pallets&&fullSample.pallets[0]?fullSample.pallets[0].height:pc.palletH+Math.min(pc.productMaxLayers,Math.floor((Math.min(pc.maxHeight,H)-pc.palletH)/pc.boxH))*pc.boxH;
 
   const a={nx:Math.floor(L/pc.palletL),ny:Math.floor(W/pc.palletW),rot:false,pL:pc.palletL,pW:pc.palletW};
   const b={nx:Math.floor(L/pc.palletW),ny:Math.floor(W/pc.palletL),rot:true,pL:pc.palletW,pW:pc.palletL};
@@ -1663,11 +2087,12 @@ function syncContainerProductFromPallet(){
   $('cBoxL').value=$('boxW').value;
   $('cBoxW').value=$('boxD').value;
   $('cBoxH').value=$('boxH').value;
-  $('cProductSummaryName').textContent=$('productTemplate').value==='w888'?'W-888 一般風扇':($('productName').value||'自訂產品');
-  $('cProductSummaryMeta').textContent=`${num('boxW',1)} × ${num('boxH',1)} × ${num('boxD',1)} cm｜${num('unitWeight').toFixed(2)} kg`;
+  $('cProductSummaryName').textContent=$('productTemplate').value==='w888'?'W-888 一般風扇':($('productName').value||'自訂紙箱');
+  const pd=productDisplayDims();$('cProductSummaryMeta').textContent=$('productTemplate').value==='w888'?`62 × 62 × 18 cm｜${num('unitWeight').toFixed(2)} kg`:`${pd.L} × ${pd.W} × ${pd.H} cm｜${num('unitWeight').toFixed(2)} kg`;
 }
 function showContainerStatus(msg,isError=false){const el=$('cActionStatus');if(!el)return;el.textContent=msg;el.style.color=isError?'#b91c1c':'';clearTimeout(showContainerStatus.timer);showContainerStatus.timer=setTimeout(()=>{el.textContent='';el.style.color=''},3200)}
 
+function markContainerReportStale(){if($('containerReportPage')&&$('containerReportPage').classList.contains('show')){$('containerReportPage').classList.remove('show');showContainerStatus('資料已更新，請重新產生出貨單。')}}
 function updateContainerMode(){
   syncContainerProductFromPallet();
   const L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1);
@@ -1684,7 +2109,7 @@ function updateContainerMode(){
 
   if(p.error){
     currentContainerDist=[];selectedContainer=0;
-    $('cContainerTabs').innerHTML='';
+    $('containerJump').innerHTML='';
     $('cCurrentTitle').textContent='目前無法計算';
     $('cResultKV').innerHTML=`<div class="k">原因</div><div class="v">${p.error}</div>`;
     return;
@@ -1693,8 +2118,8 @@ function updateContainerMode(){
   const dist=containerDistribution(p,qty);currentContainerDist=dist;
   selectedContainer=Math.min(selectedContainer,Math.max(0,dist.length-1));
   const cur=dist[selectedContainer]||{q:0,pallets:0};
-  $('cContainerTabs').innerHTML=dist.map((d,i)=>`<button type="button" class="container-tab ${i===selectedContainer?'active':''}" data-container-index="${i}">第 ${i+1} 櫃</button>`).join('');
-  document.querySelectorAll('[data-container-index]').forEach(btn=>btn.onclick=()=>{selectedContainer=Number(btn.dataset.containerIndex);updateContainerMode();});
+  $('containerJump').innerHTML=dist.map((d,i)=>`<option value="${i}" ${i===selectedContainer?'selected':''}>第 ${i+1} / ${dist.length} 櫃</option>`).join('');
+  $('containerPrev').disabled=selectedContainer<=0;$('containerNext').disabled=selectedContainer>=dist.length-1;
   $('cCurrentTitle').textContent=`目前查看：第 ${selectedContainer+1} 櫃`;
   $('cCurrentQty').textContent=`${cur.q} 台`;
   $('cCurrentType').textContent=containerPresetLabel();
@@ -1707,7 +2132,7 @@ function updateContainerMode(){
     const usedW=Math.min(p.ny,fullRows)*p.palletW;
     $('cCurrentSecondLabel').textContent='棧板數';$('cCurrentSecond').textContent=`${pallets} 板`;
     $('cCurrentUsed').textContent=`${usedL} × ${usedW} × ${p.usedH} cm`;
-    $('palletLoadHint').innerHTML=`目前棧板：<b>${p.unitPerPallet} 台／板</b>｜單櫃最多 <b>${p.palletPerContainer} 板 / ${p.capacity} 台</b>`;
+    const activePc=cfg(); $('palletLoadHint').innerHTML=`使用目前棧板：<span class="current-pallet-spec">${activePc.palletL} × ${activePc.palletW} cm｜${p.unitPerPallet} 台／板</span><span style="display:block;margin-top:2px">單櫃最多 ${p.palletPerContainer} 板 / ${p.capacity} 台</span>`;
     $('cResultKV').innerHTML=[
       ['貨櫃內部尺寸',`${L} × ${W} × ${H} cm`],['目前棧板外部尺寸',`${p.palletL} × ${p.palletW} × ${p.palletHeight} cm`],
       ['每板產品數',`${p.unitPerPallet} 台`],['單櫃棧板排列',`長向 ${p.nx} 板 × 寬向 ${p.ny} 板`],
@@ -1740,7 +2165,6 @@ function updateContainerMode(){
     $('cFootnote').textContent='散裝直接依紙箱尺寸配置，不使用棧板。';
   }
   if(typeof refreshContainer3D==='function')refreshContainer3D();
-  if($('containerReportPage').classList.contains('show'))buildContainerReport();
 }
 $('modePallet').onclick=()=>{
   $('modePallet').classList.add('active');
@@ -1796,6 +2220,7 @@ function setContainerQty(v){
   const q=Math.max(0,Math.floor(v));
   $('cQty').value=q;
   $('qtyInput').value=q;
+  markContainerReportStale();markPalletReportStale();
   updateUI();
   updateContainerMode();
 }
@@ -1803,11 +2228,12 @@ $('cMinus10').onclick=()=>setContainerQty(cnum('cQty')-10);
 $('cMinus1').onclick=()=>setContainerQty(cnum('cQty')-1);
 $('cPlus1').onclick=()=>setContainerQty(cnum('cQty')+1);
 $('cPlus10').onclick=()=>setContainerQty(cnum('cQty')+10);
+$('containerPrev').onclick=()=>{if(selectedContainer>0){selectedContainer--;updateContainerMode()}};$('containerNext').onclick=()=>{if(selectedContainer<currentContainerDist.length-1){selectedContainer++;updateContainerMode()}};$('containerJump').onchange=()=>{selectedContainer=Math.max(0,Number($('containerJump').value)||0);updateContainerMode()};
 
 
 ['cL','cW','cH','cQty','floorLayoutMode'].forEach(id=>{
   const evt=['cQty','cL','cW','cH'].includes(id)?'input':'change';
-  $(id).addEventListener(evt,()=>{if(id==='cQty'){$('qtyInput').value=Math.floor(cnum('cQty'));updateUI()}updateContainerMode()});
+  $(id).addEventListener(evt,()=>{markContainerReportStale();if(id==='cQty'){$('qtyInput').value=Math.floor(cnum('cQty'));markPalletReportStale();updateUI()}updateContainerMode()});
 });
 
 
@@ -1837,7 +2263,7 @@ function initContainer3D(){
   cContainerRoot.add(cShellGroup,cCargoGroup); cScene.add(cContainerRoot);
   const floorGeo=new THREE.PlaneGeometry(1800,900);
   const floorMat=new THREE.MeshStandardMaterial({color:0xdfe7ed,roughness:.95,metalness:0});
-  const floor=new THREE.Mesh(floorGeo,floorMat); floor.rotation.x=-Math.PI/2; floor.position.y=-1; floor.receiveShadow=true; cScene.add(floor);
+  const floor=new THREE.Mesh(floorGeo,floorMat); floor.name='containerFloor'; floor.rotation.x=-Math.PI/2; floor.position.y=-1; floor.receiveShadow=true; cScene.add(floor);
   setContainerCamera('angle'); animateContainer3D();
   const ro=new ResizeObserver(()=>{ if(!host.clientWidth||!host.clientHeight)return; cCamera.aspect=host.clientWidth/host.clientHeight; cCamera.updateProjectionMatrix(); cRenderer.setSize(host.clientWidth,host.clientHeight); });
   ro.observe(host);
@@ -1968,25 +2394,65 @@ function addCarton(x,y,z,l,w,h){
 }
 
 function addPalletStack(x,z,pL,pW,stackH,units){
-  const palletH=15;
-  const pallet=cBox(pL*.94,palletH*.9,pW*.94,0xa97845,1);
-  pallet.position.set(x,palletH*.45,z);
-  cCargoGroup.add(pallet);
+  const pc=cfg(), palletH=Math.max(1,pc.palletH||15);
+  const group=new THREE.Group();
+  const woodTop=new THREE.MeshStandardMaterial({color:0xb77f4d,roughness:.8,metalness:0});
+  const woodSide=new THREE.MeshStandardMaterial({color:0x8f5f37,roughness:.86,metalness:0});
 
-  const cols=2,rows=5,layers=Math.max(1,Math.min(3,Math.ceil(units/(cols*rows))));
-  const cartonH=(stackH-palletH)/layers;
-  const cartonL=pL/cols;
-  const cartonW=pW/rows;
+  // Real pallet slats: keep the full pallet footprint visible around the cartons.
+  const slats=7, gap=Math.max(1.4,Math.min(2.4,pL*.018));
+  const slatW=Math.max(3,(pL-gap*(slats-1))/slats);
+  for(let i=0;i<slats;i++){
+    const slat=new THREE.Mesh(new THREE.BoxGeometry(slatW,4.2,pW),woodTop);
+    slat.position.set(x-pL/2+slatW/2+i*(slatW+gap),palletH-3.2,z);
+    slat.castShadow=true;slat.receiveShadow=true;group.add(slat);
+  }
+  [-.34,0,.34].forEach(k=>{
+    const runner=new THREE.Mesh(new THREE.BoxGeometry(pL,6.4,9),woodSide);
+    runner.position.set(x,3.2,z+pW*k);runner.castShadow=true;runner.receiveShadow=true;group.add(runner);
+  });
+  // Four darker feet make the pallet boundary readable even when pallets touch.
+  [[-.38,-.34],[-.38,.34],[.38,-.34],[.38,.34]].forEach(([kx,kz])=>{
+    const foot=new THREE.Mesh(new THREE.BoxGeometry(Math.max(10,pL*.12),5.5,Math.max(9,pW*.10)),woodSide);
+    foot.position.set(x+pL*kx,2.6,z+pW*kz);foot.castShadow=true;foot.receiveShadow=true;group.add(foot);
+  });
+  cCargoGroup.add(group);
+
+  // W-888 upright footprint is 62 x 18 cm. Choose the 2 x 5 orientation that fits
+  // the current pallet orientation, so the cartons do not cover the whole pallet.
+  const longSide=Math.max(pc.boxW,pc.boxD), shortSide=Math.min(pc.boxW,pc.boxD);
+  const candidates=[
+    {cols:2,rows:5,cartonL:longSide,cartonW:shortSide},
+    {cols:5,rows:2,cartonL:shortSide,cartonW:longSide}
+  ].filter(o=>o.cols*o.cartonL<=pL+.01 && o.rows*o.cartonW<=pW+.01);
+  const lay=(candidates.sort((a,b)=>((pL-a.cols*a.cartonL)+(pW-a.rows*a.cartonW))-((pL-b.cols*b.cartonL)+(pW-b.rows*b.cartonW)))[0])||{cols:2,rows:5,cartonL:pL/2,cartonW:pW/5};
+  const perLayer=lay.cols*lay.rows;
+  const maxUpright=perLayer*Math.min(pc.productMaxLayers||3,Math.floor((Math.min(pc.maxHeight,stackH)-palletH)/pc.boxH));
+  const flatCount=pc.allowTopFlat?Math.max(0,units-maxUpright):0;
+  const uprightUnits=units-flatCount;
+  const layers=Math.max(1,Math.ceil(uprightUnits/perLayer));
+  const cartonH=pc.boxH||62;
+  const usedL=lay.cols*lay.cartonL, usedW=lay.rows*lay.cartonW;
+  const baseX=x-usedL/2, baseZ=z-usedW/2;
   let placed=0;
-
-  for(let ly=0;ly<layers;ly++) for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
-    if(placed>=units)return;
-    // use exact grid centers so cartons on the same pallet visually sit flush together
-    const cx=x-pL/2+cartonL*(c+.5);
+  for(let ly=0;ly<layers;ly++) for(let r=0;r<lay.rows;r++) for(let c=0;c<lay.cols;c++){
+    if(placed>=uprightUnits)break;
+    const cx=baseX+lay.cartonL*(c+.5);
     const cy=palletH+cartonH*(ly+.5);
-    const cz=z-pW/2+cartonW*(r+.5);
-    addCarton(cx,cy,cz,cartonL,cartonW,cartonH);
+    const cz=baseZ+lay.cartonW*(r+.5);
+    addCarton(cx,cy,cz,lay.cartonL,lay.cartonW,cartonH);
     placed++;
+  }
+  if(flatCount){
+    const flatL=pc.boxW,flatW=pc.boxH,flatH=pc.boxD;
+    const cols=Math.max(1,Math.floor(pL/flatL));
+    const rows=Math.max(1,Math.ceil(flatCount/cols));
+    const fUsedL=Math.min(cols,flatCount)*flatL,fUsedW=rows*flatW;
+    let n=0;
+    for(let r=0;r<rows;r++)for(let c=0;c<cols;c++){
+      if(n>=flatCount)break;
+      addCarton(x-fUsedL/2+flatL*(c+.5),palletH+layers*cartonH+flatH/2,z-fUsedW/2+flatW*(r+.5),flatL,flatW,flatH);n++;
+    }
   }
 }
 
@@ -2055,22 +2521,18 @@ $('cProductEdit').onclick=()=>openSidebarModal('productModal');
 $('cContainerEdit').onclick=()=>openSidebarModal('containerSpecModal');
 ['containerSpecModal'].forEach(id=>{const m=$(id);if(m)m.addEventListener('click',e=>{if(e.target===m)closeSidebarModal(id)})});
 document.querySelectorAll('[data-close-modal="containerSpecModal"]').forEach(btn=>btn.onclick=()=>{closeSidebarModal('containerSpecModal');updateContainerMode()});
-['productName','boxW','boxH','boxD','unitWeight','productTemplate'].forEach(id=>{if($(id))$(id).addEventListener('change',()=>{syncContainerProductFromPallet();if($('containerModePanel').classList.contains('active'))updateContainerMode()})});
+['productName','boxW','boxH','boxD','unitWeight','productTemplate','placementRule'].forEach(id=>{if($(id))$(id).addEventListener('change',()=>{syncContainerProductFromPallet();if($('containerModePanel').classList.contains('active'))updateContainerMode()})});
 
 function getContainerImageDataUrl(){if(!cRenderer)return'';cRenderer.render(cScene,cCamera);const source=cRenderer.domElement,out=document.createElement('canvas');out.width=source.width;out.height=source.height;const ctx=out.getContext('2d');ctx.fillStyle='#f5f7f9';ctx.fillRect(0,0,out.width,out.height);ctx.drawImage(source,0,0);return out.toDataURL('image/png')}
-$('cDownloadImage').onclick=()=>{try{const dataUrl=getContainerImageDataUrl();$('imagePreview').src=dataUrl;$('imageModal').classList.add('open');$('imageModal').setAttribute('aria-hidden','false');showContainerStatus('圖片已產生，請在圖片上按右鍵另存新檔。')}catch(err){console.error(err);showContainerStatus('圖片建立失敗。',true)}};
+if($('cDownloadImage')) $('cDownloadImage').onclick=()=>{try{const dataUrl=getContainerImageDataUrl();$('imagePreview').src=dataUrl;$('imageModal').classList.add('open');$('imageModal').setAttribute('aria-hidden','false');showContainerStatus('圖片已產生，請在圖片上按右鍵另存新檔。')}catch(err){console.error(err);showContainerStatus('圖片建立失敗。',true)}};
 
-function buildContainerReport(){
-  const p=currentContainerPlan;if(!p||p.error)return false;const zh=$('cReportLanguage').value==='zh';const qty=Math.floor(cnum('cQty'));const L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1);const dist=currentContainerDist;const cur=dist[selectedContainer]||{q:0,pallets:0};const img=getContainerImageDataUrl();const totalWeight=qty*cnum('cUnitWeight');
-  const cards=dist.map((d,i)=>`<div style="border:1px solid #dbe4ee;border-radius:12px;padding:10px;background:#fff"><div style="font-weight:800;color:#0f4c81">${zh?'第 '+(i+1)+' 櫃':'Container '+(i+1)}</div><div style="margin-top:5px;font-size:12px;line-height:1.6">${zh?'數量':'Quantity'}：${d.q}<br>${p.method==='pallet'?(zh?'棧板':'Pallets')+'：'+d.pallets+'<br>':''}${zh?'重量':'Weight'}：${(d.q*cnum('cUnitWeight')).toFixed(2)} kg</div></div>`).join('');
-  $('cShippingSheetContent').innerHTML=`<div style="font-family:Arial,'Microsoft JhengHei',sans-serif;color:#0f172a"><div style="font-size:12px;font-weight:800;color:#0f4c81">WEI CHUNG FUNG TRADING CO., LTD.</div><div style="font-size:22px;font-weight:900;margin:4px 0 10px">${zh?'貨櫃裝載資料單':'Container Loading Sheet'}</div><div style="height:2px;background:#0f4c81;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">${[[zh?'總數量':'Quantity',qty],[zh?'貨櫃數':'Containers',dist.length],[zh?'總重量':'Total Weight',totalWeight.toFixed(2)+' kg'],[zh?'裝櫃方式':'Method',p.method==='pallet'?(zh?'棧板':'Palletized'):(zh?'散裝':'Floor Loading')]].map(([k,v])=>`<div style="background:#f8fafc;border:1px solid #dbe4ee;border-radius:10px;padding:8px;text-align:center"><div style="font-size:10px;color:#64748b">${k}</div><div style="font-weight:900;margin-top:3px">${v}</div></div>`).join('')}</div><div style="border:1px solid #dbe4ee;border-radius:10px;padding:8px 10px;margin-bottom:12px;font-size:12px"><b>${zh?'品名':'Commodity'}：</b>${$('cProductName').value}<br><b>${zh?'貨櫃規格':'Container'}：</b>${containerPresetLabel()} / ${L} × ${W} × ${H} cm</div><div style="display:grid;grid-template-columns:1.1fr .9fr;gap:12px"><div style="border:1px solid #dbe4ee;border-radius:12px;padding:8px"><img src="${img}" style="width:100%;display:block;border-radius:8px;background:#f5f7f9"><div style="font-size:11px;color:#64748b;margin-top:5px">${zh?'目前預覽：第 '+(selectedContainer+1)+' 櫃':'Preview: Container '+(selectedContainer+1)}</div></div><div style="display:grid;gap:8px;align-content:start">${cards}</div></div></div>`;
-  $('containerReportPage').classList.add('show');$('containerReportWrap').scrollIntoView({behavior:'smooth',block:'start'});showContainerStatus(zh?'出貨單已產生。':'Shipping sheet generated.');return true;
-}
-$('cBuildReport').onclick=()=>buildContainerReport();$('cReportLanguage').onchange=()=>{if($('containerReportPage').classList.contains('show'))buildContainerReport()};
+async function captureAllContainerPanoramas(p,dist,L,W,H){const original=selectedContainer,images=[];for(let i=0;i<dist.length;i++){selectedContainer=i;buildContainerShell(L,W,H);buildContainerCargo(p,dist[i].q,L,W,H);const target=new THREE.Vector3(0,H*.40,0);cCamera.position.set(L*1.28,H*1.15,W*1.82);if(cControls){cControls.target.copy(target);cControls.update()}else cCamera.lookAt(target);await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));cRenderer.render(cScene,cCamera);images.push(getContainerImageDataUrl())}selectedContainer=Math.min(original,Math.max(0,dist.length-1));refreshContainer3D();setContainerView('angle');updateContainerMode();return images}
+async function buildContainerReport({scroll=true}={}){const p=currentContainerPlan;if(!p||p.error)return false;const zh=$('cReportLanguage').value==='zh',qty=Math.floor(cnum('cQty')),L=cnum('cL',1),W=cnum('cW',1),H=cnum('cH',1),dist=currentContainerDist,totalWeight=qty*cnum('cUnitWeight');if(!dist.length)return false;showContainerStatus(zh?'正在建立各櫃全景圖…':'Building container panoramas...');const images=await captureAllContainerPanoramas(p,dist,L,W,H);const cards=dist.map((d,i)=>{const second=p.method==='pallet'?`${zh?'棧板':'Pallets'}：${d.pallets}`:`${zh?'排列':'Pattern'}：${p.nx} × ${p.ny} × ${Math.max(1,Math.ceil(d.q/Math.max(1,p.nx*p.ny)))}`;return `<div class="container-report-container-card"><div style="font-weight:900;color:#0f4c81;margin-bottom:6px">${zh?'第 '+(i+1)+' 櫃':'Container '+(i+1)}</div><img src="${images[i]}"><div class="container-report-container-meta"><div><b>${zh?'數量':'Quantity'}</b><br>${d.q}</div><div><b>${second.split('：')[0]}</b><br>${second.includes('：')?second.split('：').slice(1).join('：'):second}</div><div><b>${zh?'重量':'Weight'}</b><br>${(d.q*cnum('cUnitWeight')).toFixed(2)} kg</div></div></div>`}).join('');$('cShippingSheetContent').innerHTML=`<div style="font-family:'Noto Sans TC','Microsoft JhengHei','Segoe UI',Arial,sans-serif;color:#0f172a"><div style="font-size:12px;font-weight:700;letter-spacing:.01em;color:#0f4c81">WEI CHUNG FUNG TRADING CO., LTD.</div><div style="font-size:22px;font-weight:700;letter-spacing:.01em;margin:4px 0 10px">${zh?'貨櫃裝載資料單':'Container Loading Sheet'}</div><div style="height:2px;background:#0f4c81;margin-bottom:12px"></div><div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px">${[[zh?'總數量':'Quantity',qty],[zh?'貨櫃數':'Containers',dist.length],[zh?'總重量':'Total Weight',totalWeight.toFixed(2)+' kg'],[zh?'裝櫃方式':'Method',p.method==='pallet'?(zh?'棧板':'Palletized'):(zh?'散裝':'Floor Loading')]].map(([k,v])=>`<div style="background:#f8fafc;border:1px solid #dbe4ee;border-radius:10px;padding:8px;text-align:center"><div style="font-size:10px;color:#64748b">${k}</div><div style="font-weight:900;margin-top:3px">${v}</div></div>`).join('')}</div><div style="border:1px solid #dbe4ee;border-radius:10px;padding:8px 10px;margin-bottom:12px;font-size:12px"><b>${zh?'品名':'Commodity'}：</b>${$('cProductName').value}<br><b>${zh?'運輸方式':'Transport Mode'}：</b>${zh?($('transportMode').value==='sea'?'海運':$('transportMode').value==='air'?'空運':'自訂'):($('transportMode').value==='sea'?'Sea Freight':$('transportMode').value==='air'?'Air Freight':'Custom')}<br><b>${zh?'貨櫃規格':'Container'}：</b>${containerPresetLabel()} / ${L} × ${W} × ${H} cm</div><div style="display:grid;grid-template-columns:repeat(${dist.length===1?1:2},minmax(0,1fr));gap:10px">${cards}</div></div>`;$('containerReportPage').classList.add('show');if(scroll)$('containerReportWrap').scrollIntoView({behavior:'smooth',block:'start'});showContainerStatus(zh?'出貨單已產生。':'Shipping sheet generated.');return true}
+$('cBuildReport').onclick=async()=>{await buildContainerReport({scroll:true})};$('cReportLanguage').onchange=()=>{if($('containerReportPage').classList.contains('show')){$('containerReportPage').classList.remove('show');showContainerStatus('語言已變更，請重新產生出貨單。')}};
 
 async function downloadElementPdf(el,filename){if(!window.html2canvas||!window.jspdf)throw new Error('PDF libs missing');const canvas=await html2canvas(el,{scale:2.2,useCORS:true,backgroundColor:'#fff',logging:false});const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});const pageW=210,pageH=297,mx=10,mt=12,mb=10,uw=pageW-mx*2,uh=pageH-mt-mb;let iw=uw,ih=canvas.height*iw/canvas.width;if(ih>uh){ih=uh;iw=canvas.width*ih/canvas.height}pdf.addImage(canvas.toDataURL('image/jpeg',.95),'JPEG',(pageW-iw)/2,mt,iw,ih,undefined,'FAST');pdf.save(filename)}
-$('cGeneratePdf').onclick=async()=>{if(!buildContainerReport())return;const a=$('containerReportPage').querySelector('.container-report-actions');a.style.display='none';try{await downloadElementPdf($('containerReportPage'),`${Math.floor(cnum('cQty'))}台-貨櫃裝載資料單.pdf`)}catch(e){console.error(e);showContainerStatus('PDF 產生失敗。',true)}finally{a.style.display='flex'}};
-$('cDownloadWord').onclick=async()=>{if(!buildContainerReport())return;if(!window.html2canvas||!window.JSZip){showContainerStatus('Word 元件載入失敗。',true);return}const actions=$('containerReportPage').querySelector('.container-report-actions');actions.style.display='none';try{const canvas=await html2canvas($('containerReportPage'),{scale:2.1,useCORS:true,backgroundColor:'#fff',logging:false});const png=canvas.toDataURL('image/png'),zip=new JSZip();zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');zip.folder('_rels').file('.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');const word=zip.folder('word');word.folder('media').file('container-sheet.png',dataUrlToUint8Array(png));word.folder('_rels').file('document.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/container-sheet.png"/></Relationships>');const maxW=7.25,maxH=10.15,ratio=canvas.height/canvas.width;let wi=maxW,hi=wi*ratio;if(hi>maxH){hi=maxH;wi=hi/ratio}const cx=Math.round(wi*914400),cy=Math.round(hi*914400);word.file('document.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:drawing><wp:inline><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="1" name="Container Loading Sheet"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="container-sheet.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p><w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="680" w:right="720" w:bottom="720" w:left="720"/></w:sectPr></w:body></w:document>`);const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${Math.floor(cnum('cQty'))}台-貨櫃裝載資料單.docx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}catch(e){console.error(e);showContainerStatus('Word 產生失敗。',true)}finally{actions.style.display='flex'}};
+$('cGeneratePdf').onclick=async()=>{if(!(await buildContainerReport({scroll:false})))return;const a=$('containerReportPage').querySelector('.container-report-actions');a.style.display='none';try{await downloadElementPdf($('containerReportPage'),`${Math.floor(cnum('cQty'))}台-貨櫃裝載資料單.pdf`)}catch(e){console.error(e);showContainerStatus('PDF 產生失敗。',true)}finally{a.style.display='flex'}};
+$('cDownloadWord').onclick=async()=>{if(!(await buildContainerReport({scroll:false})))return;if(!window.html2canvas||!window.JSZip){showContainerStatus('Word 元件載入失敗。',true);return}const actions=$('containerReportPage').querySelector('.container-report-actions');actions.style.display='none';try{const canvas=await html2canvas($('containerReportPage'),{scale:2.1,useCORS:true,backgroundColor:'#fff',logging:false});const png=canvas.toDataURL('image/png'),zip=new JSZip();zip.file('[Content_Types].xml','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>');zip.folder('_rels').file('.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>');const word=zip.folder('word');word.folder('media').file('container-sheet.png',dataUrlToUint8Array(png));word.folder('_rels').file('document.xml.rels','<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/container-sheet.png"/></Relationships>');const maxW=7.25,maxH=10.15,ratio=canvas.height/canvas.width;let wi=maxW,hi=wi*ratio;if(hi>maxH){hi=maxH;wi=hi/ratio}const cx=Math.round(wi*914400),cy=Math.round(hi*914400);word.file('document.xml',`<?xml version="1.0" encoding="UTF-8" standalone="yes"?><w:document xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"><w:body><w:p><w:pPr><w:jc w:val="center"/></w:pPr><w:r><w:drawing><wp:inline><wp:extent cx="${cx}" cy="${cy}"/><wp:docPr id="1" name="Container Loading Sheet"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="0" name="container-sheet.png"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId1"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="${cx}" cy="${cy}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p><w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="680" w:right="720" w:bottom="720" w:left="720"/></w:sectPr></w:body></w:document>`);const blob=await zip.generateAsync({type:'blob',mimeType:'application/vnd.openxmlformats-officedocument.wordprocessingml.document'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`${Math.floor(cnum('cQty'))}台-貨櫃裝載資料單.docx`;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000)}catch(e){console.error(e);showContainerStatus('Word 產生失敗。',true)}finally{actions.style.display='flex'}};
 
 updateContainerMode();
 
@@ -2176,6 +2638,21 @@ themeToggle.onclick=()=>{
   localStorage.setItem('palletPlannerTheme',dark?'dark':'light');
 };
 
+function apply3DTheme(){
+  const dark=document.body.classList.contains('dark');
+  scene.background=new THREE.Color(dark?0x303944:0xf3f4f6);
+  floor.material.color.set(dark?0x36414d:0xe5e7eb);
+  if(cScene){
+    cScene.background=new THREE.Color(dark?0x303944:0xf3f6f8);
+    const cf=cScene.getObjectByName('containerFloor');
+    if(cf&&cf.material)cf.material.color.set(dark?0x3a4652:0xdfe7ed);
+    if(typeof refreshContainer3D==='function')refreshContainer3D();
+  }
+}
+apply3DTheme();
+const _themeHandler=themeToggle.onclick;
+themeToggle.onclick=()=>{_themeHandler();apply3DTheme();};
+
 
 </script>
 
@@ -2188,5 +2665,342 @@ themeToggle.onclick=()=>{
 </div>
 
 <div id="pdfStatusToast" class="pdf-status-toast">正在產生 PDF…</div>
+
+<style id="v25CompactOverrides">
+#placementCompactSummary{margin-top:8px}
+#placementCompactSummary .sub{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:220px}
+#stepPallet .special-top-option{margin-top:8px}
+#stepPallet .sidebar-action-row{margin-top:8px}
+#settingsPanel .section{padding-top:11px;padding-bottom:11px}
+</style>
+
+<style id="v27MicroCompact">
+/* tighter vertical rhythm */
+#settingsPanel .section{padding-top:7px!important;padding-bottom:7px!important}
+#settingsPanel .step-heading{margin-bottom:5px!important}
+#settingsPanel .workflow-card{padding:8px!important}
+#settingsPanel .workflow-card h3{margin-bottom:5px!important}
+#settingsPanel .smart-launch{margin-top:5px!important;margin-bottom:6px!important}
+#settingsPanel .applied-plan{margin-top:6px!important;padding:7px 9px!important}
+#settingsPanel .sidebar-action-row{margin-top:6px!important}
+#settingsPanel #reset{margin-top:5px!important}
+#settingsPanel .sidebar-export-block{padding-top:7px!important;margin-top:6px!important}
+#settingsPanel .sidebar-export-actions{margin-top:6px!important}
+#settingsPanel .sidebar-export-language{margin-top:3px!important}
+#settingsPanel #actionStatus{margin-top:3px!important;min-height:12px!important}
+
+/* placement + special top in one row */
+.pallet-compact-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:7px}
+.compact-setting-btn{min-width:0;height:54px;border:1px solid #d7e2ec;border-radius:11px;background:#f8fafc;padding:7px 9px;text-align:left;cursor:pointer;color:#334155;display:flex;flex-direction:column;justify-content:center;gap:2px}
+button.compact-setting-btn span,.compact-toggle-btn b{font-size:12px;font-weight:900;line-height:1.2}
+.compact-setting-btn small{font-size:10.5px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;line-height:1.25}
+.compact-toggle-btn{position:relative;flex-direction:row;align-items:center;gap:8px}
+.compact-toggle-btn input{width:16px;height:16px;margin:0;accent-color:#0f4c81;flex:0 0 auto}
+.compact-toggle-btn span{display:flex;min-width:0;flex-direction:column;gap:2px}
+.compact-toggle-btn:has(input:checked){background:#eef7ff;border-color:#7cb7df}
+.compact-toggle-btn:has(input:checked) small::before{content:'開啟'}
+.compact-toggle-btn:has(input:checked) small{font-size:0}
+.compact-toggle-btn:has(input:checked) small::before{font-size:10.5px;color:#0f4c81}
+body.dark .compact-setting-btn{background:#202833;border-color:#465464;color:#edf4fb}
+body.dark .compact-setting-btn small{color:#aebac7}
+body.dark .compact-toggle-btn:has(input:checked){background:#18334a;border-color:#4b9bd1}
+body.dark .compact-toggle-btn:has(input:checked) small::before{color:#8dccf4}
+
+/* export: title + tiny language label, selector below, report button last */
+.export-title-inline{display:flex!important;align-items:center!important;gap:7px!important}
+.export-title-inline small{font-size:10px;font-weight:600;color:#94a3b8;line-height:1}
+.compact-language-row{justify-content:flex-end!important}
+.compact-language-row>span{display:none!important}
+.compact-language-row select{width:100%!important;min-width:0!important}
+
+/* no positive green status block; warnings still appear */
+#fitMessage:empty{display:none!important}
+</style>
+
+<style>
+/* V28: output title + language selector on one row */
+.sidebar-export-headrow,
+.container-export-headrow{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  width:100%;
+}
+.sidebar-export-headrow .sidebar-export-title,
+.container-export-headrow .container-side-title{
+  margin:0!important;
+  flex:0 0 auto;
+}
+.sidebar-export-title small,
+.container-export-headrow .container-side-title small{
+  font-size:10px;
+  font-weight:700;
+  color:#94a3b8;
+  margin-left:4px;
+}
+.inline-language-select{
+  width:104px!important;
+  min-width:104px!important;
+  max-width:104px!important;
+  height:34px;
+  margin:0!important;
+  padding:5px 28px 5px 10px!important;
+}
+.sidebar-export-actions,
+.container-output-row{margin-top:8px!important;}
+body.dark .sidebar-export-title small,
+body.dark .container-export-headrow .container-side-title small{color:#8fa0b3;}
+</style>
+
 </body>
-</html>
+</html><style>
+/* v17 - darker depth, softer 3D canvas, clearer borders */
+body.dark{
+  background:#0d1117!important;
+}
+body.dark .card,
+body.dark .metric,
+body.dark .currentpanel,
+body.dark .resultcard,
+body.dark .container-current-card,
+body.dark .container-summary-card,
+body.dark .workflow-card,
+body.dark .compact-summary,
+body.dark .sidebar-export-block,
+body.dark .container-3d-card,
+body.dark .ortho-card{
+  background:#171d25!important;
+  border-color:#3b4755!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.24)!important;
+}
+body.dark .currentitem,
+body.dark .container-current-item,
+body.dark .shipping-overview-item,
+body.dark .shipping-pallet-card{
+  background:#202833!important;
+  border-color:#465464!important;
+}
+body.dark .currentpanel,
+body.dark .container-current-card{
+  border-color:#4a596b!important;
+}
+body.dark .btnsecondary,
+body.dark .pallettab,
+body.dark .mode-switch button,
+body.dark .container-method-tabs button,
+body.dark .load-method-tabs button,
+body.dark .container-tab,
+body.dark .viewer-tools .btn,
+body.dark .container-3d-toolbar button,
+body.dark .view-dropdown>summary{
+  background:#1b222b!important;
+  border-color:#465363!important;
+}
+body.dark .primary,
+body.dark .counter button.primary,
+body.dark .container-qty-inline button.plus,
+body.dark .mode-switch button.active,
+body.dark .container-method-tabs button.active,
+body.dark .load-method-tabs button.active,
+body.dark .container-tab.active,
+body.dark .pallettab.active{
+  background:#2578b7!important;
+  border-color:#4b9bd1!important;
+}
+body.dark .ok,body.dark #fitMessage.ok,body.dark .recommended-note{
+  background:#152822!important;
+  border-color:#315848!important;
+  color:#c6eadf!important;
+}
+body.dark #viewer,
+body.dark #container3D{
+  background:#2a333e!important;
+  border:1px solid #536171!important;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.025)!important;
+}
+body.dark .container-3d-card{
+  background:#171d25!important;
+  border-color:#435061!important;
+}
+body.dark .view-menu{
+  background:#171d25!important;
+  border-color:#485668!important;
+}
+body.dark table th{background:#1c232c!important;border-color:#3b4755!important}
+body.dark table td{border-color:#313b47!important}
+body.dark .total-row td{background:#24303d!important;border-top-color:#607184!important}
+</style>
+
+<style>
+/* v18 - dark sidebar cleanup; exports always remain white documents */
+.sidebar-export-actions .export-single,
+.container-output-row .export-single{width:100%!important;flex:1 1 100%!important}
+
+/* Remove the abrupt white controls in dark mode. */
+body.dark .qty-inline button:not(.primary),
+body.dark .container-qty-inline button:not(.plus),
+body.dark #reset,
+body.dark .smart-launch,
+body.dark .sidebar-export-actions .btnsecondary,
+body.dark .container-output-row .btnsecondary{
+  background:#202833!important;
+  color:#f1f5f9!important;
+  border-color:#465464!important;
+  box-shadow:none!important;
+}
+body.dark .qty-inline button:not(.primary):hover,
+body.dark .container-qty-inline button:not(.plus):hover,
+body.dark #reset:hover,
+body.dark .smart-launch:hover,
+body.dark .sidebar-export-actions .btnsecondary:hover,
+body.dark .container-output-row .btnsecondary:hover{
+  background:#293442!important;
+  border-color:#5a6b7f!important;
+}
+/* Keep quantity inputs dark and coherent. */
+body.dark .qty-inline input,
+body.dark .container-qty-inline input{
+  background:#151b22!important;
+  color:#f8fafc!important;
+  border-color:#465464!important;
+}
+/* Dark success/plan cards: no pale white/green slabs. */
+body.dark .applied-plan,
+body.dark #fitMessage.ok,
+body.dark .recommended-note{
+  background:#163126!important;
+  color:#c9f1dc!important;
+  border-color:#315f4a!important;
+}
+body.dark .applied-plan strong{color:#a7f3d0!important}
+
+/* Export sheets are intentionally always white, even from dark mode. */
+body.dark #reportPage,
+body.dark #containerReportPage{
+  background:#ffffff!important;
+  color:#0f172a!important;
+  border-color:#d1d5db!important;
+  box-shadow:0 8px 28px rgba(15,23,42,.10)!important;
+}
+body.dark #reportPage .report-title,
+body.dark #containerReportPage .report-title{color:#0f172a!important}
+body.dark #reportPage .report-sub,
+body.dark #containerReportPage .report-sub{color:#64748b!important}
+body.dark #reportPage .report-image,
+body.dark #reportPage .report-box,
+body.dark #reportPage .report-note,
+body.dark #containerReportPage .container-report-container-card{
+  background:#fff!important;
+  border-color:#dbe4ee!important;
+  color:#0f172a!important;
+}
+body.dark #reportPage .report-metric,
+body.dark #containerReportPage .container-report-container-meta>div{
+  background:#f8fafc!important;
+  border-color:#dbe4ee!important;
+  color:#0f172a!important;
+}
+body.dark #reportPage .report-metric .k,
+body.dark #reportPage .report-kv .k{color:#64748b!important}
+body.dark #reportPage .report-metric .v,
+body.dark #reportPage .report-kv .v{color:#0f172a!important}
+body.dark #reportPage pre{background:#fff!important;color:#0f172a!important;border-color:#dbe4ee!important}
+body.dark #containerReportPage img{background:#f5f7f9!important}
+body.dark #reportPage .btnsecondary,
+body.dark #containerReportPage .btnsecondary{
+  background:#f8fafc!important;color:#0f172a!important;border-color:#cbd5e1!important
+}
+body.dark #reportPage .primary,
+body.dark #containerReportPage .primary{
+  background:#155b91!important;color:#fff!important;border-color:#155b91!important
+}
+
+/* V19 export order + full-width button */
+.sidebar-export-actions,
+.container-output-row{
+  display:block !important;
+  width:100% !important;
+  margin-top:10px !important;
+}
+.sidebar-export-actions .export-single,
+.container-output-row .export-single{
+  display:block !important;
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+}
+.sidebar-export-language,
+.container-output-lang{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  width:100% !important;
+  margin-top:8px !important;
+}
+.sidebar-export-language select,
+.container-output-lang select{
+  min-width:104px;
+}
+</style>
+<style>
+/* v21 natural-height container sidebar */
+@media(min-width:1051px){
+  .container-shell{align-items:start!important;}
+  .container-settings{height:auto!important;display:block!important;}
+  .container-settings>.container-side-section:last-of-type{margin-top:0!important;}
+}
+.container-settings.card{
+  background:transparent!important;
+  border:0!important;
+  box-shadow:none!important;
+  padding:0!important;
+}
+.container-settings .container-side-section{
+  background:#fff;
+  border:1px solid #dbe4ee;
+  border-radius:14px;
+  padding:12px;
+  margin-bottom:10px;
+  box-shadow:0 2px 8px rgba(15,23,42,.025);
+}
+.container-settings .container-side-section:last-of-type{margin-bottom:0;}
+.container-settings .container-side-title{margin-bottom:8px;}
+.container-settings .container-summary-card{
+  border-color:#e2e8f0;
+  background:#f8fafc;
+}
+body.dark .container-settings.card{background:transparent!important;border:0!important;box-shadow:none!important;}
+body.dark .container-settings .container-side-section{
+  background:#171e27!important;
+  border-color:#344150!important;
+  box-shadow:none!important;
+}
+body.dark .container-settings .container-summary-card{
+  background:#202833!important;
+  border-color:#3b4959!important;
+}
+</style>
+<style>
+/* v22 - keep natural section spacing, but align sidebar bottom with right content */
+@media(min-width:1051px){
+  .container-shell{
+    align-items:stretch!important;
+  }
+  .container-settings{
+    align-self:stretch!important;
+    height:auto!important;
+    min-height:100%!important;
+    display:flex!important;
+    flex-direction:column!important;
+  }
+  .container-settings>.container-side-section{
+    flex:0 0 auto;
+  }
+  .container-settings>.container-side-section:last-of-type{
+    margin-top:auto!important;
+    margin-bottom:0!important;
+  }
+}
+</style>
